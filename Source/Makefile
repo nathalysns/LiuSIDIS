@@ -29,7 +29,7 @@ HEAD = $(SRC:.C=.h)
 DEPS = $(SRC:.C=.d)
 SCALER_OBJS = $(SRC:.C=.o)
 
-F_OBJS = DSSV-2008.o fDSS.o grsv2000.o
+F_OBJS =
 cc_OBJS =
 total_OBJS = $(F_OBJS) $(cc_OBJS)
 
