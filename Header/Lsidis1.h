@@ -83,14 +83,17 @@ class Lsidis{
   double Wp;//invariant mass of final state except scattered lepton and the hadron
   double gamma;//
   double epsilon;//longi-trans-photon flux ratio
-  double jacobian;
-  bool physics_control;
+  double currentR;//a criterism for current fragmentation judgement
+  double jacobian;//Jacobian from simulation space to cross section defined space
+  bool physics_control;//
   double f1[6];//PDFs of u, d, s, ubar, dbar, sbar
   double D1[6];//FFs of u, d, s, ubar, dbar, sbar
-  double TMDpars[2];
-  double Xmin[6];
-  double Xmax[6];
-  double volume;
+  double g1[6];//Polarized PDF of u, d, s, ubar, dbar, sbar
+  double h1[6];//Transversity PDF of u, d, s, ubar, dbar, sbar
+  double TMDpars[2];//Model parameters of gaussian type TMDs
+  double Xmin[6];//simulation variables lower limits
+  double Xmax[6];//simulation variables upper limits
+  double volume;//simulation variables volume
  public:
   Lsidis();
   Lsidis(const TLorentzVector l, const TLorentzVector P);
