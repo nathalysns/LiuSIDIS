@@ -1,0 +1,90 @@
+./mainzzfile pi+
+zip zzpip.zip sidis_*.dat
+rm sidis_*.dat
+
+./mainzzfile pi-
+zip zzpim.zip sidis_*.dat
+rm sidis_*.dat
+
+./mainzzfile pi0
+zip zzpi0.zip sidis_*.dat
+rm sidis_*.dat
+
+./mainzzfile K+
+zip zzKp.zip sidis_*.dat
+rm sidis_*.dat
+
+./mainzzfile K-
+zip zzKm.zip sidis_*.dat
+rm sidis_*.dat
+
+./mainzzfile K0
+zip zzK0.zip sidis_*.dat
+rm sidis_*.dat
+
+./mainzzfile p
+zip zzproton.zip sidis_*.dat
+rm sidis_*.dat
+
+mv zz*.zip /var/phy/project/mepg/tl190/ZZ/
+
+./mainzzfile pi+ GE180up
+zip zzpipwindowup.zip sidis_*.dat
+rm sidis_*.dat
+
+./mainzzfile pi- GE180up
+zip zzpimwindowup.zip sidis_*.dat
+rm sidis_*.dat
+
+./mainzzfile pi0 GE180up
+zip zzpi0windowup.zip sidis_*.dat
+rm sidis_*.dat
+
+./mainzzfile K+ GE180up
+zip zzKpwindowup.zip sidis_*.dat
+rm sidis_*.dat
+
+./mainzzfile K- GE180up
+zip zzKmwindowup.zip sidis_*.dat
+rm sidis_*.dat
+
+./mainzzfile K0 GE180up
+zip zzK0windowup.zip sidis_*.dat
+rm sidis_*.dat
+
+./mainzzfile p GE180up
+zip zzprotonwindowup.zip sidis_*.dat
+rm sidis_*.dat
+
+mv zz*.zip /var/phy/project/mepg/tl190/ZZ/
+
+./mainzzfile pi+ GE180down
+zip zzpipwindowdown.zip sidis_*.dat
+rm sidis_*.dat
+
+./mainzzfile pi- GE180down
+zip zzpimwindowdown.zip sidis_*.dat
+rm sidis_*.dat
+
+./mainzzfile pi0 GE180down
+zip zzpi0windowdown.zip sidis_*.dat
+rm sidis_*.dat
+
+./mainzzfile K+ GE180down
+zip zzKpwindowdown.zip sidis_*.dat
+rm sidis_*.dat
+
+./mainzzfile K- GE180down
+zip zzKmwindowdown.zip sidis_*.dat
+rm sidis_*.dat
+
+./mainzzfile K0 GE180down
+zip zzK0windowdown.zip sidis_*.dat
+rm sidis_*.dat
+
+./mainzzfile p GE180down
+zip zzprotonwindowdown.zip sidis_*.dat
+rm sidis_*.dat
+
+mv zz*.zip /var/phy/project/mepg/tl190/ZZ/
+
