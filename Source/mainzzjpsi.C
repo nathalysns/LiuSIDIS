@@ -15,9 +15,9 @@ int main(int argc, char * argv[]){
   TLorentzVector l(0, 0, 11.0, 11.0);
   TLorentzVector P(0, 0, 0, 0.938272);
 
-  double lumi = 1.0e+10 * pow(0.197327, 2);//10^36 cm^-2 s^-1
+  double lumi = 12.0e+10 * pow(0.197327, 2);//10^36 cm^-2 s^-1
 
-  mysidis.SetNucleus(2, 1);//helium-3
+  mysidis.SetNucleus(1, 0);//helium-3
 
   mysidis.SetHadron(argv[1]);
   int ic = mysidis.GetHadronCharge();
@@ -48,18 +48,18 @@ int main(int argc, char * argv[]){
   FILE * file;
 
   for (int j = 1; j <= 100; j++){
-    if (strcmp(argv[1], "pi+") == 0) file = fopen(Form("sidis_3he_pip_beam11GeV_luminuclei1e36_5e3_%d.dat", j), "w");
-    else if (strcmp(argv[1], "pi-") == 0) file = fopen(Form("sidis_3he_pim_beam11GeV_luminuclei1e36_5e3_%d.dat", j), "w");
-    else if (strcmp(argv[1], "pi0") == 0) file = fopen(Form("sidis_3he_pi0_beam11GeV_luminuclei1e36_5e3_%d.dat", j), "w");
-    else if (strcmp(argv[1], "K+") == 0) file = fopen(Form("sidis_3he_Kp_beam11GeV_luminuclei1e36_5e3_%d.dat", j), "w");
-    else if (strcmp(argv[1], "K-") == 0) file = fopen(Form("sidis_3he_Km_beam11GeV_luminuclei1e36_5e3_%d.dat", j), "w");
-    else if (strcmp(argv[1], "K0") == 0) file = fopen(Form("sidis_3he_K0_beam11GeV_luminuclei1e36_5e3_%d.dat", j), "w");
-    else if (strcmp(argv[1], "p") == 0) file = fopen(Form("sidis_3he_proton_beam11GeV_luminuclei1e36_5e3_%d.dat", j), "w");
+    if (strcmp(argv[1], "pi+") == 0) file = fopen(Form("sidis_LH2_pip_beam11GeV_lumi1.2e37_5e3_%d.dat", j), "w");
+    else if (strcmp(argv[1], "pi-") == 0) file = fopen(Form("sidis_LH2_pim_beam11GeV_lumi1.2e37_5e3_%d.dat", j), "w");
+    else if (strcmp(argv[1], "pi0") == 0) file = fopen(Form("sidis_LH2_pi0_beam11GeV_lumi1.2e37_5e3_%d.dat", j), "w");
+    else if (strcmp(argv[1], "K+") == 0) file = fopen(Form("sidis_LH2_Kp_beam11GeV_lumi1.2e37_5e3_%d.dat", j), "w");
+    else if (strcmp(argv[1], "K-") == 0) file = fopen(Form("sidis_LH2_Km_beam11GeV_lumi1.2e37_5e3_%d.dat", j), "w");
+    else if (strcmp(argv[1], "K0") == 0) file = fopen(Form("sidis_LH2_K0_beam11GeV_lumi1.2e37_5e3_%d.dat", j), "w");
+    else if (strcmp(argv[1], "p") == 0) file = fopen(Form("sidis_LH2_proton_beam11GeV_lumi1.2e37_5e3_%d.dat", j), "w");
     else return 1;
    
     Nrec = 0;
     for (double i = 0; i < Ngen; i++){
-      vz = gRandom->Uniform(-370, -330);
+      vz = gRandom->Uniform(-322.5, -307.5);
       weight = mysidis.GenerateEvent(0, 1);//please check the consistency with Xmin
       if (weight > 0){
 	lp = mysidis.GetLorentzVector("lp");
