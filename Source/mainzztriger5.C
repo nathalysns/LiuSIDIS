@@ -16,7 +16,7 @@ TH2F * acc_LA_negative = (TH2F *) file_negative->Get("acceptance_largeangle");
 TH2F * acc_FA_positive = (TH2F *) file_positive->Get("acceptance_forwardangle");
 TH2F * acc_LA_positive = (TH2F *) file_positive->Get("acceptance_largeangle");
 
-TFile * file_new = new TFile("acceptance_solid_SIDIS_He3_electron_output_cut5433211.root", "r");
+TFile * file_new = new TFile("acceptance_solid_SIDIS_He3_electron_output_cut5433111.root", "r");
 TH2F * acc_FA_new = (TH2F *) file_new->Get("acceptance_ThetaP_forwardangle");
 //TH2F * acc_LA_new = (TH2F *) file_new->Get("acceptance_ThetaP_largeangle");
 
@@ -279,12 +279,15 @@ int main(int argc, char * argv[]){
   c2->Divide(1, 3);
   c2->cd(1);
   sxz->Divide(txz);
+  sxz->GetZaxis()->SetRangeUser(0,1);
   sxz->DrawClone("colz");
   c2->cd(2);
   sxPt->Divide(txPt);
+  sxPt->GetZaxis()->SetRangeUser(0,1);
   sxPt->DrawClone("colz");
   c2->cd(3);
   szPt->Divide(tzPt);
+  szPt->GetZaxis()->SetRangeUser(0,1);
   szPt->DrawClone("colz");
 
   c2->Print("NewAcceptance2D.pdf");
