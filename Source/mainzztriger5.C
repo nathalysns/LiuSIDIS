@@ -16,9 +16,9 @@ TH2F * acc_LA_negative = (TH2F *) file_negative->Get("acceptance_largeangle");
 TH2F * acc_FA_positive = (TH2F *) file_positive->Get("acceptance_forwardangle");
 TH2F * acc_LA_positive = (TH2F *) file_positive->Get("acceptance_largeangle");
 
-TFile * file_new = new TFile("acceptance_solid_SIDIS_He3_electron_output_cut5433221.root", "r");
+TFile * file_new = new TFile("acceptance_solid_SIDIS_He3_electron_output_cut5433211.root", "r");
 TH2F * acc_FA_new = (TH2F *) file_new->Get("acceptance_ThetaP_forwardangle");
-TH2F * acc_LA_new = (TH2F *) file_new->Get("acceptance_ThetaP_largeangle");
+//TH2F * acc_LA_new = (TH2F *) file_new->Get("acceptance_ThetaP_largeangle");
 
 double GetAcceptance(const TLorentzVector p, const char * part){//
   double theta = p.Theta() / M_PI * 180.0;
@@ -48,7 +48,7 @@ double GetAcceptance_new(const TLorentzVector p, const char * part){//
   if (strcmp(part, "e-") == 0){
     acc += acc_FA_new->GetBinContent(acc_FA_new->GetXaxis()->FindBin(theta), acc_FA_new->GetYaxis()->FindBin(mom));
     if (mom > 3.5){
-      acc += acc_LA_new->GetBinContent(acc_LA_new->GetXaxis()->FindBin(theta), acc_LA_new->GetYaxis()->FindBin(mom));
+      acc += acc_LA_negative->GetBinContent(acc_LA_negative->GetXaxis()->FindBin(theta), acc_LA_negative->GetYaxis()->FindBin(mom));
     }
   }
   else if (strcmp(part, "pi+") == 0){
