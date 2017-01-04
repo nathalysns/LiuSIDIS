@@ -3,7 +3,7 @@
 //LHAPDF is required. Developed with v6.1
 //ROOT is required. Developed with v5.34.21
 //Potential error with other versions not tested
-//Last update date 16 Nov. 2016 version 1.0
+//Last update date 4 Jan. 2017 version 1.1
 
 #ifndef _LSIDIS_H_
 #define _LSIDIS_H_
@@ -83,7 +83,7 @@ class Lsidis{
   double Wp;//invariant mass of final state except scattered lepton and the hadron
   double gamma;//
   double epsilon;//longi-trans-photon flux ratio
-  double currentR;//a criterism for current fragmentation judgement
+  double Rfactor;//a criterism for current fragmentation judgement
   double jacobian;//Jacobian from simulation space to cross section defined space
   bool physics_control;//
   double f1[6];//PDFs of u, d, s, ubar, dbar, sbar
@@ -121,6 +121,7 @@ class Lsidis{
   int SetFinalHadron(const TLorentzVector Ph);//Set final detected hadron 4-momenta
   int CalculateVariables();//Calculate Lorentz scalar variables
   int CalculateFinalState();//Calculate scattered lepton and detected hadron from x, y, z, Pt, phih, phiS
+  int CalculateRfactor(const double kT2, const double MiT2, const double MfT2);//Calculate the Rfactor for current fragmentation criteria
   int SetVariables(const double x0, const double y0, const double z0, const double Pt0, const double phih0, const double phiS0);//Set variables x, y, z, Pt2, phih, phiS
   double GetVariable(const char * var);//Get particular variable of current event
   TLorentzVector GetLorentzVector(const char * part);//Get 4-momentum of a particle of current event
@@ -505,7 +506,23 @@ int Lsidis::CalculateFinalState(){//Calculate scattered electron and detected ha
     perror("Initial state missing for final state calculation!");
     return -1;
   }
-}   
+}
+
+int Lsidis::CalculateRfactor(const double kT2 = 0.16, const double MiT2 = 0.4, const double MfT2 = 0.4){
+  if (physics_control){
+    double yi = 0.5 * log(Q2 / MiT2);
+    double yf = -0.5 * log(Q2 / MfT2);
+    double yh = log( (sqrt(Q2) * z * (Q2 - xn * xn * Mp * Mp)) / ( 2.0 * xn * xn * Mp * Mp * sqrt(Mh * Mh + Pt * Pt)) - sqrt(Q2) / (xn * Mp) * sqrt(pow(z * (Q2 - xn * xn * Mp * Mp), 2) / (4.0 * xn * xn  * Mp * Mp * (Mh * Mh + Pt * Pt)) - 1.0));
+    double Rf = 0.5 * sqrt(Pt * Pt + Mh * Mh) * sqrt(MfT2) * (exp(yf - yh) + exp(yh - yf)) - sqrt(kT2) * Pt;
+    double Ri = 0.5 * sqrt(Pt * Pt + Mh * Mh) * sqrt(MiT2) * (exp(yi - yh) - exp(yh - yi)) - sqrt(kT2) * Pt;
+    Rfactor = Rf / Ri;
+    return 0;
+  }
+  else {
+    Rfactor = 1. / 0.;//NaN
+    return -1;
+  }
+}
 
 double Lsidis::GetVariable(const char * var){//get current variable
   if (!physics_control){
@@ -524,6 +541,7 @@ double Lsidis::GetVariable(const char * var){//get current variable
   else if (strcmp(var, "xn") == 0) return xn;
   else if (strcmp(var, "gamma") == 0) return gamma;
   else if (strcmp(var, "epsilon") == 0) return epsilon;
+  else if (strcmp(var, "Rfactor") == 0) return Rfactor;
   else {
     perror("No such variable!");
     return -1;
