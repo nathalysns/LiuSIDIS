@@ -1,4 +1,4 @@
-#include "../Header/Lsidis1.h"
+#include "Lsidis.h"
 
 using namespace std;
 

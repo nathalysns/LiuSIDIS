@@ -1,4 +1,4 @@
-#include "../Header/Lsidis1.h"
+#include "Lsidis.h"
 #include "TH1D.h"
 #include "TH2F.h"
 #include "TFile.h"
@@ -173,6 +173,12 @@ int main(int argc, char * argv[]){
     vz = gRandom->Uniform(-370, -330);
     weight = mysidis.GenerateEvent(0, 1);
     if (weight > 0){
+
+      mysidis.CalculateRfactor();
+
+      x = mysidis.GetVariable("Rfactor");
+      if (true) cout << x << endl;
+
       acc = 0;
       accr = 0;
       lp = mysidis.GetLorentzVector("lp");
