@@ -55,12 +55,13 @@ int GenerateBinInfoFile(const char * filename, const double Ebeam, const char * 
   double Xmin[6] = {0.0, 0.0, 0.0, 0.0, -M_PI, -M_PI}; 
   double Xmax[6] = {0.7, 0.0, 0.0, 0.0, M_PI, M_PI};;//x, Q2, z, Pt, phih, phiS
   double weight = 0;
+  double Rfactor = 0;
   double acc = 0;
   int Nx = 0;
   TLorentzVector lp(0, 0, 0, 0);
   TLorentzVector Ph(0, 0, 0, 0);
   double Q2list[7] = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 8.0};
-  double statlist[6] = {2.0e7, 1.2e7, 6.0e6, 2.0e6, 1.0e6, 1.0e6};
+  double statlist[6] = {2.0e7, 1.2e7, 6.0e6, 3.0e6, 2.0e6, 2.0e6};
   double zlist[9] = {0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7};
   double Ptlist[7] = {0.0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.6};
   int xi = 1;
@@ -84,8 +85,10 @@ int GenerateBinInfoFile(const char * filename, const double Ebeam, const char * 
 	    Ph = sidis.GetLorentzVector("Ph");
 	    acc = GetAcceptance_e(lp) * GetAcceptance_pi(Ph);
 	    if (acc > 0){
-	      //sidis.CalculateRfactor();
-	      hx->Fill(sidis.GetVariable("x"), weight * acc);
+	      sidis.CalculateRfactor();
+	      sidis.GetVariable("Rfactor");
+	      if (true)
+		hx->Fill(sidis.GetVariable("x"), weight * acc);
 	    }
 	  }
 	}
