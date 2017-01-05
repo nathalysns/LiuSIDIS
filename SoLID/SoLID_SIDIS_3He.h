@@ -86,7 +86,7 @@ int GenerateBinInfoFile(const char * filename, const double Ebeam, const char * 
 	    acc = GetAcceptance_e(lp) * GetAcceptance_pi(Ph);
 	    if (acc > 0){
 	      sidis.CalculateRfactor();
-	      sidis.GetVariable("Rfactor");
+	      Rfactor = sidis.GetVariable("Rfactor");
 	      if (true)
 		hx->Fill(sidis.GetVariable("x"), weight * acc);
 	    }
@@ -119,3 +119,150 @@ int GenerateBinInfoFile(const char * filename, const double Ebeam, const char * 
   fclose(fp);
   return 0;
 }
+
+int AnalyzeEstatUT3(const char * readfile, const char * savefile, const double Ebeam, const char * had){//bin analysis including stat. errors
+  double Hadron = 0;
+  if (strcmp(had, "pi+") == 0) Hadron = 0;
+  else if (strcmp(had, "pi-") == 0) Hadron = 1;
+  double Nucleon = 0;
+  TFile * fs = new TFile(savefile, "RECREATE");
+  TTree * Ts = new TTree("data", "data");
+  Ts->SetDirectory(fs);
+  double Eb = Ebeam;
+  double x, y, z, Q2, Pt, phih, phiS;
+  double dx, dy, dz, dQ2, dPt, dphih, dphiS, dv;
+  double Nacc, fn;
+  double Estatraw[3], Estat[3];
+  Ts->Branch("Nucleon", &Nucleon, "Nucleon/D");
+  Ts->Branch("Hadron", &Hadron, "Hadron/D");
+  Ts->Branch("Ebeam", &Eb, "Ebeam/D");
+  Ts->Branch("x", &x, "x/D");
+  Ts->Branch("y", &y, "y/D");
+  Ts->Branch("z", &z, "z/D");
+  Ts->Branch("Q2", &Q2, "Q2/D");
+  Ts->Branch("Pt", &Pt, "Pt/D");
+  Ts->Branch("dx", &dx, "dx/D");
+  Ts->Branch("dy", &dy, "dy/D");
+  Ts->Branch("dz", &dz, "dz/D");
+  Ts->Branch("dQ2", &dQ2, "dQ2/D");
+  Ts->Branch("dPt", &dPt, "dPt/D");
+  Ts->Branch("dphih", &dphih, "dphih/D");
+  Ts->Branch("dphiS", &dphiS, "dphiS/D");
+  Ts->Branch("dv", &dv, "dv/D");
+  Ts->Branch("Nacc", &Nacc, "Nacc/D");
+  Ts->Branch("fn", &fn, "fn/D");
+  Ts->Branch("E0statraw", &Estatraw[0], "E0statraw/D");
+  Ts->Branch("E1statraw", &Estatraw[1], "E1statraw/D");
+  Ts->Branch("E2statraw", &Estatraw[2], "E2statraw/D");
+  Ts->Branch("E0stat", &Estat[0], "E0stat/D");
+  Ts->Branch("E1stat", &Estat[1], "E1stat/D");
+  Ts->Branch("E2stat", &Estat[2], "E2stat/D");
+  Lsidis sidis;
+  TLorentzVector l(0, 0, Ebeam, Ebeam);
+  TLorentzVector P(0, 0, 0, 0.938272);
+  sidis.SetNucleus(2, 1);
+  sidis.SetHadron(had);
+  sidis.SetInitialState(l, P);
+  sidis.SetPDFset("CT14lo");
+  sidis.SetFFset("DSSFFlo");
+  double lumi = 1.0e+10 * pow(0.197327, 2);
+  double eff = 0.85;
+  double time = 48.0 * 24.0 * 3600.0;
+  if (Ebeam < 10.0) time = 21.0 * 24.0 * 3600.0;
+  double Nsim = 1.0e6;
+  double Xmin[6] = {0.0, 0.0, 0.0, 0.0, -M_PI, -M_PI}; 
+  double Xmax[6] = {0.7, 0.0, 0.0, 0.0, M_PI, M_PI};;//x, Q2, z, Pt, phih, phiS
+  double weight = 0;
+  double weight_n = 0;
+  double Rfactor = 0;
+  double acc = 0;
+  TLorentzVector lp(0, 0, 0, 0);
+  TLorentzVector Ph(0, 0, 0, 0);
+  Lsidis sidis_n;
+  sidis_n.SetNucleus(0, 1);
+  sidis_n.SetHadron(had);
+  sidis_n.SetInitialState(l, P);
+  sidis_n.SetPDFset("CT14lo");
+  sidis_n.SetFFset("DSSFFlo");
+  ifstream infile(readfile);
+  char tmp[300];
+  infile.getline(tmp, 256);
+  int Nt = 0;
+  while (infile >> Xmin[1] >> Xmax[1] >> Xmin[2] >> Xmax[2] >> Xmin[3] >> Xmax[3] >> Xmin[0] >> Xmax[0]){
+    printf("%.4d  Q2[%.1f,%.1f]  z[%.2f,%.2f]  Pt[%.1f,%.1f]  x[%.4f,%.4f]\n",
+	   Nt++, Xmin[1], Xmax[1], Xmin[2], Xmax[2], Xmin[3], Xmax[3], Xmin[0], Xmax[0]);
+    sidis.SetRange(Xmin, Xmax);
+    sidis_n.SetRange(Xmin, Xmax);
+    TH1D * hvar = new TH1D("hvar", "hvar", 7, -0.5, 6.5);
+    TH2D * hs = new TH2D("hs", "hs", 36, -M_PI, M_PI, 18, 0, M_PI);
+    for (Long64_t i = 0; i < Nsim; i++){
+      weight = sidis.GenerateEvent(0, 1);
+      if (weight > 0){
+	lp = sidis.GetLorentzVector("lp");
+	Ph = sidis.GetLorentzVector("Ph");
+	acc = GetAcceptance_e(lp) * GetAcceptance_pi(Ph);
+	if (acc > 0){
+	  sidis_n.SetFinalState(lp, Ph);
+	  sidis_n.CalculateVariables();
+	  weight_n = sidis_n.GetEventWeight(0, 1);
+	  sidis.CalculateRfactor();
+	  Rfactor = sidis.GetVariable("Rfactor");
+	  if (true){
+	    hvar->Fill(0., weight_n * acc);
+	    hvar->Fill(1., weight * acc);
+	    hvar->Fill(2., weight * acc * sidis.GetVariable("x"));
+	    hvar->Fill(3., weight * acc * sidis.GetVariable("y"));
+	    hvar->Fill(4., weight * acc * sidis.GetVariable("z"));
+	    hvar->Fill(5., weight * acc * sidis.GetVariable("Q2"));
+	    hvar->Fill(6., weight * acc * sidis.GetVariable("Pt"));
+	    hs->Fill(sidis.GetVariable("phih"), std::abs(sidis.GetVariable("phiS")), weight * acc);
+	  }
+	}
+      }
+    }
+    hvar->Scale(lumi * time * eff / Nsim);
+    hs->Scale(lumi * time * eff / Nsim);
+    Nacc = hvar->GetBinContent(2);
+    fn = hvar->GetBinContent(1) / Nacc;
+    x = hvar->GetBinContent(3) / Nacc;
+    y = hvar->GetBinContent(4) / Nacc;
+    z = hvar->GetBinContent(5) / Nacc;
+    Q2 = hvar->GetBinContent(6) / Nacc;
+    Pt = hvar->GetBinContent(7) / Nacc;
+    TMatrixD MUT3(3,3);
+    for (int i = 0; i < 3; i++)
+      for (int j = 0; j < 3; j++)
+	MUT3(i,j) = 0.0;
+    for (int i = 1; i <= 36; i++){
+      for (int j = 1; j <= 18; j++){
+	phih = hs->GetXaxis()->GetBinCenter(i);
+	phiS = hs->GetYaxis()->GetBinCenter(j);
+	MUT3(0,0) += sin(phih - phiS) * sin(phih - phiS) * hs->GetBinContent(i,j) / Nacc * 2.0 * M_PI * M_PI;
+	MUT3(0,1) += sin(phih - phiS) * sin(phih + phiS) * hs->GetBinContent(i,j) / Nacc * 2.0 * M_PI * M_PI;
+	MUT3(0,2) += sin(phih - phiS) * sin(3.0 * phih - phiS) * hs->GetBinContent(i,j) / Nacc * 2.0 * M_PI * M_PI;
+	MUT3(1,0) += sin(phih + phiS) * sin(phih - phiS) * hs->GetBinContent(i,j) / Nacc * 2.0 * M_PI * M_PI;
+	MUT3(1,1) += sin(phih + phiS) * sin(phih + phiS) * hs->GetBinContent(i,j) / Nacc * 2.0 * M_PI * M_PI;
+	MUT3(1,2) += sin(phih + phiS) * sin(3.0 * phih - phiS) * hs->GetBinContent(i,j) / Nacc * 2.0 * M_PI * M_PI;
+	MUT3(2,0) += sin(3.0 * phih - phiS) * sin(phih - phiS) * hs->GetBinContent(i,j) / Nacc * 2.0 * M_PI * M_PI;
+	MUT3(2,1) += sin(3.0 * phih - phiS) * sin(phih + phiS) * hs->GetBinContent(i,j) / Nacc * 2.0 * M_PI * M_PI;
+	MUT3(2,2) += sin(3.0 * phih - phiS) * sin(3.0 * phih - phiS) * hs->GetBinContent(i,j) / Nacc * 2.0 * M_PI * M_PI;
+      }
+    }
+    MUT3.Invert();
+    for (int i = 0; i < 3; i++){
+      Estatraw[i] = sqrt(2.0 * M_PI * M_PI / Nacc * (pow(MUT3(i,0),2) + pow(MUT3(i,1), 2) + pow(MUT3(i,2), 2)) * M_PI * M_PI);
+      Estat[i] = Estatraw[i] / fn / 0.6;
+      if (isnan(Estat[i]))
+	std::cout << "NaN warning in Estat!" << std::endl;
+    }
+    Ts->Fill();
+    hvar->Delete();
+    hs->Delete();
+  }
+  fs->Write();
+  infile.close();
+  return 0;
+}
+  
+  
+  

@@ -7,20 +7,27 @@ int main(int argc, char * argv[]){
   if (argc < 2){
     cout << "./analysis_neutron <opt>" << endl;
     cout << "opt = 0: binning data and create bin info file" << endl;
+    cout << "opt = 1: bin analysis including Estat" << endl;   
     return 0;
   }
 
   int opt = atoi(argv[1]);
+  
+  gRandom->SetSeed(2);
 
   if (opt == 0){
-    gRandom->SetSeed(2);
     GenerateBinInfoFile("NeutronResults/bin_info_N11p.dat", 11.0, "pi+");
     GenerateBinInfoFile("NeutronResults/bin_info_N8p.dat", 8.8, "pi+");
     GenerateBinInfoFile("NeutronResults/bin_info_N11m.dat", 11.0, "pi-");
     GenerateBinInfoFile("NeutronResults/bin_info_N8m.dat", 8.8, "pi-");
   }
 
-
+  if (opt == 1){
+    AnalyzeEstatUT3("NeutronResults/bin_info_N11p.dat", "binsN11p.root", 11.0, "pi+");
+    AnalyzeEstatUT3("NeutronResults/bin_info_N8p.dat", "binsN8p.root", 8.8, "pi+");
+    AnalyzeEstatUT3("NeutronResults/bin_info_N11m.dat", "binsN11m.root", 11.0, "pi-");
+    AnalyzeEstatUT3("NeutronResults/bin_info_N8m.dat", "binsN8m.root", 8.8, "pi-");
+  }
 
   return 0;
 }
