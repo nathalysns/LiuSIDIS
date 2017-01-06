@@ -2,7 +2,7 @@
 # R. Michaels, rom@jlab.org, Aug 2001  See also README !!
 # Version of this release
 # 
-ROOTLIBS      = $(shell root-config --libs) -MathMore
+ROOTLIBS      = $(shell root-config --libs) -MathMore -lHistPainter
 ROOTGLIBS     = $(shell root-config --glibs)
 LHAPDFLIBS    = $(shell lhapdf-config --cflags --ldflags)
 CXX           = g++
