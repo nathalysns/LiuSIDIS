@@ -36,6 +36,39 @@ double GetAcceptance_pi(const TLorentzVector p){//Get pion acceptance
   return acc;
 }
 
+int GetTotalRate(const double Ebeam, const char * hadron){//Estimate the total rate
+  Lsidis sidis;
+  TLorentzVector l(0, 0, Ebeam, Ebeam);
+  TLorentzVector P(0, 0, 0, 0.938272);
+  sidis.SetNucleus(2, 1);
+  sidis.SetHadron(hadron);
+  sidis.SetInitialState(l, P);
+  sidis.SetPDFset("CT14lo");
+  sidis.SetFFset("DSSFFlo");
+  double lumi = 1.0e+10 * pow(0.197327, 2);
+  double Xmin[6] = {0.0, 1.0, 0.3, 0.0, -M_PI, -M_PI};
+  double Xmax[6] = {0.7, 8.0, 0.7, 1.6, M_PI, M_PI};
+  sidis.SetRange(Xmin, Xmax);
+  double sum = 0.0;
+  double Nsim = 1.0e7;
+  double weight = 0.0;
+  double acc = 0.0;
+  TLorentzVector lp(0, 0, 0, 0);
+  TLorentzVector Ph(0, 0, 0, 0);
+  for (Long64_t i = 0; i < Nsim; i++){
+    weight = sidis.GenerateEvent(0, 1);
+    if (weight > 0){
+      if (sidis.GetVariable("W") < 2.3) continue;
+      if (sidis.GetVariable("Wp") < 1.6) continue;
+      lp = sidis.GetLorentzVector("lp");
+      Ph = sidis.GetLorentzVector("Ph");
+      sum += weight * GetAcceptance_e(lp) * GetAcceptance_pi(Ph);
+    }
+  }
+  std::cout << "Total rate: " << sum * lumi / Nsim << std::endl;
+  return 0;
+}
+
 int GenerateBinInfoFile(const char * filename, const double Ebeam, const char * hadron){//Bin the data and create the bin info file
   FILE * fp = fopen(filename, "w");
   fprintf(fp, "Q2l\t Q2u\t zl\t zu\t Ptl\t Ptu\t xl\t xu\n");
@@ -61,7 +94,7 @@ int GenerateBinInfoFile(const char * filename, const double Ebeam, const char * 
   TLorentzVector lp(0, 0, 0, 0);
   TLorentzVector Ph(0, 0, 0, 0);
   double Q2list[7] = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 8.0};
-  double statlist[6] = {2.0e7, 1.2e7, 6.0e6, 3.0e6, 2.0e6, 2.0e6};
+  double statlist[6] = {1.9e7, 1.1e7, 5.0e6, 3.0e6, 2.0e6, 2.0e6};
   double zlist[9] = {0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7};
   double Ptlist[7] = {0.0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.6};
   int xi = 1;
@@ -81,6 +114,8 @@ int GenerateBinInfoFile(const char * filename, const double Ebeam, const char * 
 	for (Long64_t i = 0; i < Nsim; i++){//generate events
 	  weight = sidis.GenerateEvent(0, 1);
 	  if (weight > 0){
+            if (sidis.GetVariable("W") < 2.3) continue;
+            if (sidis.GetVariable("Wp") < 1.6) continue;
 	    lp = sidis.GetLorentzVector("lp");
 	    Ph = sidis.GetLorentzVector("Ph");
 	    acc = GetAcceptance_e(lp) * GetAcceptance_pi(Ph);
@@ -169,7 +204,8 @@ int AnalyzeEstatUT3(const char * readfile, const char * savefile, const double E
   double eff = 0.85;
   double time = 48.0 * 24.0 * 3600.0;
   if (Ebeam < 10.0) time = 21.0 * 24.0 * 3600.0;
-  double Nsim = 1.0e6;
+  Long64_t Nsim = 0;
+  Long64_t Nrec = 0;
   double Xmin[6] = {0.0, 0.0, 0.0, 0.0, -M_PI, -M_PI}; 
   double Xmax[6] = {0.7, 0.0, 0.0, 0.0, M_PI, M_PI};;//x, Q2, z, Pt, phih, phiS
   double weight = 0;
@@ -195,9 +231,14 @@ int AnalyzeEstatUT3(const char * readfile, const char * savefile, const double E
     sidis_n.SetRange(Xmin, Xmax);
     TH1D * hvar = new TH1D("hvar", "hvar", 7, -0.5, 6.5);
     TH2D * hs = new TH2D("hs", "hs", 36, -M_PI, M_PI, 18, 0, M_PI);
-    for (Long64_t i = 0; i < Nsim; i++){
+    Nsim = 0;
+    Nrec = 0;
+    for (Long64_t i = 0; i < 1.0e7; i++){
+      Nsim++;
       weight = sidis.GenerateEvent(0, 1);
       if (weight > 0){
+        if (sidis.GetVariable("W") < 2.3) continue;
+        if (sidis.GetVariable("Wp") < 1.6) continue;
 	lp = sidis.GetLorentzVector("lp");
 	Ph = sidis.GetLorentzVector("Ph");
 	acc = GetAcceptance_e(lp) * GetAcceptance_pi(Ph);
@@ -208,6 +249,7 @@ int AnalyzeEstatUT3(const char * readfile, const char * savefile, const double E
 	  sidis.CalculateRfactor();
 	  Rfactor = sidis.GetVariable("Rfactor");
 	  if (true){
+            Nrec++;
 	    hvar->Fill(0., weight_n * acc);
 	    hvar->Fill(1., weight * acc);
 	    hvar->Fill(2., weight * acc * sidis.GetVariable("x"));
@@ -219,6 +261,7 @@ int AnalyzeEstatUT3(const char * readfile, const char * savefile, const double E
 	  }
 	}
       }
+      if (Nrec > 500000) break;
     }
     hvar->Scale(lumi * time * eff / Nsim);
     hs->Scale(lumi * time * eff / Nsim);
