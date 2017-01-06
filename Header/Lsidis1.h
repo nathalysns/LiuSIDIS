@@ -3,7 +3,7 @@
 //LHAPDF is required. Developed with v6.1
 //ROOT is required. Developed with v5.34.21
 //Potential error with other versions not tested
-//Last update date 4 Jan. 2017 version 1.1
+//Last update date 6 Jan. 2017 version 1.1
 
 #ifndef _LSIDIS_H_
 #define _LSIDIS_H_
@@ -11,6 +11,7 @@
 #include <iostream>
 #include <fstream>
 #include <cstring>
+#include <cmath>
 
 #include "LHAPDF/LHAPDF.h"
 
@@ -131,6 +132,7 @@ class Lsidis{
   double dsigma(const int mode);//Differential cross section in dsigma/dx dy dz dPt2 dphih dphiS
   int SetRange(const double * mins, const double * maxs);//Uniform sampling range
   double GenerateEvent(const int mode, const int method);//Generate a sidis event
+  double GetEventWeight(const int mode, const int method);//Get event weight
   int Test();
 };
 
@@ -144,8 +146,8 @@ Lsidis::Lsidis(){//constructor
   st_lp = false;
   st_Ph = false;
   physics_control = false;
-  TMDpars[0] = 0.25;//kt2
-  TMDpars[1] = 0.20;//pt2
+  TMDpars[0] = 0.54;//kt2
+  TMDpars[1] = 0.13;//pt2
   Slepton = 0;
   SNL = 0;
   SNT = 0;
@@ -396,6 +398,7 @@ int Lsidis::CalculateVariables(){//calculate lorentz scalar variables
     epsilon = (1.0 - y - 0.25 * gamma * gamma * y * y) / (1.0 - y + 0.5 * y * y + 0.25 * gamma * gamma * y * y);
     xn = 2.0 * x / (1.0 + sqrt(1.0 + gamma * gamma));
     double Pt2 = - (PPh * PPh) + 2.0 * (PP * PPh) * (Pq * PPh) / (PP * Pq) / (1.0 + gamma * gamma) - gamma * gamma / (1.0 + gamma * gamma) * (pow(Pq * PPh, 2) / Q2 - pow(PP * PPh, 2) / (Mp * Mp));
+    if (Pt2 < 0) Pt2 = 0.0;
     Pt = sqrt(Pt2);
     double lt2 = - (Pl * Pl) + 2.0 * (PP * Pl) * (Pq * Pl) / (PP * Pq) / (1.0 + gamma * gamma) - gamma * gamma / (1.0 + gamma * gamma) * (pow(Pq * Pl, 2) / Q2 - pow(PP * Pl, 2) / (Mp * Mp));
     double ch = - 1.0 / sqrt(lt2 * Pt * Pt) * ( (Pl * PPh) - ((Pq * Pl) * (PP * PPh) + (PP * Pl) * (Pq * PPh)) / (1.0 + gamma * gamma) / (PP * Pq) + gamma * gamma / (1.0 + gamma * gamma) * ( (Pq * Pl) * (Pq * PPh) / Q2 - (PP * Pl) * (PP * PPh) / (Mp * Mp)));
@@ -508,14 +511,14 @@ int Lsidis::CalculateFinalState(){//Calculate scattered electron and detected ha
   }
 }
 
-int Lsidis::CalculateRfactor(const double kT2 = 0.16, const double MiT2 = 0.4, const double MfT2 = 0.4){
+int Lsidis::CalculateRfactor(const double kT2 = 0.5, const double MiT2 = 0.5, const double MfT2 = 0.5){
   if (physics_control){
     double yi = 0.5 * log(Q2 / MiT2);
     double yf = -0.5 * log(Q2 / MfT2);
     double yh = log( (sqrt(Q2) * z * (Q2 - xn * xn * Mp * Mp)) / ( 2.0 * xn * xn * Mp * Mp * sqrt(Mh * Mh + Pt * Pt)) - sqrt(Q2) / (xn * Mp) * sqrt(pow(z * (Q2 - xn * xn * Mp * Mp), 2) / (4.0 * xn * xn  * Mp * Mp * (Mh * Mh + Pt * Pt)) - 1.0));
     double Rf = 0.5 * sqrt(Pt * Pt + Mh * Mh) * sqrt(MfT2) * (exp(yf - yh) + exp(yh - yf)) - sqrt(kT2) * Pt;
     double Ri = 0.5 * sqrt(Pt * Pt + Mh * Mh) * sqrt(MiT2) * (exp(yi - yh) - exp(yh - yi)) - sqrt(kT2) * Pt;
-    Rfactor = Rf / Ri;
+    Rfactor = std::abs(Rf / Ri);
     return 0;
   }
   else {
@@ -676,6 +679,24 @@ double Lsidis::GenerateEvent(const int mode = 0, const int method = 0){//Generat
     jacobian = 2.0 * var[3] * y0 / var[1];
     SetVariables(var[0], y0, var[2], var[3], var[4], var[5]);
     CalculateFinalState();
+    weight = dsigma(mode);
+  }
+  else {
+    perror("No such method choice!");
+    return -1;
+  }
+  return weight * volume * jacobian;
+}
+
+double Lsidis::GetEventWeight(const int mode = 0, const int method = 0){//Generate an event and return the cross section weight
+  double weight = 0;
+  if (method == 0){//generate in x, y, z, Pt, phih, phiS
+    jacobian = 2.0 * Pt;
+    weight = dsigma(mode);
+  }
+  else if (method == 1){//generate in x, Q2, z, Pt, phih, phiS
+    double y0 = Q2 / (2.0 * x * (PP * Pl));
+    jacobian = 2.0 * Pt * y0 / Q2;
     weight = dsigma(mode);
   }
   else {
