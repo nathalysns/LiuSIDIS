@@ -16,6 +16,8 @@ TH2F * acc_LA_e = (TH2F *) file_e->Get("acceptance_ThetaP_largeangle");
 TH2F * acc_FA_pi = (TH2F *) file_pi->Get("acceptance_ThetaP_forwardangle");
 TH2F * acc_LA_pi = (TH2F *) file_pi->Get("acceptance_ThetaP_largeangle");
 
+double Rfactor0 = 1.0e5;
+
 double GetAcceptance_e(const TLorentzVector p){//Get electron acceptance
   double theta = p.Theta() / M_PI * 180.0;
   if (theta < 8.0 || theta > 30.0) return 0;
@@ -52,7 +54,6 @@ int GetTotalRate(const double Ebeam, const char * hadron){//Estimate the total r
   double sum = 0.0;
   double Nsim = 1.0e7;
   double weight = 0.0;
-  double acc = 0.0;
   TLorentzVector lp(0, 0, 0, 0);
   TLorentzVector Ph(0, 0, 0, 0);
   for (Long64_t i = 0; i < Nsim; i++){
@@ -122,7 +123,7 @@ int GenerateBinInfoFile(const char * filename, const double Ebeam, const char * 
 	    if (acc > 0){
 	      sidis.CalculateRfactor();
 	      Rfactor = sidis.GetVariable("Rfactor");
-	      if (true)
+	      if (Rfactor < Rfactor0)
 		hx->Fill(sidis.GetVariable("x"), weight * acc);
 	    }
 	  }
@@ -248,7 +249,7 @@ int AnalyzeEstatUT3(const char * readfile, const char * savefile, const double E
 	  weight_n = sidis_n.GetEventWeight(0, 1);
 	  sidis.CalculateRfactor();
 	  Rfactor = sidis.GetVariable("Rfactor");
-	  if (true){
+	  if (Rfactor < Rfactor0){
             Nrec++;
 	    hvar->Fill(0., weight_n * acc);
 	    hvar->Fill(1., weight * acc);
@@ -307,5 +308,81 @@ int AnalyzeEstatUT3(const char * readfile, const char * savefile, const double E
   return 0;
 }
   
-  
-  
+double CheckCurrentCut(const double Ebeam, const char * hadron, const double kT2 = 0.16, const double MiT2 = 0.4, const double MfT2 = 0.4, const char * plotname = 0){
+  Lsidis sidis;
+  TLorentzVector l(0, 0, Ebeam, Ebeam);
+  TLorentzVector P(0, 0, 0, 0.938272);
+  sidis.SetNucleus(2, 1);
+  sidis.SetHadron(hadron);
+  sidis.SetInitialState(l, P);
+  sidis.SetPDFset("CT14lo");
+  sidis.SetFFset("DSSFFlo");
+  double lumi = 1.0e+10 * pow(0.197327, 2);
+  double Nsim = 1.0e7;
+  TH2D * h0 = new TH2D("h0", "", 1, 0.2, 0.8, 1, 0.0, 1.6);
+  h0->GetXaxis()->SetTitle("z");
+  h0->GetXaxis()->CenterTitle(true);
+  h0->GetXaxis()->SetTitleSize(0.05);
+  h0->GetXaxis()->SetTitleOffset(1.15);
+  h0->GetXaxis()->SetLabelSize(0.055);
+  h0->GetYaxis()->SetTitle("P_{hT} / GeV");
+  h0->GetYaxis()->CenterTitle(true);
+  h0->GetYaxis()->SetTitleSize(0.05);
+  h0->GetYaxis()->SetTitleOffset(1.15);
+  h0->GetYaxis()->SetLabelSize(0.055);
+  TH2D * hall = new TH2D("hall", "Before cut", 60, 0.2, 0.8, 160, 0.0, 1.6);
+  TH2D * hcut = new TH2D("hcut", "After cut", 60, 0.2, 0.8, 160, 0.0, 1.6);
+  double Xmin[6] = {0.0, 1.0, 0.3, 0.0, -M_PI, -M_PI};
+  double Xmax[6] = {0.7, 8.0, 0.7, 1.6, M_PI, M_PI};
+  sidis.SetRange(Xmin, Xmax);
+  double weight = 0;
+  double acc = 0;
+  TLorentzVector lp, Ph;
+  for (Long64_t i = 0; i < Nsim; i++){
+    weight = sidis.GenerateEvent(0, 1);
+    if (weight > 0){
+      if (sidis.GetVariable("W") < 2.3) continue;
+      if (sidis.GetVariable("Wp") < 1.6) continue;
+      lp = sidis.GetLorentzVector("lp");
+      Ph = sidis.GetLorentzVector("Ph");
+      acc = GetAcceptance_e(lp) * GetAcceptance_pi(Ph);
+      if (acc > 0){
+	hall->Fill(sidis.GetVariable("z"), sidis.GetVariable("Pt"), weight * acc);
+	sidis.CalculateRfactor(kT2, MiT2, MfT2);
+	if (sidis.GetVariable("Rfactor") < 0.4){
+	  hcut->Fill(sidis.GetVariable("z"), sidis.GetVariable("Pt"), weight * acc);
+	}
+      }
+    }
+  }
+  hall->Scale(lumi/Nsim);
+  hcut->Scale(lumi/Nsim);
+  double rate = hcut->Integral(1, -1);
+  std::cout << "All: " << hall->Integral(1, -1) << "   Cut: " << hcut->Integral(1, -1) << std::endl;
+  if (plotname != 0){
+    gStyle->SetOptStat(0);
+    //hall->GetZaxis()->SetRangeUser(0.01, hall->GetMaximum()/0.95);
+    hcut->GetZaxis()->SetRangeUser(0.01, hall->GetMaximum());
+    TCanvas * c0 = new TCanvas("c0", "", 1600, 600);
+    c0->SetBorderMode(0);
+    c0->SetBorderSize(2);
+    c0->SetFrameBorderMode(0);
+    c0->Divide(2, 1);
+    c0->cd(1);
+    c0->cd(1)->SetLeftMargin(0.15);
+    c0->cd(1)->SetBottomMargin(0.15);
+    h0->Draw();
+    hall->Draw("samecolz");
+    c0->cd(2);
+    c0->cd(2)->SetLeftMargin(0.15);
+    c0->cd(2)->SetBottomMargin(0.15);
+    h0->Draw();
+    hcut->Draw("samecolz");
+    c0->Print(plotname);
+    c0->Close();
+  }
+  h0->Delete();
+  hall->Delete();
+  hcut->Delete();
+  return rate;
+}

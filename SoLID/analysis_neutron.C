@@ -14,7 +14,7 @@ int main(int argc, char * argv[]){
 
   int opt = atoi(argv[1]);
   
-  gRandom->SetSeed(2);
+  gRandom->SetSeed(23);
 
   if (opt == 0){
     GetTotalRate(11.0, "pi+");
@@ -36,6 +36,21 @@ int main(int argc, char * argv[]){
     AnalyzeEstatUT3("NeutronResults/bin_info_N11m.dat", "NeutronResults/binsN11m.root", 11.0, "pi-");
     AnalyzeEstatUT3("NeutronResults/bin_info_N8m.dat", "NeutronResults/binsN8m.root", 8.8, "pi-");
   }
+
+  if (opt == 3){
+    CheckCurrentCut(11.0, "pi+", 0.5, 0.5, 0.5, "NeutronResults/cutN11p.pdf");
+    CheckCurrentCut(8.8, "pi+", 0.5, 0.5, 0.5, "NeutronResults/cutN8p.pdf");
+    CheckCurrentCut(11.0, "pi-", 0.5, 0.5, 0.5, "NeutronResults/cutN11m.pdf");
+    CheckCurrentCut(8.8, "pi-", 0.5, 0.5, 0.5, "NeutronResults/cutN8m.pdf");
+  }
+
+  if (opt == 4){
+    double kT2 = atof(argv[2]);
+    double MiT2 = atof(argv[3]);
+    double MfT2 = atof(argv[4]);
+    CheckCurrentCut(11.0, "pi+", kT2, MiT2, MfT2);
+  }
+
 
   return 0;
 }
