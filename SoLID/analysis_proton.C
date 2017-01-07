@@ -79,7 +79,6 @@ int main(int argc, char * argv[]){
     double MfT2 = atof(argv[4]);
     CheckCurrentCut(11.0, "pi+", kT2, MiT2, MfT2);
   }
-*/
 
   return 0;
 }
