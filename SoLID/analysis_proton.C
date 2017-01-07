@@ -34,24 +34,23 @@ int main(int argc, char * argv[]){
     GetTotalRate(8.8, "pi-");
   }
 
-	/*
   if (opt == 1){
     if (argc == 2){
-      GenerateBinInfoFile("ProtonResults/bin_info_N11p.dat", 11.0, "pi+");
-      GenerateBinInfoFile("ProtonResults/bin_info_N8p.dat", 8.8, "pi+");
-      GenerateBinInfoFile("NeutronResults/bin_info_N11m.dat", 11.0, "pi-");
-      GenerateBinInfoFile("NeutronResults/bin_info_N8m.dat", 8.8, "pi-");
+      GenerateBinInfoFile("ProtonResults/bin_info_P11p.dat", 11.0, "pi+");
+      GenerateBinInfoFile("ProtonResults/bin_info_P8p.dat", 8.8, "pi+");
+      GenerateBinInfoFile("ProtonResults/bin_info_P11m.dat", 11.0, "pi-");
+      GenerateBinInfoFile("ProtonResults/bin_info_P8m.dat", 8.8, "pi-");
     }
     else if (argc == 3){
       Rfactor0 = atof(argv[2]);
-      GenerateBinInfoFile("NeutronResults/bin_info_N11p_cut.dat", 11.0, "pi+");
-      GenerateBinInfoFile("NeutronResults/bin_info_N8p_cut.dat", 8.8, "pi+");
-      GenerateBinInfoFile("NeutronResults/bin_info_N11m_cut.dat", 11.0, "pi-");
-      GenerateBinInfoFile("NeutronResults/bin_info_N8m_cut.dat", 8.8, "pi-");
+      GenerateBinInfoFile("ProtonResults/bin_info_P11p_cut.dat", 11.0, "pi+");
+      GenerateBinInfoFile("ProtonResults/bin_info_P8p_cut.dat", 8.8, "pi+");
+      GenerateBinInfoFile("ProtonResults/bin_info_P11m_cut.dat", 11.0, "pi-");
+      GenerateBinInfoFile("ProtonResults/bin_info_P8m_cut.dat", 8.8, "pi-");
     }
   }
 
-
+  /*
   if (opt == 2){
     if (argc == 2){
       AnalyzeEstatUT3("NeutronResults/bin_info_N11p.dat", "NeutronResults/binsN11p.root", 11.0, "pi+");
