@@ -2,6 +2,7 @@
 #include "TH1D.h"
 #include "TH2D.h"
 #include "TH2F.h"
+#include "TH3F.h"
 #include "TCanvas.h"
 #include "TStyle.h"
 #include "TTree.h"
@@ -9,32 +10,41 @@
 #include "Lsidis.h"
 
 // Acceptance 
-TFile * file_e = new TFile("Acceptance/acceptance_solid_SIDIS_He3_electron_201701_1e7_output.root", "r");
-TFile * file_pi = new TFile("Acceptance/acceptance_solid_SIDIS_He3_pim_201701_1e7_output.root", "r");
-TH2F * acc_FA_e = (TH2F *) file_e->Get("acceptance_ThetaP_forwardangle");
-TH2F * acc_LA_e = (TH2F *) file_e->Get("acceptance_ThetaP_largeangle");
-TH2F * acc_FA_pi = (TH2F *) file_pi->Get("acceptance_ThetaP_forwardangle");
-TH2F * acc_LA_pi = (TH2F *) file_pi->Get("acceptance_ThetaP_largeangle");
+TFile * file_e = new TFile("Acceptance/acceptance_solid_SIDIS_NH3_electron_output.root", "r");
+TFile * file_pip = new TFile("Acceptance/acceptance_solid_SIDIS_NH3_pionp_output.root", "r");
+TFile * file_pim = new TFile("Acceptance/acceptance_solid_SIDIS_NH3_pionm_output.root", "r");
+TH3F * acc_FA_e = (TH3F *) file_e->Get("acceptance_ThetaPhiP_forwardangle");
+TH3F * acc_LA_e = (TH3F *) file_e->Get("acceptance_ThetaPhiP_largeangle");
+TH3F * acc_FA_pip = (TH3F *) file_pip->Get("acceptance_ThetaPhiP_forwardangle");
+TH3F * acc_LA_pip = (TH3F *) file_pip->Get("acceptance_ThetaPhiP_largeangle");
+TH3F * acc_FA_pim = (TH3F *) file_pim->Get("acceptance_ThetaPhiP_forwardangle");
+TH3F * acc_LA_pim = (TH3F *) file_pim->Get("acceptance_ThetaPhiP_largeangle");
 
 double Rfactor0 = 1.0e5;
 
 double GetAcceptance_e(const TLorentzVector p){//Get electron acceptance
   double theta = p.Theta() / M_PI * 180.0;
-  if (theta < 8.0 || theta > 30.0) return 0;
+  double phi = p.Phi() / M_PI * 180.0;
+  if (theta > 50.0) return 0;
   double mom = p.P();
   double acc = 0;
-  acc += acc_FA_e->GetBinContent(acc_FA_e->GetXaxis()->FindBin(theta), acc_FA_e->GetYaxis()->FindBin(mom));
+  acc += acc_FA_e->GetBinContent(acc_FA_e->GetXaxis()->FindBin(theta), acc_FA_e->GetYaxis()->FindBin(phi), acc_FA_e->GetZaxis()->FindBin(mon));
   if (mom > 3.5)
-    acc += acc_LA_e->GetBinContent(acc_LA_e->GetXaxis()->FindBin(theta), acc_LA_e->GetYaxis()->FindBin(mom));
+    acc += acc_LA_e->GetBinContent(acc_LA_e->GetXaxis()->FindBin(theta), acc_LA_e->GetYaxis()->FindBin(phi), acc_LA_e->GetZaxis()->FindBin(mom));
   return acc;
 }
 
-double GetAcceptance_pi(const TLorentzVector p){//Get pion acceptance
+double GetAcceptance_pi(const TLorentzVector p, const char * hadron){//Get pion acceptance
   double theta = p.Theta() / M_PI * 180.0;
-  if (theta < 8.0 || theta > 18.0) return 0;
+  double phi = p.Phi() / M_PI * 180.0;
+  if (theta > 45.0) return 0;
   double mom = p.P();
   double acc = 0;
-  acc += acc_FA_pi->GetBinContent(acc_FA_pi->GetXaxis()->FindBin(theta), acc_FA_pi->GetYaxis()->FindBin(mom));
+  if (strcmp(hadron, "pi+") == 0)
+    acc += acc_FA_pip->GetBinContent(acc_FA_pip->GetXaxis()->FindBin(theta), acc_FA_pip->GetYaxis()->FindBin(phi), acc_FA_pip->GetZaxis()->FindBin(mom));
+  else if (strcmp(hadron, "pi-") == 0)
+    acc += acc_FA_pim->GetBinContent(acc_FA_pim->GetXaxis()->FindBin(theta), acc_FA_pim->GetYaxis()->FindBin(phi), acc_FA_pim->GetZaxis()->FindBin(mom));
+  else return 0;
   return acc;
 }
 
