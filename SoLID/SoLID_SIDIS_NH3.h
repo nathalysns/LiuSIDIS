@@ -169,14 +169,14 @@ int AnalyzeEstatUT3(const char * readfile, const char * savefile, const double E
   double Hadron = 0;
   if (strcmp(had, "pi+") == 0) Hadron = 0;
   else if (strcmp(had, "pi-") == 0) Hadron = 1;
-  double Nucleon = 0;
+  double Nucleon = 1;
   TFile * fs = new TFile(savefile, "RECREATE");
   TTree * Ts = new TTree("data", "data");
   Ts->SetDirectory(fs);
   double Eb = Ebeam;
   double x, y, z, Q2, Pt, phih, phiS;
   double dx, dy, dz, dQ2, dPt, dphih, dphiS, dv;
-  double Nacc, fn;
+  double Nacc, fp;
   double Estatraw[3], Estat[3];
   Ts->Branch("Nucleon", &Nucleon, "Nucleon/D");
   Ts->Branch("Hadron", &Hadron, "Hadron/D");
@@ -195,7 +195,7 @@ int AnalyzeEstatUT3(const char * readfile, const char * savefile, const double E
   Ts->Branch("dphiS", &dphiS, "dphiS/D");
   Ts->Branch("dv", &dv, "dv/D");
   Ts->Branch("Nacc", &Nacc, "Nacc/D");
-  Ts->Branch("fn", &fn, "fn/D");
+  Ts->Branch("fp", &fp, "fp/D");
   Ts->Branch("E0statraw", &Estatraw[0], "E0statraw/D");
   Ts->Branch("E1statraw", &Estatraw[1], "E1statraw/D");
   Ts->Branch("E2statraw", &Estatraw[2], "E2statraw/D");
@@ -205,30 +205,30 @@ int AnalyzeEstatUT3(const char * readfile, const char * savefile, const double E
   Lsidis sidis;
   TLorentzVector l(0, 0, Ebeam, Ebeam);
   TLorentzVector P(0, 0, 0, 0.938272);
-  sidis.SetNucleus(2, 1);
+  sidis.SetNucleus(0.334*10.0+0.593*2.0, 0.334*7.0+0.593*2.0);
   sidis.SetHadron(had);
   sidis.SetInitialState(l, P);
   sidis.SetPDFset("CT14lo");
   sidis.SetFFset("DSSFFlo");
-  double lumi = 1.0e+10 * pow(0.197327, 2);
+  double lumi = 1.0e+9 * pow(0.197327, 2);
   double eff = 0.85;
-  double time = 48.0 * 24.0 * 3600.0;
-  if (Ebeam < 10.0) time = 21.0 * 24.0 * 3600.0;
+  double time = 55.0 * 24.0 * 3600.0;
+  if (Ebeam < 10.0) time = 27.5 * 24.0 * 3600.0;
   Long64_t Nsim = 0;
   Long64_t Nrec = 0;
   double Xmin[6] = {0.0, 0.0, 0.0, 0.0, -M_PI, -M_PI}; 
   double Xmax[6] = {0.7, 0.0, 0.0, 0.0, M_PI, M_PI};;//x, Q2, z, Pt, phih, phiS
   double weight = 0;
-  double weight_n = 0;
+  double weight_p = 0;
   double acc = 0;
   TLorentzVector lp(0, 0, 0, 0);
   TLorentzVector Ph(0, 0, 0, 0);
-  Lsidis sidis_n;
-  sidis_n.SetNucleus(0, 1);
-  sidis_n.SetHadron(had);
-  sidis_n.SetInitialState(l, P);
-  sidis_n.SetPDFset("CT14lo");
-  sidis_n.SetFFset("DSSFFlo");
+  Lsidis sidis_p;
+  sidis_p.SetNucleus(1, 0);
+  sidis_p.SetHadron(had);
+  sidis_p.SetInitialState(l, P);
+  sidis_p.SetPDFset("CT14lo");
+  sidis_p.SetFFset("DSSFFlo");
   ifstream infile(readfile);
   char tmp[300];
   infile.getline(tmp, 256);
@@ -237,7 +237,7 @@ int AnalyzeEstatUT3(const char * readfile, const char * savefile, const double E
     printf("%.4d  Q2[%.1f,%.1f]  z[%.2f,%.2f]  Pt[%.1f,%.1f]  x[%.4f,%.4f]\n",
 	   Nt++, Xmin[1], Xmax[1], Xmin[2], Xmax[2], Xmin[3], Xmax[3], Xmin[0], Xmax[0]);
     sidis.SetRange(Xmin, Xmax);
-    sidis_n.SetRange(Xmin, Xmax);
+    sidis_p.SetRange(Xmin, Xmax);
     TH1D * hvar = new TH1D("hvar", "hvar", 7, -0.5, 6.5);
     TH2D * hs = new TH2D("hs", "hs", 36, -M_PI, M_PI, 18, 0, M_PI);
     Nsim = 0;
@@ -254,11 +254,11 @@ int AnalyzeEstatUT3(const char * readfile, const char * savefile, const double E
 	Ph = sidis.GetLorentzVector("Ph");
 	acc = GetAcceptance_e(lp) * GetAcceptance_pi(Ph, had);
 	if (acc > 0){
-	  sidis_n.SetFinalState(lp, Ph);
-	  sidis_n.CalculateVariables();
-	  weight_n = sidis_n.GetEventWeight(0, 1);
+	  sidis_p.SetFinalState(lp, Ph);
+	  sidis_p.CalculateVariables();
+	  weight_p = sidis_n.GetEventWeight(0, 1);
 	  Nrec++;
-	  hvar->Fill(0., weight_n * acc);
+	  hvar->Fill(0., weight_p * acc);
 	  hvar->Fill(1., weight * acc);
 	  hvar->Fill(2., weight * acc * sidis.GetVariable("x"));
 	  hvar->Fill(3., weight * acc * sidis.GetVariable("y"));
@@ -273,7 +273,7 @@ int AnalyzeEstatUT3(const char * readfile, const char * savefile, const double E
     hvar->Scale(lumi * time * eff / Nsim);
     hs->Scale(lumi * time * eff / Nsim);
     Nacc = hvar->GetBinContent(2);
-    fn = hvar->GetBinContent(1) / Nacc;
+    fp = hvar->GetBinContent(1) / Nacc;
     x = hvar->GetBinContent(3) / Nacc;
     y = hvar->GetBinContent(4) / Nacc;
     z = hvar->GetBinContent(5) / Nacc;
@@ -301,7 +301,7 @@ int AnalyzeEstatUT3(const char * readfile, const char * savefile, const double E
     MUT3.Invert();
     for (int i = 0; i < 3; i++){
       Estatraw[i] = sqrt(2.0 * M_PI * M_PI / Nacc * (pow(MUT3(i,0),2) + pow(MUT3(i,1), 2) + pow(MUT3(i,2), 2)) * M_PI * M_PI);
-      Estat[i] = Estatraw[i] / fn / 0.6;
+      Estat[i] = Estatraw[i] / fp / 0.7;
       if (isnan(Estat[i]))
 	std::cout << "NaN warning in Estat!" << std::endl;
     }
@@ -314,16 +314,16 @@ int AnalyzeEstatUT3(const char * readfile, const char * savefile, const double E
   return 0;
 }
   
-double CheckCurrentCut(const double Ebeam, const char * hadron, const double kT2 = 0.16, const double MiT2 = 0.4, const double MfT2 = 0.4, const char * plotname = 0){
+double CheckCurrentCut(const double Ebeam, const char * hadron, const double kT2 = 0.5, const double MiT2 = 0.5, const double MfT2 = 0.5, const char * plotname = 0){
   Lsidis sidis;
   TLorentzVector l(0, 0, Ebeam, Ebeam);
   TLorentzVector P(0, 0, 0, 0.938272);
-  sidis.SetNucleus(2, 1);
+  sidis.SetNucleus(0.334*10.0+0.593*2.0, 0.334*7.0+0.593*2.0);
   sidis.SetHadron(hadron);
   sidis.SetInitialState(l, P);
   sidis.SetPDFset("CT14lo");
   sidis.SetFFset("DSSFFlo");
-  double lumi = 1.0e+10 * pow(0.197327, 2);
+  double lumi = 1.0e+9 * pow(0.197327, 2);
   double Nsim = 1.0e7;
   TH2D * h0 = new TH2D("h0", "", 1, 0.2, 0.8, 1, 0.0, 1.6);
   h0->GetXaxis()->SetTitle("z");
