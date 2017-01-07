@@ -256,7 +256,7 @@ int AnalyzeEstatUT3(const char * readfile, const char * savefile, const double E
 	if (acc > 0){
 	  sidis_p.SetFinalState(lp, Ph);
 	  sidis_p.CalculateVariables();
-	  weight_p = sidis_n.GetEventWeight(0, 1);
+	  weight_p = sidis_p.GetEventWeight(0, 1);
 	  Nrec++;
 	  hvar->Fill(0., weight_p * acc);
 	  hvar->Fill(1., weight * acc);
