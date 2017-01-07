@@ -52,12 +52,12 @@ int GetTotalRate(const double Ebeam, const char * hadron){//Estimate the total r
   Lsidis sidis;
   TLorentzVector l(0, 0, Ebeam, Ebeam);
   TLorentzVector P(0, 0, 0, 0.938272);
-  sidis.SetNucleus(2, 1);
+  sidis.SetNucleus(0.334*10.0+0.593*2.0, 0.334*7.0+0.593*2.0);
   sidis.SetHadron(hadron);
   sidis.SetInitialState(l, P);
   sidis.SetPDFset("CT14lo");
   sidis.SetFFset("DSSFFlo");
-  double lumi = 1.0e+10 * pow(0.197327, 2);
+  double lumi = 1.0e+9 * pow(0.197327, 2);
   double Xmin[6] = {0.0, 1.0, 0.3, 0.0, -M_PI, -M_PI};
   double Xmax[6] = {0.7, 8.0, 0.7, 1.6, M_PI, M_PI};
   sidis.SetRange(Xmin, Xmax);
@@ -75,7 +75,7 @@ int GetTotalRate(const double Ebeam, const char * hadron){//Estimate the total r
       if (sidis.GetVariable("Rfactor") > Rfactor0) continue;
       lp = sidis.GetLorentzVector("lp");
       Ph = sidis.GetLorentzVector("Ph");
-      sum += weight * GetAcceptance_e(lp) * GetAcceptance_pi(Ph);
+      sum += weight * GetAcceptance_e(lp) * GetAcceptance_pi(Ph, hadron);
     }
   }
   std::cout << "Total rate: " << sum * lumi / Nsim << std::endl;
@@ -88,15 +88,15 @@ int GenerateBinInfoFile(const char * filename, const double Ebeam, const char * 
   Lsidis sidis;
   TLorentzVector l(0, 0, Ebeam, Ebeam);
   TLorentzVector P(0, 0, 0, 0.938272);
-  sidis.SetNucleus(2, 1);
+  sidis.SetNucleus(0.334*10.0+0.593*2.0, 0.334*7.0+0.593*2.0);
   sidis.SetHadron(hadron);
   sidis.SetInitialState(l, P);
   sidis.SetPDFset("CT14lo");
   sidis.SetFFset("DSSFFlo");
-  double lumi = 1.0e+10 * pow(0.197327, 2);
+  double lumi = 1.0e+9 * pow(0.197327, 2);
   double eff = 0.85;
-  double time = 48.0 * 24.0 * 3600.0;
-  if (Ebeam < 10.0) time = 21.0 * 24.0 * 3600.0;
+  double time = 55.0 * 24.0 * 3600.0;
+  if (Ebeam < 10.0) time = 27.5 * 24.0 * 3600.0;
   double Nsim = 1.0e6;
   double Xmin[6] = {0.0, 0.0, 0.0, 0.0, -M_PI, -M_PI}; 
   double Xmax[6] = {0.7, 0.0, 0.0, 0.0, M_PI, M_PI};;//x, Q2, z, Pt, phih, phiS
