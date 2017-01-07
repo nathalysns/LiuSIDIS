@@ -28,7 +28,7 @@ double GetAcceptance_e(const TLorentzVector p){//Get electron acceptance
   if (theta > 50.0) return 0;
   double mom = p.P();
   double acc = 0;
-  acc += acc_FA_e->GetBinContent(acc_FA_e->GetXaxis()->FindBin(theta), acc_FA_e->GetYaxis()->FindBin(phi), acc_FA_e->GetZaxis()->FindBin(mon));
+  acc += acc_FA_e->GetBinContent(acc_FA_e->GetXaxis()->FindBin(theta), acc_FA_e->GetYaxis()->FindBin(phi), acc_FA_e->GetZaxis()->FindBin(mom));
   if (mom > 3.5)
     acc += acc_LA_e->GetBinContent(acc_LA_e->GetXaxis()->FindBin(theta), acc_LA_e->GetYaxis()->FindBin(phi), acc_LA_e->GetZaxis()->FindBin(mom));
   return acc;
@@ -132,7 +132,7 @@ int GenerateBinInfoFile(const char * filename, const double Ebeam, const char * 
 	    if (sidis.GetVariable("Rfactor") > Rfactor0) continue;
 	    lp = sidis.GetLorentzVector("lp");
 	    Ph = sidis.GetLorentzVector("Ph");
-	    acc = GetAcceptance_e(lp) * GetAcceptance_pi(Ph);
+	    acc = GetAcceptance_e(lp) * GetAcceptance_pi(Ph, hadron);
 	    if (acc > 0)
 	      hx->Fill(sidis.GetVariable("x"), weight * acc);
 	  }
@@ -252,7 +252,7 @@ int AnalyzeEstatUT3(const char * readfile, const char * savefile, const double E
 	if (sidis.GetVariable("Rfactor") > Rfactor0) continue;
 	lp = sidis.GetLorentzVector("lp");
 	Ph = sidis.GetLorentzVector("Ph");
-	acc = GetAcceptance_e(lp) * GetAcceptance_pi(Ph);
+	acc = GetAcceptance_e(lp) * GetAcceptance_pi(Ph, had);
 	if (acc > 0){
 	  sidis_n.SetFinalState(lp, Ph);
 	  sidis_n.CalculateVariables();
@@ -351,7 +351,7 @@ double CheckCurrentCut(const double Ebeam, const char * hadron, const double kT2
       if (sidis.GetVariable("Wp") < 1.6) continue;
       lp = sidis.GetLorentzVector("lp");
       Ph = sidis.GetLorentzVector("Ph");
-      acc = GetAcceptance_e(lp) * GetAcceptance_pi(Ph);
+      acc = GetAcceptance_e(lp) * GetAcceptance_pi(Ph, hadron);
       if (acc > 0){
 	hall->Fill(sidis.GetVariable("z"), sidis.GetVariable("Pt"), weight * acc);
 	sidis.CalculateRfactor(kT2, MiT2, MfT2);
