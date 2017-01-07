@@ -291,7 +291,7 @@ int AnalyzeEstatUT3(const char * readfile, const char * savefile, const double E
     MUT3.Invert();
     for (int i = 0; i < 3; i++){
       Estatraw[i] = sqrt(2.0 * M_PI * M_PI / Nacc * (pow(MUT3(i,0),2) + pow(MUT3(i,1), 2) + pow(MUT3(i,2), 2)) * M_PI * M_PI);
-      Estat[i] = Estatraw[i] / fn / 0.6;
+      Estat[i] = Estatraw[i] / fn / 0.6 / 0.86;
       if (isnan(Estat[i]))
 	std::cout << "NaN warning in Estat!" << std::endl;
     }
