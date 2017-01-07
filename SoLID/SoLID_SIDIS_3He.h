@@ -61,6 +61,8 @@ int GetTotalRate(const double Ebeam, const char * hadron){//Estimate the total r
     if (weight > 0){
       if (sidis.GetVariable("W") < 2.3) continue;
       if (sidis.GetVariable("Wp") < 1.6) continue;
+      sidis.CalculateRfactor();
+      if (sidis.GetVariable("Rfactor") > Rfactor0) continue;
       lp = sidis.GetLorentzVector("lp");
       Ph = sidis.GetLorentzVector("Ph");
       sum += weight * GetAcceptance_e(lp) * GetAcceptance_pi(Ph);
@@ -89,7 +91,6 @@ int GenerateBinInfoFile(const char * filename, const double Ebeam, const char * 
   double Xmin[6] = {0.0, 0.0, 0.0, 0.0, -M_PI, -M_PI}; 
   double Xmax[6] = {0.7, 0.0, 0.0, 0.0, M_PI, M_PI};;//x, Q2, z, Pt, phih, phiS
   double weight = 0;
-  double Rfactor = 0;
   double acc = 0;
   int Nx = 0;
   TLorentzVector lp(0, 0, 0, 0);
@@ -117,15 +118,13 @@ int GenerateBinInfoFile(const char * filename, const double Ebeam, const char * 
 	  if (weight > 0){
             if (sidis.GetVariable("W") < 2.3) continue;
             if (sidis.GetVariable("Wp") < 1.6) continue;
+	    sidis.CalculateRfactor();
+	    if (sidis.GetVariable("Rfactor") > Rfactor0) continue;
 	    lp = sidis.GetLorentzVector("lp");
 	    Ph = sidis.GetLorentzVector("Ph");
 	    acc = GetAcceptance_e(lp) * GetAcceptance_pi(Ph);
-	    if (acc > 0){
-	      sidis.CalculateRfactor();
-	      Rfactor = sidis.GetVariable("Rfactor");
-	      if (Rfactor < Rfactor0)
-		hx->Fill(sidis.GetVariable("x"), weight * acc);
-	    }
+	    if (acc > 0)
+	      hx->Fill(sidis.GetVariable("x"), weight * acc);
 	  }
 	}
 	hx->Scale(lumi * time * eff / Nsim);
@@ -211,7 +210,6 @@ int AnalyzeEstatUT3(const char * readfile, const char * savefile, const double E
   double Xmax[6] = {0.7, 0.0, 0.0, 0.0, M_PI, M_PI};;//x, Q2, z, Pt, phih, phiS
   double weight = 0;
   double weight_n = 0;
-  double Rfactor = 0;
   double acc = 0;
   TLorentzVector lp(0, 0, 0, 0);
   TLorentzVector Ph(0, 0, 0, 0);
@@ -240,6 +238,8 @@ int AnalyzeEstatUT3(const char * readfile, const char * savefile, const double E
       if (weight > 0){
         if (sidis.GetVariable("W") < 2.3) continue;
         if (sidis.GetVariable("Wp") < 1.6) continue;
+	sidis.CalculateRfactor();
+	if (sidis.GetVariable("Rfactor") > Rfactor0) continue;
 	lp = sidis.GetLorentzVector("lp");
 	Ph = sidis.GetLorentzVector("Ph");
 	acc = GetAcceptance_e(lp) * GetAcceptance_pi(Ph);
@@ -247,19 +247,15 @@ int AnalyzeEstatUT3(const char * readfile, const char * savefile, const double E
 	  sidis_n.SetFinalState(lp, Ph);
 	  sidis_n.CalculateVariables();
 	  weight_n = sidis_n.GetEventWeight(0, 1);
-	  sidis.CalculateRfactor();
-	  Rfactor = sidis.GetVariable("Rfactor");
-	  if (Rfactor < Rfactor0){
-            Nrec++;
-	    hvar->Fill(0., weight_n * acc);
-	    hvar->Fill(1., weight * acc);
-	    hvar->Fill(2., weight * acc * sidis.GetVariable("x"));
-	    hvar->Fill(3., weight * acc * sidis.GetVariable("y"));
-	    hvar->Fill(4., weight * acc * sidis.GetVariable("z"));
-	    hvar->Fill(5., weight * acc * sidis.GetVariable("Q2"));
-	    hvar->Fill(6., weight * acc * sidis.GetVariable("Pt"));
-	    hs->Fill(sidis.GetVariable("phih"), std::abs(sidis.GetVariable("phiS")), weight * acc);
-	  }
+	  Nrec++;
+	  hvar->Fill(0., weight_n * acc);
+	  hvar->Fill(1., weight * acc);
+	  hvar->Fill(2., weight * acc * sidis.GetVariable("x"));
+	  hvar->Fill(3., weight * acc * sidis.GetVariable("y"));
+	  hvar->Fill(4., weight * acc * sidis.GetVariable("z"));
+	  hvar->Fill(5., weight * acc * sidis.GetVariable("Q2"));
+	  hvar->Fill(6., weight * acc * sidis.GetVariable("Pt"));
+	  hs->Fill(sidis.GetVariable("phih"), std::abs(sidis.GetVariable("phiS")), weight * acc);
 	}
       }
       if (Nrec > 500000) break;
