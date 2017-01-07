@@ -50,28 +50,27 @@ int main(int argc, char * argv[]){
     }
   }
 
-  /*
   if (opt == 2){
     if (argc == 2){
-      AnalyzeEstatUT3("NeutronResults/bin_info_N11p.dat", "NeutronResults/binsN11p.root", 11.0, "pi+");
-      AnalyzeEstatUT3("NeutronResults/bin_info_N8p.dat", "NeutronResults/binsN8p.root", 8.8, "pi+");
-      AnalyzeEstatUT3("NeutronResults/bin_info_N11m.dat", "NeutronResults/binsN11m.root", 11.0, "pi-");
-      AnalyzeEstatUT3("NeutronResults/bin_info_N8m.dat", "NeutronResults/binsN8m.root", 8.8, "pi-");
+      AnalyzeEstatUT3("ProtonResults/bin_info_P11p.dat", "ProtonResults/binsP11p.root", 11.0, "pi+");
+      AnalyzeEstatUT3("ProtonResults/bin_info_P8p.dat", "ProtonResults/binsP8p.root", 8.8, "pi+");
+      AnalyzeEstatUT3("ProtonResults/bin_info_P11m.dat", "ProtonResults/binsP11m.root", 11.0, "pi-");
+      AnalyzeEstatUT3("ProtonResults/bin_info_P8m.dat", "ProtonResults/binsP8m.root", 8.8, "pi-");
     }
     else if (argc == 3){
       Rfactor0 = atof(argv[2]);
-      AnalyzeEstatUT3("NeutronResults/bin_info_N11p_cut.dat", "NeutronResults/binsN11p_cut.root", 11.0, "pi+");
-      AnalyzeEstatUT3("NeutronResults/bin_info_N8p_cut.dat", "NeutronResults/binsN8p_cut.root", 8.8, "pi+");
-      AnalyzeEstatUT3("NeutronResults/bin_info_N11m_cut.dat", "NeutronResults/binsN11m_cut.root", 11.0, "pi-");
-      AnalyzeEstatUT3("NeutronResults/bin_info_N8m_cut.dat", "NeutronResults/binsN8m_cut.root", 8.8, "pi-");
+      AnalyzeEstatUT3("ProtonResults/bin_info_P11p_cut.dat", "ProtonResults/binsP11p_cut.root", 11.0, "pi+");
+      AnalyzeEstatUT3("ProtonResults/bin_info_P8p_cut.dat", "ProtonResults/binsP8p_cut.root", 8.8, "pi+");
+      AnalyzeEstatUT3("ProtonResults/bin_info_P11m_cut.dat", "ProtonResults/binsP11m_cut.root", 11.0, "pi-");
+      AnalyzeEstatUT3("ProtonResults/bin_info_P8m_cut.dat", "ProtonResults/binsP8m_cut.root", 8.8, "pi-");
     }
   }
 
   if (opt == 3){
-    CheckCurrentCut(11.0, "pi+", 0.5, 0.5, 0.5, "NeutronResults/cutN11p.pdf");
-    CheckCurrentCut(8.8, "pi+", 0.5, 0.5, 0.5, "NeutronResults/cutN8p.pdf");
-    CheckCurrentCut(11.0, "pi-", 0.5, 0.5, 0.5, "NeutronResults/cutN11m.pdf");
-    CheckCurrentCut(8.8, "pi-", 0.5, 0.5, 0.5, "NeutronResults/cutN8m.pdf");
+    CheckCurrentCut(11.0, "pi+", 0.5, 0.5, 0.5, "ProtonResults/cutP11p.pdf");
+    CheckCurrentCut(8.8, "pi+", 0.5, 0.5, 0.5, "ProtonResults/cutP8p.pdf");
+    CheckCurrentCut(11.0, "pi-", 0.5, 0.5, 0.5, "ProtonResults/cutP11m.pdf");
+    CheckCurrentCut(8.8, "pi-", 0.5, 0.5, 0.5, "ProtonResults/cutP8m.pdf");
   }
 
   if (opt == 4){
