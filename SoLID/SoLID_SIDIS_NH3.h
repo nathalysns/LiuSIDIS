@@ -106,7 +106,7 @@ int GenerateBinInfoFile(const char * filename, const double Ebeam, const char * 
   TLorentzVector lp(0, 0, 0, 0);
   TLorentzVector Ph(0, 0, 0, 0);
   double Q2list[7] = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 8.0};
-  double statlist[6] = {1.0e7, 6.0e6, 3.0e6, 1.5e6, 1.0e6, 1.0e6};
+  double statlist[6] = {1.0e7, 6.4e6, 3.2e6, 1.6e6, 1.2e6, 1.0e6};
   double zlist[9] = {0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7};
   double Ptlist[7] = {0.0, 0.2, 0.4, 0.6, 0.8, 1.0, 1.6};
   int xi = 1;
