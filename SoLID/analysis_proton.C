@@ -1,0 +1,97 @@
+#include "SoLID_SIDIS_3He.h"
+
+using namespace std;
+
+int main(int argc, char * argv[]){
+
+  if (argc < 2){
+    cout << "./analysis_neutron <opt>" << endl;
+    cout << "opt = 0: total rate" << endl;
+    cout << "     ./analysis 0" << endl;
+    cout << "     ./analysis 0 <R0>" << endl;
+    cout << "opt = 1: binning data and create bin info file" << endl;
+    cout << "     ./analysis 1" << endl;
+    cout << "     ./analysis 1 <R0>" << endl;
+    cout << "opt = 2: bin analysis including Estat" << endl;
+    cout << "     ./analysis 2" << endl;
+    cout << "     ./analysis 2 <R0>" << endl;
+    cout << "opt = 3: compare current cut effect" << endl;
+    cout << "opt = 4: see parameter sensitivity of the current cut" << endl;
+    cout << "     ./analysis 4 <kT2> <MiT2> <MfT2>" << endl;
+    return 0;
+  }
+
+  int opt = atoi(argv[1]);
+  
+  gRandom->SetSeed(2);
+
+  if (opt == 0){
+    gRandom->SetSeed(0);
+    if (argc > 2) Rfactor0 = atof(argv[2]);
+    GetTotalRate(11.0, "pi+");
+    GetTotalRate(8.8, "pi+");
+    GetTotalRate(11.0, "pi-");
+    GetTotalRate(8.8, "pi-");
+  }
+
+  if (opt == 1){
+    if (argc == 2){
+      GenerateBinInfoFile("NeutronResults/bin_info_N11p.dat", 11.0, "pi+");
+      GenerateBinInfoFile("NeutronResults/bin_info_N8p.dat", 8.8, "pi+");
+      GenerateBinInfoFile("NeutronResults/bin_info_N11m.dat", 11.0, "pi-");
+      GenerateBinInfoFile("NeutronResults/bin_info_N8m.dat", 8.8, "pi-");
+    }
+    else if (argc == 3){
+      Rfactor0 = atof(argv[2]);
+      GenerateBinInfoFile("NeutronResults/bin_info_N11p_cut.dat", 11.0, "pi+");
+      GenerateBinInfoFile("NeutronResults/bin_info_N8p_cut.dat", 8.8, "pi+");
+      GenerateBinInfoFile("NeutronResults/bin_info_N11m_cut.dat", 11.0, "pi-");
+      GenerateBinInfoFile("NeutronResults/bin_info_N8m_cut.dat", 8.8, "pi-");
+    }
+  }
+
+
+  if (opt == 2){
+    if (argc == 2){
+      AnalyzeEstatUT3("NeutronResults/bin_info_N11p.dat", "NeutronResults/binsN11p.root", 11.0, "pi+");
+      AnalyzeEstatUT3("NeutronResults/bin_info_N8p.dat", "NeutronResults/binsN8p.root", 8.8, "pi+");
+      AnalyzeEstatUT3("NeutronResults/bin_info_N11m.dat", "NeutronResults/binsN11m.root", 11.0, "pi-");
+      AnalyzeEstatUT3("NeutronResults/bin_info_N8m.dat", "NeutronResults/binsN8m.root", 8.8, "pi-");
+    }
+    else if (argc == 3){
+      Rfactor0 = atof(argv[2]);
+      AnalyzeEstatUT3("NeutronResults/bin_info_N11p_cut.dat", "NeutronResults/binsN11p_cut.root", 11.0, "pi+");
+      AnalyzeEstatUT3("NeutronResults/bin_info_N8p_cut.dat", "NeutronResults/binsN8p_cut.root", 8.8, "pi+");
+      AnalyzeEstatUT3("NeutronResults/bin_info_N11m_cut.dat", "NeutronResults/binsN11m_cut.root", 11.0, "pi-");
+      AnalyzeEstatUT3("NeutronResults/bin_info_N8m_cut.dat", "NeutronResults/binsN8m_cut.root", 8.8, "pi-");
+    }
+  }
+
+  if (opt == 3){
+    CheckCurrentCut(11.0, "pi+", 0.5, 0.5, 0.5, "NeutronResults/cutN11p.pdf");
+    CheckCurrentCut(8.8, "pi+", 0.5, 0.5, 0.5, "NeutronResults/cutN8p.pdf");
+    CheckCurrentCut(11.0, "pi-", 0.5, 0.5, 0.5, "NeutronResults/cutN11m.pdf");
+    CheckCurrentCut(8.8, "pi-", 0.5, 0.5, 0.5, "NeutronResults/cutN8m.pdf");
+  }
+
+  if (opt == 4){
+    double kT2 = atof(argv[2]);
+    double MiT2 = atof(argv[3]);
+    double MfT2 = atof(argv[4]);
+    CheckCurrentCut(11.0, "pi+", kT2, MiT2, MfT2);
+  }
+
+
+  return 0;
+}
+	
+
+	
+
+
+
+      
+
+  
+  
+
