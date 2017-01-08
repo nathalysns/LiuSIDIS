@@ -5,6 +5,7 @@
 #include "TCanvas.h"
 #include "TStyle.h"
 #include "TTree.h"
+#include "TChain.h"
 
 #include "Lsidis.h"
 
@@ -383,9 +384,10 @@ double CheckCurrentCut(const double Ebeam, const char * hadron, const double kT2
   return rate;
 }
 
-int CreateFileSivers(const char * rootfile, const char * csvfile){//Create file for Sivers analysis use
-  TFile * fs = new TFile(rootfile, "r");
-  TTree * Ts = (TTree *) fs->Get("data");
+int CreateFileSivers(const char * rootfile1, const char * rootfile2, const char * csvfile){//Create file for Sivers analysis use
+  TChain * Ts;
+  Ts->Add(rootfile1);
+  Ts->Add(rootfile2);
   double Nucleon, Hadron, Ebeam, x, y, z, Q2, Pt, stat, systrel, systabs, fn;
   Ts->SetBranchAddress("Nucleon", &Nucleon);
   Ts->SetBranchAddress("Hadron", &Hadron);
