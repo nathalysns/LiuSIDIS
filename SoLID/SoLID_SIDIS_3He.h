@@ -400,6 +400,7 @@ int CreateFileSivers(const char * rootfile, const char * csvfile){//Create file 
   FILE * file = fopen(csvfile, "w");
   fprintf(file, "  ,Ebeam,x,y,z,Q2,pT,obs,value,stat,systrel,systabs,target,hadron,Experiment\n");
   for (int i = 0; i < Ts->GetEntries(); i++){
+    std::cout << i << std::endl;
     Ts->GetEntry(i);
     systrel = 0.0;
     systabs = 0.0;
