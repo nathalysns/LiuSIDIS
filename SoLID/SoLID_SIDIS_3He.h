@@ -383,7 +383,59 @@ double CheckCurrentCut(const double Ebeam, const char * hadron, const double kT2
   return rate;
 }
 
-int CreateFileSivers(const char * rootfile, const char * csvfile){
+int CreateFileSivers(const char * rootfile, const char * csvfile){//Create file for Sivers analysis use
+  TFile * fs = new TFile(rootfile, "r");
+  TTree * Ts = (TTree *) fs->Get("data");
+  double Nucleon, Hadron, Ebeam, x, y, z, Q2, Pt, stat, systrel, systabs, fn;
+  Ts->SetBranchAddress("Nucleon", &Nucleon);
+  Ts->SetBranchAddress("Hadron", &Hadron);
+  Ts->SetBranchAddress("Ebeam", &Ebeam);
+  Ts->SetBranchAddress("x", &x);
+  Ts->SetBranchAddress("y", &y);
+  Ts->SetBranchAddress("z", &z);
+  Ts->SetBranchAddress("Q2", &Q2);
+  Ts->SetBranchAddress("Pt", &Pt);
+  Ts->SetBranchAddress("E1stat", &stat);
+  Ts->SetBranchAddress("fn", &fn);
+  FILE * file = fopen(csvfile, "w");
+  fprintf(file, "  ,Ebeam,x,y,z,Q2,pT,obs,value,stat,systrel,systabs,target,hadron,Experiment\n");
+  for (int i = 0; i < Ts->GetEntries(); i++){
+    Ts->GetEntry(i);
+    systrel = 0.0;
+    systabs = 0.0;
+    systrel += pow(0.03, 2);//target polarization
+    systrel += pow(0.05, 2);//nuclear effect
+    systrel += pow(0.025, 2);//radiative correction
+    systrel += pow(0.03, 2);//diffractive meson
+    systrel += pow(0.002, 2);//random coincidence
+    if (Ebeam > 10.0)//raw asymmetry
+      systabs += 1.7e-4 / 0.6 / fn / 0.86;
+    else
+      systabs += 2.57e-4 / 0.6 / fn / 0.86;
+    systrel = sqrt(systrel);
+    if (Hadron == 0)
+      fprintf(file, "%d,%.1f,%.6f,%.6f,%.6f,%.6f,%.6f,%s,%.1f,%.6f,%.6f,%.6f,%s,%s,%s\n",
+	      i, Ebeam, x, y, z, Q2, Pt, "AUT", 0.0, stat, systrel, systabs, "neutron", "pi+", "solid");
+    else if (Hadron == 1)
+      fprintf(file, "%d,%.1f,%.6f,%.6f,%.6f,%.6f,%.6f,%s,%.1f,%.6f,%.6f,%.6f,%s,%s,%s\n",
+	      i, Ebeam, x, y, z, Q2, Pt, "AUT", 0.0, stat, systrel, systabs, "neutron", "pi-", "solid");
+  }
+  fclose(file);
+  return 0;
+}
 
+
+
+
+
+
+
+  
+
+
+
+
+
+  
 	
 	
