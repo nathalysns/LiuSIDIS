@@ -6,6 +6,7 @@
 #include "TCanvas.h"
 #include "TStyle.h"
 #include "TTree.h"
+#include "TChain.h"
 
 #include "Lsidis.h"
 
