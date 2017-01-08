@@ -18,6 +18,8 @@ int main(int argc, char * argv[]){
     cout << "opt = 3: compare current cut effect" << endl;
     cout << "opt = 4: see parameter sensitivity of the current cut" << endl;
     cout << "     ./analysis 4 <kT2> <MiT2> <MfT2>" << endl;
+    cout << "opt = 5: output file for Sivers analysis" << endl;
+    cout << "     ./analysis 5 <rootfile> <csvfile>" << endl;
     return 0;
   }
 
@@ -81,6 +83,9 @@ int main(int argc, char * argv[]){
     CheckCurrentCut(11.0, "pi+", kT2, MiT2, MfT2);
   }
 
+  if (opt == 5){
+    CreateFileSivers(argv[2], argv[3]);
+  }
 
   return 0;
 }
