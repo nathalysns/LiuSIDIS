@@ -15,6 +15,7 @@ A quick start to use this generator
 * __mysidis.SetPDFset("CJ15lo");__ //choose a PDF set
 * __mysidis.SetFFset("DSSFFlo");__ //choose a FF set
 * __mysidis.SetRange(double Xmin[6], double Xmax[6]);__ //set the generating kinematics range, x, y(Q2), z, Pt, phih, phiS
+
 ## Generate event
 * __mysidis.GenerateEvent(int mode, int method);__ //generate an event and return the weight, (0, 0) in y space, (0, 1) in Q2 space
 * __mysidis.GetVariable(char * variable);__ //return kinematic variable for this event (if it pass a physical condition), e.g. "W", "Q2"
