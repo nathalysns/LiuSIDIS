@@ -5,4 +5,5 @@ A sidis generator
 Tianbo Liu, Zhiwen Zhao, Weizhi Xiong, Haiyan Gao
 
 # How to use it
-* initialization
+* Initialization
+** dfjskl
