@@ -1,3 +1,4 @@
+i,Ebeam,x,y,z,Q2,pT,obs,value,stat,systrel,systabs,target,hadron,Experiment
 0,27.6,0.037525,0.643301,0.348119,1.250269,0.414958,M_Hermes,1.7,0.032028,0.000000,0.200024,deuteron,pi-,hermes
 1,27.6,0.037525,0.643301,0.422971,1.250269,0.097694,M_Hermes,0.4,0.016821,0.000000,0.010787,deuteron,pi-,hermes
 2,27.6,0.037525,0.643301,0.424812,1.250269,0.205721,M_Hermes,0.6,0.020743,0.000000,0.148288,deuteron,pi-,hermes
