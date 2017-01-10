@@ -81,7 +81,7 @@ int main(int argc, char * argv[]){
     mysidis.CalculateRfactor();
     if (mysidis.GetVariable("Rfactor") > R0) continue;
   
-    fprintf(file, "%d,%.1f,%.6f,%.6f,%.6f,%.6f,%.6f,%s,%.1f,%.6f,%.6f,%.6f,%s,%s,%s\n",
+    fprintf(file, "%d,%.1f,%.6f,%.6f,%.6f,%.6f,%.6f,%s,%.6f,%.6f,%.6f,%.6f,%s,%s,%s\n",
 	      j++, Ebeam, x, y, z, Q2, pT, obs.data(), value, stat, systrel, systabs, target.data(), hadron.data(), experiment.data());
   }
   
