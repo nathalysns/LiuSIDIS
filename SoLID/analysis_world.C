@@ -66,7 +66,7 @@ int main(int argc, char * argv[]){
     P.SetXYZT(0, 0, 0, 0.938272);
     mysidis.SetInitialState(l, P);
     
-    mysidis.SetVariables(x, y, z, Q2, pT, 0.0, 0.0);
+    mysidis.SetVariables(x, y, z, pT, 0.0, 0.0);
     mysidis.CalculateFinalState();
 
     cout << mysidis.GetVariable("W") << endl;
