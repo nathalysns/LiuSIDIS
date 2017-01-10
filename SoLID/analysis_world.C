@@ -10,14 +10,14 @@ int main(int argc, char * argv[]){
     return 0;
   }
 
-  FILE * infile = fopen(argv[1], "r");
-  char tmp[200];
-  fscanf(infile, "%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", tmp,tmp,tmp,tmp,tmp,tmp,tmp,tmp,tmp,tmp,tmp,tmp,tmp,tmp,tmp);
+  ifstream infile(argv[1]);
+  string tmp;
+  getline(infile, tmp, '\n');
   
   double i, Ebeam, x, y, z, Q2, pT, value, stat, systrel, systabs;
   string obs, target, hadron, experiment;
  
-  //FILE * file = fopen(argv[2], "w");
+  FILE * file = fopen(argv[2], "w");
   
   Lsidis mysidis;
   TLorentzVector l, P;
@@ -25,9 +25,9 @@ int main(int argc, char * argv[]){
   //while (infile >> i >> Ebeam >> x >> y >> z >> Q2 >> pT >> obs >> value >> stat >> systrel >> systabs >> target >> hadron >> experiment){
   //}
   
-  cout << tmp << endl;
+  printf("%s", tmp);
   
-  fclose(infile);
+  infile.close();
 
   return 0;
 }
