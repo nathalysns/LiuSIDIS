@@ -14,28 +14,18 @@ int main(int argc, char * argv[]){
   
   ifstream infile(argv[1]);
   getline(infile, header);
-  cout << header << endl;
-  /*
   
-  getline(infile, header, '\r');
-  int Ncol = 1;
-  for (unsigned int i = 0; i < header.length(); i++){
-    if (header[i] == ',') Ncol++;
-  }
-  infile.clear();
-  infile.seekg(0, ios::beg);
-
-  string column[Ncol];
-  for (int i = 0; i < Ncol - 1; i++){
-    getline(infile, column[i], ',');
-  }
-  getline(infile, column[Ncol-1], '\r');
+  double i, Ebeam, x, y, z, Q2, pT, value, stat, systrel, systabs;
+  string obs, target, hadron, experiment;
+ 
+  //FILE * file = fopen(argv[2], "w");
   
-  cout << header << endl;
-  cout << Ncol << endl;
-  for (int i = 0; i < Ncol; i++)
-    cout << column[i] << endl;
-*/
+  Lsidis mysidis;
+  TLorentzVector l, P;
+  int j = 0;
+  while (infile >> i >> Ebeam >> x >> y >> z >> Q2 >> pT >> obs >> value >> stat >> systrel >> systabs >> target >> hadron >> experiment){
+  }
+  
   infile.close();
 
   return 0;
