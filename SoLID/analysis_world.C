@@ -20,6 +20,7 @@ int main(int argc, char * argv[]){
   string obs, target, hadron, experiment;
    
   FILE * file = fopen(argv[3], "w");
+  fprintf(file, "%s\n", tmp.data());
   
   Lsidis mysidis;
   mysidis.SetHadron("pi+");
