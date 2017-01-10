@@ -50,6 +50,8 @@ int main(int argc, char * argv[]){
     getline(infile, target, ',');
     getline(infile, hadron, ',');
     getline(infile, experiment, '\n');
+	
+    if (target == "proton") mysidis.SetNucleus(1,0);
   //}
   printf("%.0f,%.1f,%.6f,%.6f,%.6f,%.6f,%.6f,%s,%.1f,%.6f,%.6f,%.6f,%s,%s,%s\n",
 	      i, Ebeam, x, y, z, Q2, pT, obs.data(), value, stat, systrel, systabs, target.data(), hadron.data(), experiment.data());
