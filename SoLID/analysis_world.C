@@ -52,7 +52,7 @@ int main(int argc, char * argv[]){
     getline(infile, experiment, '\n');
   //}
   printf("%.0f,%.1f,%.6f,%.6f,%.6f,%.6f,%.6f,%s,%.1f,%.6f,%.6f,%.6f,%s,%s,%s\n",
-	      i, Ebeam, x, y, z, Q2, Pt, obs.data(), value, stat, systrel, systabs, target.data(), hadron.data(), experiment.data());
+	      i, Ebeam, x, y, z, Q2, pT, obs.data(), value, stat, systrel, systabs, target.data(), hadron.data(), experiment.data());
   
   infile.close();
 
