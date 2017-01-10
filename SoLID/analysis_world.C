@@ -5,12 +5,14 @@
 using namespace std;
 
 int main(int argc, char * argv[]){
-  if (argc < 3){
-    cout << "./analysis_world <readfile> <savefile>" << endl;
+  if (argc < 4){
+    cout << "./analysis_world <R0> <readfile> <savefile> " << endl;
     return 0;
   }
 
-  ifstream infile(argv[1]);
+  double R0 = atof(argv[1]);
+	
+  ifstream infile(argv[2]);
   string tmp;
   getline(infile, tmp, '\n');
   
@@ -18,12 +20,12 @@ int main(int argc, char * argv[]){
   string obs, target, hadron, experiment;
   double R;
  
-  FILE * file = fopen(argv[2], "w");
+  FILE * file = fopen(argv[3], "w");
   
   Lsidis mysidis;
   TLorentzVector l, P;
   int j = 0;
-  //while (infile.good()){
+  while (infile.good()){
     getline(infile, tmp, ',');
     i = atof(tmp.data());
     getline(infile, tmp, ',');
@@ -50,6 +52,7 @@ int main(int argc, char * argv[]){
     getline(infile, target, ',');
     getline(infile, hadron, ',');
     getline(infile, experiment, '\n');
+    if (!infile.good()) break;
 	
     if (target == "proton") mysidis.SetNucleus(1, 0);
     else if (target == "neutron") mysidis.SetNucleus(0, 1);
@@ -69,12 +72,18 @@ int main(int argc, char * argv[]){
     mysidis.SetVariables(x, y, z, pT, 0.0, 0.0);
     mysidis.CalculateFinalState();
 
-    cout << mysidis.GetVariable("W") << endl;
-  //}
-  printf("%.0f,%.1f,%.6f,%.6f,%.6f,%.6f,%.6f,%s,%.1f,%.6f,%.6f,%.6f,%s,%s,%s\n",
-	      i, Ebeam, x, y, z, Q2, pT, obs.data(), value, stat, systrel, systabs, target.data(), hadron.data(), experiment.data());
+    if (mysidis.GetVariable("W") < 2.3) continue;
+    if (mysidis.GetVariable("Wp") < 1.6) continue;
+	  
+    mysidis.CalculateRfactor();
+    if (mysidis.GetVariable("Rfactor") > R0) continue;
+  
+    fprintf(file, "%d,%.1f,%.6f,%.6f,%.6f,%.6f,%.6f,%s,%.1f,%.6f,%.6f,%.6f,%s,%s,%s\n",
+	      j++, Ebeam, x, y, z, Q2, pT, obs.data(), value, stat, systrel, systabs, target.data(), hadron.data(), experiment.data());
+  }
   
   infile.close();
+  fclose(file);
 
   return 0;
 }
