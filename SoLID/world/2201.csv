@@ -1,0 +1,5 @@
+i,Ebeam,x,y,z,Q2,pT,obs,value,stat,systrel,systabs,target,hadron,Experiment
+0,5.9,0.156,0.81,0.5,1.38,0.435,AUT,-0.011,0.125,0,0.028,neutron,pi+,jlab
+1,5.9,0.206,0.78,0.52,1.76,0.38,AUT,-0.108,0.138,0,0.039,neutron,pi+,jlab
+2,5.9,0.265,0.75,0.54,2.16,0.32,AUT,-0.129,0.096,0,0.028,neutron,pi+,jlab
+3,5.9,0.349,0.7,0.58,2.68,0.24,AUT,-0.163,0.133,0,0.039,neutron,pi+,jlab
