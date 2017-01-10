@@ -410,7 +410,7 @@ int CreateFileSivers(const char * rootfile1, const char * rootfile2, const char 
   Ts->SetBranchAddress("E1stat", &stat);
   Ts->SetBranchAddress("fp", &fp);
   FILE * file = fopen(csvfile, "w");
-  fprintf(file, "  ,Ebeam,x,y,z,Q2,pT,obs,value,stat,systrel,systabs,target,hadron,Experiment\n");
+  fprintf(file, "i,Ebeam,x,y,z,Q2,pT,obs,value,stat,systrel,systabs,target,hadron,Experiment\n");
   for (int i = 0; i < Ts->GetEntries(); i++){
     std::cout << i << std::endl;
     Ts->GetEntry(i);
