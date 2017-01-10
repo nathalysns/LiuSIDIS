@@ -11,7 +11,7 @@ int main(int argc, char * argv[]){
   }
 
   FILE * infile = fopen(argv[1], "r");
-  string tmp;
+  char tmp[200];
   fscanf(infile, "%s\n", tmp);
   
   double i, Ebeam, x, y, z, Q2, pT, value, stat, systrel, systabs;
