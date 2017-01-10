@@ -18,11 +18,12 @@ int main(int argc, char * argv[]){
   
   double i, Ebeam, x, y, z, Q2, pT, value, stat, systrel, systabs;
   string obs, target, hadron, experiment;
-  double R;
- 
+   
   FILE * file = fopen(argv[3], "w");
   
   Lsidis mysidis;
+  mysidis.SetPDFset("CT14lo");
+  mysidis.SetFFset("DSSFFlo");
   TLorentzVector l, P;
   int j = 0;
   while (infile.good()){
