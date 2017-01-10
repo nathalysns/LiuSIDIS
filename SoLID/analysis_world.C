@@ -25,7 +25,7 @@ int main(int argc, char * argv[]){
   //while (infile >> i >> Ebeam >> x >> y >> z >> Q2 >> pT >> obs >> value >> stat >> systrel >> systabs >> target >> hadron >> experiment){
   //}
   
-  printf("%s", tmp);
+  printf("%s", tmp.data());
   
   infile.close();
 
