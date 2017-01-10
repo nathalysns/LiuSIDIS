@@ -13,6 +13,10 @@ int main(int argc, char * argv[]){
   string header;
   
   ifstream infile(argv[1]);
+  getline(infile, header);
+  cout << header << endl;
+  /*
+  
   getline(infile, header, '\r');
   int Ncol = 1;
   for (unsigned int i = 0; i < header.length(); i++){
@@ -31,7 +35,7 @@ int main(int argc, char * argv[]){
   cout << Ncol << endl;
   for (int i = 0; i < Ncol; i++)
     cout << column[i] << endl;
-
+*/
   infile.close();
 
   return 0;
