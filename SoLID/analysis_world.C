@@ -22,7 +22,8 @@ int main(int argc, char * argv[]){
   Lsidis mysidis;
   TLorentzVector l, P;
   int j = 0;
-  //while (infile >> i >> Ebeam >> x >> y >> z >> Q2 >> pT >> obs >> value >> stat >> systrel >> systabs >> target >> hadron >> experiment){
+  //while (infile.good()){
+    getline(infile, i, ',');
   //}
   
   printf("%s\n", tmp.data());
