@@ -22,6 +22,7 @@ int main(int argc, char * argv[]){
   FILE * file = fopen(argv[3], "w");
   
   Lsidis mysidis;
+  mysidis.SetHadron("pi+");
   mysidis.SetPDFset("CT14lo");
   mysidis.SetFFset("DSSFFlo");
   TLorentzVector l, P;
