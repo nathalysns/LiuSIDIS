@@ -12,7 +12,7 @@ int main(int argc, char * argv[]){
 
   FILE * infile = fopen(argv[1], "r");
   char tmp[200];
-  fscanf(infile, "%s\n", tmp);
+  fscanf(infile, "%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n", tmp,tmp,tmp,tmp,tmp,tmp,tmp,tmp,tmp,tmp,tmp,tmp,tmp,tmp,tmp);
   
   double i, Ebeam, x, y, z, Q2, pT, value, stat, systrel, systabs;
   string obs, target, hadron, experiment;
