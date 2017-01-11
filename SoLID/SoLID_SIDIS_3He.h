@@ -12,10 +12,17 @@
 // Acceptance 
 TFile * file_e = new TFile("Acceptance/acceptance_solid_SIDIS_He3_electron_201701_1e7_output.root", "r");
 TFile * file_pi = new TFile("Acceptance/acceptance_solid_SIDIS_He3_pim_201701_1e7_output.root", "r");
+//TFile * file_e = new TFile("Acceptance/acceptance_solid_CLEO_SIDIS_3he_negative_output.root", "r");
+//TFile * file_pi = new TFile("Acceptance/acceptance_solid_CLEO_SIDIS_3he_negative_output.root", "r");
 TH2F * acc_FA_e = (TH2F *) file_e->Get("acceptance_ThetaP_forwardangle");
 TH2F * acc_LA_e = (TH2F *) file_e->Get("acceptance_ThetaP_largeangle");
 TH2F * acc_FA_pi = (TH2F *) file_pi->Get("acceptance_ThetaP_forwardangle");
 TH2F * acc_LA_pi = (TH2F *) file_pi->Get("acceptance_ThetaP_largeangle");
+//TH2F * acc_FA_e = (TH2F *) file_e->Get("acceptance_forwardangle");
+//TH2F * acc_LA_e = (TH2F *) file_e->Get("acceptance_largeangle");
+//TH2F * acc_FA_pi = (TH2F *) file_pi->Get("acceptance_forwardangle");
+//TH2F * acc_LA_pi = (TH2F *) file_pi->Get("acceptance_largeangle");
+
 
 double Rfactor0 = 1.0e5;
 
