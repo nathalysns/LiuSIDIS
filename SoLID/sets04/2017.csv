@@ -1,0 +1,6 @@
+i,Ebeam,x,y,z,Q2,pT,obs,value,stat,systrel,systabs,target,hadron,Experiment,Dependence
+0,160,0.0358,0.359,0.346,3.25,0.2374,AUT,-0.0122,0.0291,0,0,proton,k0,compass,PT
+1,160,0.035,0.374,0.355,3.33,0.4463,AUT,-0.0214,0.0306,0,0,proton,k0,compass,PT
+2,160,0.0338,0.388,0.371,3.32,0.6411,AUT,-0.0056,0.0357,0,0,proton,k0,compass,PT
+3,160,0.0327,0.407,0.388,3.39,0.8558,AUT,-0.0158,0.0459,0,0,proton,k0,compass,PT
+4,160,0.0315,0.451,0.406,3.68,1.2516,AUT,-0.1314,0.0588,0,0,proton,k0,compass,PT
