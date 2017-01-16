@@ -1,4 +1,4 @@
-i,Ebeam,x,y,z,Q2,pT,obs,value,stat,systole,systabs,target,hadron,Experiment,Dependence
+i,Ebeam,x,y,z,Q2,pT,obs,value,stat,systrel,systabs,target,hadron,Experiment,Dependence
 0,27.6,0.037588,0.641938,0.347886,1.249727,0.416362,M_Hermes,1.661679,0.035345,0.000000,0.248040,proton,pi-,hermes,NA
 1,27.6,0.037588,0.641938,0.421246,1.249727,0.103808,M_Hermes,0.294805,0.016483,0.000000,0.010193,proton,pi-,hermes,NA
 2,27.6,0.037588,0.641938,0.424863,1.249727,0.205035,M_Hermes,0.687025,0.023003,0.000000,0.052592,proton,pi-,hermes,NA
