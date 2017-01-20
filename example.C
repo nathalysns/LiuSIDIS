@@ -1,4 +1,4 @@
-#include "Lsidis1.h"
+#include "Lsidis.h"
 
 using namespace std;
 
@@ -27,6 +27,7 @@ int main(int argc, char * argv[]){
     if (weight > 0){
       lp = mysidis.GetLorentzVector("lp");
       Ph = mysidis.GetLorentzVector("Ph");
+      cout << i << endl;
     }
   }
   
