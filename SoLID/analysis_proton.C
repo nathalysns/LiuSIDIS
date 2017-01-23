@@ -20,6 +20,7 @@ int main(int argc, char * argv[]){
     cout << "     ./analysis 4 <kT2> <MiT2> <MfT2>" << endl;
     cout << "opt = 5: output file for Sivers analysis" << endl;
     cout << "     ./analysis 5 <rootfile1> <rootfile2> <csvfile>" << endl;
+    cout << "opt = 6: make kinematic coverage file" << endl;
     return 0;
   }
 
@@ -84,6 +85,13 @@ int main(int argc, char * argv[]){
 	
   if (opt == 5){
     CreateFileSivers(argv[2], argv[3], argv[4]);
+  }
+
+  if (opt == 6){
+    MakeKinematicCoveragePlots(11.0, "pi+", "ProtonResults/coverage_11p.root");
+    MakeKinematicCoveragePlots(11.0, "pi-", "ProtonResults/coverage_11m.root");
+    MakeKinematicCoveragePlots(8.8, "pi+", "ProtonResults/coverage_8.8p.root");
+    MakeKinematicCoveragePlots(8.8, "pi-", "ProtonResults/coverage_8.8m.root");
   }
 
   return 0;
