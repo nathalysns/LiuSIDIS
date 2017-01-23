@@ -90,8 +90,8 @@ int main(int argc, char * argv[]){
   }
 
   if (opt == 6){
-    double Ebeam = atof(argv[2]);
-    MakeKinematicCoveragePlots(Ebeam, "NeutronResults/coverage.root");
+    MakeKinematicCoveragePlots(11.0, "NeutronResults/coverage_11.root");
+    MakeKinematicCoveragePlots(8.8, "NeutronResults/coverage_8.8.root");
   }			
 
   return 0;

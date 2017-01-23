@@ -95,23 +95,109 @@ int MakeKinematicCoveragePlots(const double Ebeam, const char * savefile){
   sidis.SetRange(Xmin, Xmax);
   TFile * fs = new TFile(savefile, "RECREATE");
   gStyle->SetOptStat(0);
-  TH2D * xQ2_FA = new TH2D("xQ2_FA", "", 140, 0.0, 0.7, 180, 0.0, 9.0);
+  //(x, Q2)
+  TH2D * xQ2_FA = new TH2D("xQ2_FA", "", 700, 0.0, 0.7, 900, 0.0, 9.0);
   xQ2_FA->GetXaxis()->SetTitle("x");
-  xQ2_FA->GetYaxis()->SetTitle("Q^2 / GeV^2");
-  TH2D * xQ2_LA = new TH2D("xQ2_LA", "", 140, 0.0, 0.7, 180, 0.0, 9.0);
+  xQ2_FA->GetYaxis()->SetTitle("Q^{2} / GeV^{2}");
+  TH2D * xQ2_LA = new TH2D("xQ2_LA", "", 700, 0.0, 0.7, 900, 0.0, 9.0);
   xQ2_LA->GetXaxis()->SetTitle("x");
-  xQ2_LA->GetYaxis()->SetTitle("Q^2 / GeV^2");
-  TH2D * xW_FA = new TH2D("xW_FA", "", 140, 0.0, 0.7, 125, 2.0, 4.5);
+  xQ2_LA->GetYaxis()->SetTitle("Q^{2} / GeV^{2}");
+  //(x, W)
+  TH2D * xW_FA = new TH2D("xW_FA", "", 700, 0.0, 0.7, 500, 2.0, 4.5);
   xW_FA->GetXaxis()->SetTitle("x");
   xW_FA->GetYaxis()->SetTitle("W / GeV");
-  TH2D * xW_LA = new TH2D("xW_LA", "", 140, 0.0, 0.7, 125, 2.0, 4.5);
+  TH2D * xW_LA = new TH2D("xW_LA", "", 700, 0.0, 0.7, 500, 2.0, 4.5);
   xW_LA->GetXaxis()->SetTitle("x");
   xW_LA->GetYaxis()->SetTitle("W / GeV");
+  //(x, Wp)
+  TH2D * xWp_FA = new TH2D("xWp_FA", "", 700, 0.0, 0.7, 500, 1.5, 4.0);
+  xWp_FA->GetXaxis()->SetTitle("x");
+  xWp_FA->GetYaxis()->SetTitle("W' / GeV");
+  TH2D * xWp_LA = new TH2D("xWp_LA", "", 700, 0.0, 0.7, 500, 1.5, 4.0);
+  xWp_LA->GetXaxis()->SetTitle("x");
+  xWp_LA->GetYaxis()->SetTitle("W' / GeV");
+  //(x, z)
+  TH2D * xz_FA = new TH2D("xz_FA", "", 700, 0.0, 0.7, 600, 0.2, 0.8);
+  xz_FA->GetXaxis()->SetTitle("x");
+  xz_FA->GetYaxis()->SetTitle("z");
+  TH2D * xz_LA = new TH2D("xz_LA", "", 700, 0.0, 0.7, 600, 0.2, 0.8);
+  xz_LA->GetXaxis()->SetTitle("x");
+  xz_LA->GetYaxis()->SetTitle("z");
+  //(x, Pt)
+  TH2D * xPt_FA = new TH2D("xPt_FA", "", 700, 0.0, 0.7, 800, 0.0, 2.0);
+  xPt_FA->GetXaxis()->SetTitle("x");
+  xPt_FA->GetYaxis()->SetTitle("P_{T} / GeV");
+  TH2D * xPt_LA = new TH2D("xPt_LA", "", 700, 0.0, 0.7, 800, 0.0, 2.0);
+  xPt_LA->GetXaxis()->SetTitle("x");
+  xPt_LA->GetYaxis()->SetTitle("P_{T} / GeV");
+  //(z, Pt)
+  TH2D * zPt_FA = new TH2D("zPt_FA", "", 600, 0.2, 0.8, 800, 0.0, 2.0);
+  zPt_FA->GetXaxis()->SetTitle("z");
+  zPt_FA->GetYaxis()->SetTitle("P_{T} / GeV");
+  TH2D * zPt_LA = new TH2D("zPt_LA", "", 600, 0.2, 0.8, 800, 0.0, 2.0);
+  zPt_LA->GetXaxis()->SetTitle("z");
+  zPt_LA->GetYaxis()->SetTitle("P_{T} / GeV");
+  //(z, Q2)
+  TH2D * zQ2_FA = new TH2D("zQ2_FA", "", 600, 0.2, 0.8, 900, 0.0, 9.0);
+  zQ2_FA->GetXaxis()->SetTitle("z");
+  zQ2_FA->GetYaxis()->SetTitle("Q^{2} / GeV^{2}");
+  TH2D * zQ2_LA = new TH2D("zQ2_LA", "", 600, 0.2, 0.8, 900, 0.0, 9.0);
+  zQ2_LA->GetXaxis()->SetTitle("z");
+  zQ2_LA->GetYaxis()->SetTitle("Q^{2} / GeV^{2}");
+  //(z, W)
+  TH2D * zW_FA = new TH2D("zW_FA", "", 600, 0.2, 0.8, 500, 2.0, 4.5);
+  zW_FA->GetXaxis()->SetTitle("z");
+  zW_FA->GetYaxis()->SetTitle("W / GeV");
+  TH2D * zW_LA = new TH2D("zW_LA", "", 600, 0.2, 0.8, 500, 2.0, 4.5);
+  zW_LA->GetXaxis()->SetTitle("z");
+  zW_LA->GetYaxis()->SetTitle("W / GeV");
+  //(z, Wp)
+  TH2D * zWp_FA = new TH2D("zWp_FA", "", 600, 0.2, 0.8, 500, 1.5, 4.0);
+  zWp_FA->GetXaxis()->SetTitle("z");
+  zWp_FA->GetYaxis()->SetTitle("W' / GeV");
+  TH2D * zWp_LA = new TH2D("zWp_LA", "", 600, 0.2, 0.8, 500, 1.5, 4.0);
+  zWp_LA->GetXaxis()->SetTitle("z");
+  zWp_LA->GetYaxis()->SetTitle("W' / GeV");
+  //(Pt, Q2)
+  TH2D * PtQ2_FA = new TH2D("PtQ2_FA", "", 800, 0.0, 2.0, 900, 0.0, 9.0);
+  PtQ2_FA->GetXaxis()->SetTitle("P_{T} / GeV");
+  PtQ2_FA->GetYaxis()->SetTitle("Q^{2} / GeV^{2}");
+  TH2D * PtQ2_LA = new TH2D("PtQ2_LA", "", 800, 0.0, 2.0, 900, 0.0, 9.0);
+  PtQ2_LA->GetXaxis()->SetTitle("P_{T} / GeV");
+  PtQ2_LA->GetYaxis()->SetTitle("Q^{2} / GeV^{2}");
+  //(Pt, W)
+  TH2D * PtW_FA = new TH2D("PtW_FA", "", 800, 0.0, 2.0, 500, 2.0, 4.5);
+  PtW_FA->GetXaxis()->SetTitle("P_{T} / GeV");
+  PtW_FA->GetYaxis()->SetTitle("W / GeV");
+  TH2D * PtW_LA = new TH2D("PtW_LA", "", 800, 0.0, 2.0, 500, 2.0, 4.5);
+  PtW_LA->GetXaxis()->SetTitle("P_{T} / GeV");
+  PtW_LA->GetYaxis()->SetTitle("W / GeV");
+  //(Pt, Wp)
+  TH2D * PtWp_FA = new TH2D("PtWp_FA", "", 800, 0.0, 2.0, 500, 1.5, 4.0);
+  PtWp_FA->GetXaxis()->SetTitle("P_{T} / GeV");
+  PtWp_FA->GetYaxis()->SetTitle("W' / GeV");
+  TH2D * PtWp_LA = new TH2D("PtWp_LA", "", 800, 0.0, 2.0, 500, 1.5, 4.0);
+  PtWp_LA->GetXaxis()->SetTitle("P_{T} / GeV");
+  PtWp_LA->GetYaxis()->SetTitle("W' / GeV");
+  //(W, Q2)
+  TH2D * WQ2_FA = new TH2D("WQ2_FA", "", 500, 2.0, 4.5, 900, 0.0, 9.0);
+  WQ2_FA->GetXaxis()->SetTitle("W / GeV");
+  WQ2_FA->GetYaxis()->SetTitle("Q^{2} / GeV^{2}");
+  TH2D * WQ2_LA = new TH2D("WQ2_LA", "", 500, 2.0, 4.5, 900, 0.0, 9.0);
+  WQ2_LA->GetXaxis()->SetTitle("W / GeV");
+  WQ2_LA->GetYaxis()->SetTitle("Q^{2} / GeV^{2}");
+  //(Wp, Q2)
+  TH2D * WpQ2_FA = new TH2D("WpQ2_FA", "", 500, 1.5, 4.0, 900, 0.0, 9.0);
+  WpQ2_FA->GetXaxis()->SetTitle("W' / GeV");
+  WpQ2_FA->GetYaxis()->SetTitle("Q^{2} / GeV^{2}");
+  TH2D * WpQ2_LA = new TH2D("WpQ2_LA", "", 500, 1.5, 4.0, 900, 0.0, 9.0);
+  WpQ2_LA->GetXaxis()->SetTitle("W' / GeV");
+  WpQ2_LA->GetYaxis()->SetTitle("Q^{2} / GeV^{2}");
   double x, Q2, z, Pt, W, Wp;
   double weight, acc_FA, acc_LA;
   TLorentzVector lp, Ph;
-  for (Long64_t i = 0; i < 10000000; i++){
-    if (i % 1000000 == 0) std::cout << i / 100000 << " %" << std::endl;
+  for (Long64_t i = 0; i < 100000000; i++){
+    if (i % 1000000 == 0) std::cout << i / 1000000 << " %" << std::endl;
     weight = sidis.GenerateEvent(0, 1);
     if (weight > 0){
       z = sidis.GetVariable("z");
@@ -131,10 +217,34 @@ int MakeKinematicCoveragePlots(const double Ebeam, const char * savefile){
       if (acc_FA > 0){
 	xQ2_FA->Fill(x, Q2, acc_FA);
 	xW_FA->Fill(x, W, acc_FA);
+	xz_FA->Fill(x, z, acc_FA);
+	xPt_FA->Fill(x, Pt, acc_FA);
+	xWp_FA->Fill(x, Wp, acc_FA);
+	zPt_FA->Fill(z, Pt, acc_FA);
+	zQ2_FA->Fill(z, Q2, acc_FA);
+	zW_FA->Fill(z, W, acc_FA);
+	zWp_FA->Fill(z, Wp, acc_FA);
+	PtQ2_FA->Fill(Pt, Q2, acc_FA);
+	PtW_FA->Fill(Pt, W, acc_FA);
+	PtWp_FA->Fill(Pt, Wp, acc_FA);
+	WQ2_FA->Fill(W, Q2, acc_FA);
+	WpQ2_FA->Fill(Wp, Q2, acc_FA);
       }
       if (acc_LA > 0){
 	xQ2_LA->Fill(x, Q2, acc_LA);
 	xW_LA->Fill(x, W, acc_LA);
+	xz_LA->Fill(x, z, acc_LA);
+	xPt_LA->Fill(x, Pt, acc_LA);
+	xWp_LA->Fill(x, Wp, acc_LA);
+	zPt_LA->Fill(z, Pt, acc_LA);
+	zQ2_LA->Fill(z, Q2, acc_LA);
+	zW_LA->Fill(z, W, acc_LA);
+	zWp_LA->Fill(z, Wp, acc_LA);
+	PtQ2_LA->Fill(Pt, Q2, acc_LA);
+	PtW_LA->Fill(Pt, W, acc_LA);
+	PtWp_LA->Fill(Pt, Wp, acc_LA);
+	WQ2_LA->Fill(W, Q2, acc_LA);
+	WpQ2_LA->Fill(Wp, Q2, acc_LA);
       }
     }
   }
@@ -142,6 +252,30 @@ int MakeKinematicCoveragePlots(const double Ebeam, const char * savefile){
   xQ2_LA->Divide(xQ2_LA); xQ2_LA->Scale(100);
   xW_FA->Divide(xW_FA); xW_FA->Scale(100);
   xW_LA->Divide(xW_LA); xW_LA->Scale(100);
+  xz_FA->Divide(xz_FA); xz_FA->Scale(100);
+  xz_LA->Divide(xz_LA); xz_LA->Scale(100);
+  xPt_FA->Divide(xPt_FA); xPt_FA->Scale(100);
+  xPt_LA->Divide(xPt_LA); xPt_LA->Scale(100);
+  xWp_FA->Divide(xWp_FA); xWp_FA->Scale(100);
+  xWp_LA->Divide(xWp_LA); xWp_LA->Scale(100);
+  zW_FA->Divide(zW_FA); zW_FA->Scale(100);
+  zW_LA->Divide(zW_LA); zW_LA->Scale(100);
+  zQ2_FA->Divide(zQ2_FA); zQ2_FA->Scale(100);
+  zQ2_LA->Divide(zQ2_LA); zQ2_LA->Scale(100);
+  zWp_FA->Divide(zWp_FA); zWp_FA->Scale(100);
+  zWp_LA->Divide(zWp_LA); zWp_LA->Scale(100);
+  zPt_FA->Divide(zPt_FA); zPt_FA->Scale(100);
+  zPt_LA->Divide(zPt_LA); zPt_LA->Scale(100);
+  PtQ2_FA->Divide(PtQ2_FA); PtQ2_FA->Scale(100);
+  PtQ2_LA->Divide(PtQ2_LA); PtQ2_LA->Scale(100);
+  WQ2_FA->Divide(WQ2_FA); WQ2_FA->Scale(100);
+  WQ2_LA->Divide(WQ2_LA); WQ2_LA->Scale(100);
+  PtW_FA->Divide(PtW_FA); PtW_FA->Scale(100);
+  PtW_LA->Divide(PtW_LA); PtW_LA->Scale(100);
+  PtWp_FA->Divide(PtWp_FA); PtWp_FA->Scale(100);
+  PtWp_LA->Divide(PtWp_LA); PtWp_LA->Scale(100);
+  WpQ2_FA->Divide(WpQ2_FA); WpQ2_FA->Scale(100);
+  WpQ2_LA->Divide(WpQ2_LA); WpQ2_LA->Scale(100);
   fs->Write();
   return 0;
 }
