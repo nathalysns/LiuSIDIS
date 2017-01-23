@@ -26,13 +26,14 @@ TH2F * acc_LA_pi = (TH2F *) file_pi->Get("acceptance_ThetaP_largeangle");
 
 double Rfactor0 = 1.0e5;
 
-double GetAcceptance_e(const TLorentzVector p){//Get electron acceptance
+double GetAcceptance_e(const TLorentzVector p, const char * detector = "all"){//Get electron acceptance
   double theta = p.Theta() / M_PI * 180.0;
   if (theta < 8.0 || theta > 30.0) return 0;
   double mom = p.P();
   double acc = 0;
-  acc += acc_FA_e->GetBinContent(acc_FA_e->GetXaxis()->FindBin(theta), acc_FA_e->GetYaxis()->FindBin(mom));
-  if (mom > 3.5)
+  if (strcmp(detector, "FA") == 0 || strcmp(detector, "all") == 0)
+    acc += acc_FA_e->GetBinContent(acc_FA_e->GetXaxis()->FindBin(theta), acc_FA_e->GetYaxis()->FindBin(mom));
+  if (mom > 3.5 && (strcmp(detector, "LA") == 0 || strcmp(detector, "all") == 0))
     acc += acc_LA_e->GetBinContent(acc_LA_e->GetXaxis()->FindBin(theta), acc_LA_e->GetYaxis()->FindBin(mom));
   return acc;
 }
@@ -77,6 +78,71 @@ int GetTotalRate(const double Ebeam, const char * hadron){//Estimate the total r
     }
   }
   std::cout << "Total rate: " << sum * lumi / Nsim << std::endl;
+  return 0;
+}
+
+int MakeKinematicCoveragePlots(const double Ebeam, const char * savefile){
+  Lsidis sidis;
+  TLorentzVector l(0, 0, Ebeam, Ebeam);
+  TLorentzVector P(0, 0, 0, 0.938272);
+  sidis.SetNucleus(2,1);
+  sidis.SetHadron("pi+");
+  sidis.SetInitialState(l, P);
+  sidis.SetPDFset("CJ15lo");
+  sidis.SetFFset("DSSFFlo");
+  double Xmin[6] = {0.0, 1.0, 0.3, 0.0, -M_PI, -M_PI};
+  double Xmax[6] = {0.7, 9.0, 0.7, 2.0, M_PI, M_PI};
+  sidis.SetRange(Xmin, Xmax);
+  TFile * fs = new TFile(savefile, "RECREATE");
+  gStyle->SetOptStat(0);
+  TH2D * xQ2_FA = new TH2D("xQ2_FA", "", 140, 0.0, 0.7, 180, 0.0, 9.0);
+  xQ2_FA->GetXaxis()->SetTitle("x");
+  xQ2_FA->GetYaxis()->SetTitle("Q^2 / GeV^2");
+  TH2D * xQ2_LA = new TH2D("xQ2_LA", "", 140, 0.0, 0.7, 180, 0.0, 9.0);
+  xQ2_LA->GetXaxis()->SetTitle("x");
+  xQ2_LA->GetYaxis()->SetTitle("Q^2 / GeV^2");
+  TH2D * xW_FA = new TH2D("xW_FA", "", 140, 0.0, 0.7, 125, 2.0, 4.5);
+  xW_FA->GetXaxis()->SetTitle("x");
+  xW_FA->GetYaxis()->SetTitle("W / GeV");
+  TH2D * xW_LA = new TH2D("xW_LA", "", 140, 0.0, 0.7, 125, 2.0, 4.5);
+  xW_LA->GetXaxis()->SetTitle("x");
+  xW_LA->GetYaxis()->SetTitle("W / GeV");
+  double x, Q2, z, Pt, W, Wp;
+  double weight, acc_FA, acc_LA;
+  TLorentzVector lp, Ph;
+  for (Long64_t i = 0; i < 10000000; i++){
+    if (i % 1000000 == 0) std::cout << i / 100000 << " %" << std::endl;
+    weight = sidis.GenerateEvent(0, 1);
+    if (weight > 0){
+      z = sidis.GetVariable("z");
+      if (z < 0.3 || z > 0.7) continue;
+      Q2 = sidis.GetVariable("Q2");
+      if (Q2 < 1.0) continue;
+      W = sidis.GetVariable("W");
+      if (W < 2.3) continue;
+      Wp = sidis.GetVariable("Wp");
+      if (Wp < 1.6) continue;
+      x = sidis.GetVariable("x");
+      Pt = sidis.GetVariable("Pt");
+      lp = sidis.GetLorentzVector("lp");
+      Ph = sidis.GetLorentzVector("Ph");
+      acc_FA = GetAcceptance_e(lp, "FA") * GetAcceptance_pi(Ph);
+      acc_LA = GetAcceptance_e(lp, "LA") * GetAcceptance_pi(Ph);
+      if (acc_FA > 0){
+	xQ2_FA->Fill(x, Q2, acc_FA);
+	xW_FA->Fill(x, W, acc_FA);
+      }
+      if (acc_LA > 0){
+	xQ2_LA->Fill(x, Q2, acc_LA);
+	xW_LA->Fill(x, W, acc_LA);
+      }
+    }
+  }
+  xQ2_FA->Divide(xQ2_FA); xQ2_FA->Scale(100);
+  xQ2_LA->Divide(xQ2_LA); xQ2_LA->Scale(100);
+  xW_FA->Divide(xW_FA); xW_FA->Scale(100);
+  xW_LA->Divide(xW_LA); xW_LA->Scale(100);
+  fs->Write();
   return 0;
 }
 
