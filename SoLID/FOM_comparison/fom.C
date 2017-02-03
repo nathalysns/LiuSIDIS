@@ -106,6 +106,7 @@ int main(int argc, char * argv){
     if (z < 0.3 || z > 0.7) continue;
     W = sqrt(0.93827 * 0.93827 + Q2 * (1.0 / x - 1.0));
     if (W < 2.3) continue;
+    Estat = Estat * 1.3;
     hxSOLIDp->Fill(x, 1.0/Estat/Estat);
     hQ2SOLIDp->Fill(Q2, 1.0/Estat/Estat);
   }
