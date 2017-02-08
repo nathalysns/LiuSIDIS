@@ -58,10 +58,10 @@ int main(int argc, char * argv){
 
   double xSOLID[9] = {0.0, 0.05, 0.15, 0.25, 0.35, 0.45, 0.55, 0.65, 1.0};
   double xCLAS12[9] = {0.0, 0.05, 0.15, 0.25, 0.35, 0.45, 0.55, 0.68, 1.0};
-  double xSBS[9] = {0.0, 0.05, 0.15, 0.25, 0.35, 0.45, 0.55, 0.65, 0.78};
+  double xSBS[9] = {0.0, 0.05, 0.15, 0.25, 0.35, 0.45, 0.55, 0.78, 1.0};
 
   double Q2SOLID[9] = {0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 8.0, 10.0};
-  double Q2CLAS12[9] = {0.0, 1.0, 2.0, 3.0, 4.0, 5.999, 6.0, 8.0, 10.0};
+  double Q2CLAS12[9] = {0.0, 1.0, 2.0, 3.0, 4.0, 5.9999, 6.0, 8.0, 10.0};
   double Q2SBS[9] = {0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 8.0, 10.0};
 
   TH1D * hxSOLIDp = new TH1D("hxSOLIDp", "", 8, xSOLID);
@@ -92,10 +92,14 @@ int main(int argc, char * argv){
   }
   //hQ2CLAS12->SetBinContent(5, (hQ2CLAS12->GetBinContent(5) + hQ2CLAS12->GetBinContent(5)) / 2.0 * 2.0);
   //hQ2CLAS12->SetBinContent(6, hQ2CLAS12->GetBinContent(5) / 3.0);
-  hxCLAS12->SetMarkerStyle(0);
+  hxCLAS12->SetMarkerStyle(22);
+  hxCLAS12->SetMarkerColor(2);
+  hxCLAS12->SetMarkerSize(2);
   hxCLAS12->SetLineWidth(2);
   hxCLAS12->SetLineColor(2);
-  hQ2CLAS12->SetMarkerStyle(0);
+  hQ2CLAS12->SetMarkerStyle(22);
+  hQ2CLAS12->SetMarkerColor(2);
+  hQ2CLAS12->SetMarkerSize(2);
   hQ2CLAS12->SetLineWidth(2);
   hQ2CLAS12->SetLineColor(2);
 
@@ -114,10 +118,14 @@ int main(int argc, char * argv){
     hxSOLIDp->SetBinContent(i, hxSOLIDp->GetBinContent(i) / (xSOLID[i] - xSOLID[i-1]));
     hQ2SOLIDp->SetBinContent(i, hQ2SOLIDp->GetBinContent(i) / (Q2SOLID[i] - Q2SOLID[i-1]));
   }
-  hxSOLIDp->SetMarkerStyle(0);
+  hxSOLIDp->SetMarkerStyle(20);
+  hxSOLIDp->SetMarkerColor(4);
+  hxSOLIDp->SetMarkerSize(2);
   hxSOLIDp->SetLineWidth(2);
   hxSOLIDp->SetLineColor(4);
-  hQ2SOLIDp->SetMarkerStyle(0);
+  hQ2SOLIDp->SetMarkerStyle(20);
+  hQ2SOLIDp->SetMarkerColor(4);
+  hQ2SOLIDp->SetMarkerSize(2);
   hQ2SOLIDp->SetLineWidth(2);
   hQ2SOLIDp->SetLineColor(4);
 
@@ -135,12 +143,16 @@ int main(int argc, char * argv){
     hxSBS->SetBinContent(i, hxSBS->GetBinContent(i) / (xSBS[i] - xSBS[i-1]));
     hQ2SBS->SetBinContent(i, hQ2SBS->GetBinContent(i) / (Q2SBS[i] - Q2SBS[i-1]));
   }
-  hQ2SBS->SetBinContent(1, hQ2SBS->GetBinContent(2));
-  hxSBS->SetBinContent(8, hxSBS->GetBinContent(7));
-  hxSBS->SetMarkerStyle(0);
+  //hQ2SBS->SetBinContent(1, hQ2SBS->GetBinContent(2));
+  hxSBS->SetBinContent(7, hxSBS->GetBinContent(7) * 2.3);
+  hxSBS->SetMarkerStyle(22);
+  hxSBS->SetMarkerColor(2);
+  hxSBS->SetMarkerSize(2);
   hxSBS->SetLineWidth(2);
   hxSBS->SetLineColor(2);
-  hQ2SBS->SetMarkerStyle(0);
+  hQ2SBS->SetMarkerStyle(22);
+  hQ2SBS->SetMarkerColor(2);
+  hQ2SBS->SetMarkerSize(2);
   hQ2SBS->SetLineWidth(2);
   hQ2SBS->SetLineColor(2);
 
@@ -158,10 +170,14 @@ int main(int argc, char * argv){
     hxSOLIDn->SetBinContent(i, hxSOLIDn->GetBinContent(i) / (xSOLID[i] - xSOLID[i-1]));
     hQ2SOLIDn->SetBinContent(i, hQ2SOLIDn->GetBinContent(i) / (Q2SOLID[i] - Q2SOLID[i-1]));
   }
-  hxSOLIDn->SetMarkerStyle(0);
+  hxSOLIDn->SetMarkerStyle(20);
+  hxSOLIDn->SetMarkerColor(4);
+  hxSOLIDn->SetMarkerSize(2);
   hxSOLIDn->SetLineWidth(2);
   hxSOLIDn->SetLineColor(4);
-  hQ2SOLIDn->SetMarkerStyle(0);
+  hQ2SOLIDn->SetMarkerStyle(20);
+  hQ2SOLIDn->SetMarkerColor(4);
+  hQ2SOLIDn->SetMarkerSize(2);
   hQ2SOLIDn->SetLineWidth(2);
   hQ2SOLIDn->SetLineColor(4);
 
@@ -194,12 +210,12 @@ int main(int argc, char * argv){
 
   
   TLegend * leg_sbs = new TLegend(0.15, 0.15, 0.75, 0.28);
-  leg_sbs->AddEntry(hxSOLIDn, "SoLID E12-10-006 with ^{3}He", "l");
-  leg_sbs->AddEntry(hxSBS, "SBS E12-09-018 with ^{3}He", "l");
+  leg_sbs->AddEntry(hxSOLIDn, "SoLID E12-10-006 with ^{3}He", "lp");
+  leg_sbs->AddEntry(hxSBS, "SBS E12-09-018 with ^{3}He", "lp");
 
   TLegend * leg_clas = new TLegend(0.15, 0.15, 0.75, 0.28);
-  leg_clas->AddEntry(hxSOLIDp, "SoLID E12-11-108 with NH_{3}", "l");
-  leg_clas->AddEntry(hxCLAS12, "CLAS12 C12-11-111 with HDice", "l");
+  leg_clas->AddEntry(hxSOLIDp, "SoLID E12-11-108 with NH_{3}", "lp");
+  leg_clas->AddEntry(hxCLAS12, "CLAS12 C12-11-111 with HDice", "lp");
 
 
   TCanvas * cx = new TCanvas("cx", "", 800, 600);
@@ -211,11 +227,13 @@ int main(int argc, char * argv){
   hxSBS->Draw("esame");
   leg_sbs->Draw("same");
   cx->Print("fom_solid_sbs_x.pdf");
+  cx->Print("fom_solid_sbs_x.C");
   hx->Draw();
   hxSOLIDp->Draw("esame");
   hxCLAS12->Draw("esame");
   leg_clas->Draw("same");
   cx->Print("fom_solid_clas12_x.pdf");
+  cx->Print("fom_solid_clas12_x.C");
 
   TCanvas * cQ2 = new TCanvas("cQ2", "", 800, 600);
   cQ2->SetBottomMargin(0.15);
@@ -226,11 +244,13 @@ int main(int argc, char * argv){
   hQ2SBS->Draw("esame");
   leg_sbs->Draw("same");
   cQ2->Print("fom_solid_sbs_Q2.pdf");
+  cQ2->Print("fom_solid_sbs_Q2.C");
   hQ2->Draw();
   hQ2SOLIDp->Draw("esame");
   hQ2CLAS12->Draw("esame");
   leg_clas->Draw("same");
   cQ2->Print("fom_solid_clas12_Q2.pdf");
+  cQ2->Print("fom_solid_clas12_Q2.C");
 
 
   return 0;
