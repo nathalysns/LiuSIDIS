@@ -67,6 +67,9 @@ int main(int argc, char * argv[]){
   const double nedm95 = 3.57e-26 / Xscale;
   
   efx = efx1;
+  if (argc > 2){
+    efx = efx2;
+  }
   
   if (opt == 1){//
     c0->Clear();
@@ -144,4 +147,24 @@ double efx1(const double * x, const double * par){
     + pow( etu * dd / td, 2)
     + pow( ets * ds / td, 2);
   return sqrt(edu2) + sqrt(pow(edn / td, 2));
+}
+
+double efx2(const double * x, const double * par){
+  double dd = x[0];//d quark edm
+  double ds = par[0];//s quark edm
+  double dn = par[1];//neutron edm
+  double tu = par[2];//u quark tensor charge
+  double td = par[3];//d quark tensor charge
+  double ts = par[4];//s quark tensor charge
+  double edn = par[5];//error of dn
+  double etu = par[6];//error of tu
+  double etd = par[7];//error of td
+  double ets = par[8];//error of ts
+  double du = fx(x, par);
+  double edu2 = 
+    max(pow((dn - tu * dd - ts * ds) / td, 2), pow((-edn - tu * dd - ts * ds) / td, 2)) * pow(etd / td, 2)
+    + pow( etu * dd / td, 2)
+    + pow( ets * ds / td, 2)
+    + pow( edn / td, 2);
+  return sqrt(edu2);
 }
