@@ -162,7 +162,7 @@ double efx2(const double * x, const double * par){
   double ets = par[8];//error of ts
   double du = fx(x, par);
   double edu2 = 
-    max(pow((dn - tu * dd - ts * ds) / td, 2), pow((-edn - tu * dd - ts * ds) / td, 2)) * pow(etd / td, 2)
+    max(pow((dn - tu * dd - ts * ds) / td, 2), pow((dn - tu * dd - ts * ds) / td, 2)) * pow(etd / td, 2)
     + pow( etu * dd / td, 2)
     + pow( ets * ds / td, 2)
     + pow( edn / td, 2);
