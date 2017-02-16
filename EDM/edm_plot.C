@@ -14,7 +14,9 @@
 using namespace std;
 
 double fx(const double * x, const double * par);
-double efx(const double * x, const double * par);
+double (*efx)(const double *, const double *);
+double efx1(const double * x, const double * par);
+double efx2(const double * x, const double * par);
 
 int main(int argc, char * argv[]){
 
@@ -63,6 +65,8 @@ int main(int argc, char * argv[]){
   const double nedm68 = 1.82e-26 / Xscale;
   const double nedm90 = 2.99e-26 / Xscale;
   const double nedm95 = 3.57e-26 / Xscale;
+  
+  efx = efx1;
   
   if (opt == 1){//
     c0->Clear();
@@ -123,7 +127,7 @@ double fx(const double * x, const double * par){
   return du;
 }
 
-double efx(const double * x, const double * par){
+double efx1(const double * x, const double * par){
   double dd = x[0];//d quark edm
   double ds = par[0];//s quark edm
   double dn = par[1];//neutron edm
