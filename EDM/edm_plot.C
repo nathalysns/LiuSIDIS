@@ -58,6 +58,7 @@ int main(int argc, char * argv[]){
   c0->SetLeftMargin(0.15);
 
   double x[100], y[100], err[100], err1[100], err2[100];
+  double y1[100], y2[100];
   for (int i = 0; i < 100; i++)
     x[i] = (Xmin + (Xmax - Xmin) / 99.0 * i) * 1.0;
   
@@ -84,7 +85,6 @@ int main(int argc, char * argv[]){
     TGraphErrors * g1 = new TGraphErrors(100, x, y, 0, err);
     g1->SetLineColorAlpha(4, 1.0);
     g1->SetFillColorAlpha(4, 1.0);
-    g1->DrawClone("3same");
     //SoLID
     double par2[9] = {0.0, 0.0, 0.413, -0.229, 0.0, nedm90, 0.018, 0.008, 0.0};//SoLID
     for (int i = 0; i < 100; i++){
@@ -94,7 +94,6 @@ int main(int argc, char * argv[]){
     TGraphErrors * g2 = new TGraphErrors(100, x, y, 0, err);
     g2->SetLineColorAlpha(2, 1.0);
     g2->SetFillColorAlpha(2, 1.0);
-    g2->DrawClone("3same");
     //SoLID + nEDM
     double par3[9] = {0.0, 0.0, 0.413, -0.229, 0.0, 0.01 * nedm90, 0.018, 0.008, 0.0};//SoLID
     for (int i = 0; i < 100; i++){
@@ -104,11 +103,13 @@ int main(int argc, char * argv[]){
     TGraphErrors * g3 = new TGraphErrors(100, x, y, 0, err);
     g3->SetLineColorAlpha(1, 1.0);
     g3->SetFillColorAlpha(1, 1.0);
-    g3->DrawClone("3same");
-    TLegend * l0 = new TLegend(0.15, 0.72, 0.4, 0.9);
+    TLegend * l0 = new TLegend(0.15, 0.72, 0.45, 0.9);
     l0->AddEntry(g1, "#font[22]{Kang et al. (2016)}", "f");
     l0->AddEntry(g2, "#font[22]{SoLID projection}", "f");
     l0->AddEntry(g3, "#font[22]{SoLID + future nEDM}", "f");
+    g1->DrawClone("3same");
+    g2->DrawClone("3same");
+    g3->DrawClone("3same");
     h0->DrawClone("axissame");
     l0->Draw("same");
     c0->Print("solid_edm.pdf");
@@ -123,11 +124,20 @@ int main(int argc, char * argv[]){
     for (int i = 0; i < 100; i++){
       y[i] = fx(&x[i], par1);
       err[i] = efx(&x[i], par1);
+      y1[i] = y[i] + err[i];
+      y2[i] = y[i] - err[i];
     }
     TGraphErrors * g1 = new TGraphErrors(100, x, y, 0, err);
     g1->SetLineColorAlpha(1, 1.0);
     g1->SetFillColorAlpha(1, 1.0);
-    //g1->DrawClone("3same");
+    TGraph * g1a = new TGraph(100, x, y1);
+    g1a->SetLineColorAlpha(1, 1.0);
+    g1a->SetLineWidth(2);
+    g1a->SetLineStyle(2);
+    TGraph * g1b = new TGraph(100, x, y2);
+    g1b->SetLineColorAlpha(1, 1.0);
+    g1b->SetLineWidth(2);
+    g1b->SetLineStyle(2);
     //ETMC15 PRD92(2015)114513
     double par2[9] = {0.0, 0.0, 0.791, -0.236, 0.0, nedm68, 0.053, 0.033, 0.0};//SoLID
     for (int i = 0; i < 100; i++){
@@ -135,9 +145,8 @@ int main(int argc, char * argv[]){
       err[i] = efx(&x[i], par2);
     }
     TGraphErrors * g2 = new TGraphErrors(100, x, y, 0, err);
-    g2->SetLineColorAlpha(2, 0.6);
-    g2->SetFillColorAlpha(2, 0.6);
-    //g2->DrawClone("3same");
+    g2->SetLineColorAlpha(2, 1.0);
+    g2->SetFillColorAlpha(2, 1.0);
     //DSE PRD91(2015)074004
     double par3[9] = {0.0, 0.0, 0.55, -0.11, 0.0, nedm68, 0.08, 0.02, 0.0};//SoLID
     for (int i = 0; i < 100; i++){
@@ -148,13 +157,15 @@ int main(int argc, char * argv[]){
     g3->SetLineColorAlpha(4, 1.0);
     g3->SetFillColorAlpha(4, 1.0);
     //g3->DrawClone("3same");
-    TLegend * l0 = new TLegend(0.15, 0.72, 0.4, 0.9);
+    TLegend * l0 = new TLegend(0.15, 0.72, 0.45, 0.9);
     l0->AddEntry(g1, "#font[22]{LQCD Bhattacharya et al. (2016)}", "f");
     l0->AddEntry(g2, "#font[22]{LQCD Abdel-Rehim et al. (2015)}", "f");
     l0->AddEntry(g3, "#font[22]{DSE Pitschmann et al. (2015)}", "f");
     g3->DrawClone("3same");
     g1->DrawClone("3same");
     g2->DrawClone("3same");
+    g1a->DrawClone("Lsame");
+    g1b->DrawClone("Lsame");
     h0->DrawClone("axissame");
     l0->DrawClone("same");
     c0->Print("lattice_dse_edm.pdf");
