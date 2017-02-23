@@ -351,7 +351,184 @@ int main(int argc, char * argv[]){
 
   if (opt == 2){
     c0->Clear();
-    
+    c0->SetCanvasSize(1200, 800);
+    gStyle->SetEndErrorSize(6);
+    h0->GetXaxis()->SetLimits(0.1, 2.3);
+    h0->GetYaxis()->SetRangeUser(-26, -6.0);
+    h0->GetXaxis()->SetNdivisions(5, 5, 0, kTRUE);
+    h0->GetYaxis()->SetNdivisions(0, 0, 0, kTRUE);
+    h0->DrawClone("AXIS");
+    double iy = -10.0;
+    double Xtext = 1.6;
+    double tsize = 0.027;
+    double msize = 1.3;
+    double lwidth = 1.;
+    TLatex * t0;
+    t0 = new TLatex(0.75, -8.0, "#font[32]{#delta u - #delta d}");
+    t0->SetTextAlign(22);
+    t0->DrawClone("same");
+
+    TGraphErrors * a0 = new TGraphErrors(1);
+    a0->SetMarkerStyle(8);
+    a0->SetMarkerColor(8);
+    a0->SetMarkerSize(msize);
+    a0->SetLineColor(8);
+    a0->SetLineWidth(lwidth);
+    //DSE PRD91(2015)074004 Pitschmann et al.
+    iy -= 1.0;
+    a0->SetPoint(0, 0.66, iy);
+    a0->SetPointError(0, 0.10, 0);
+    t0 = new TLatex(Xtext, iy, "#font[22]{Pitschmann et al. (2015)}");
+    t0->SetTextAlign(12);
+    t0->SetTextSize(tsize);
+    a0->DrawClone("pesame");
+    t0->DrawClone("same");
+    //DSE PRD88(2013)074036 Yamanaka et al.
+    iy -= 1.0;
+    a0->SetPoint(0, 1.0, iy);
+    t0 = new TLatex(Xtext, iy, "#font[22]{Yamanaka et al. (2013)}");
+    t0->SetTextAlign(12);
+    t0->SetTextSize(tsize);
+    a0->DrawClone("pxsame");
+    t0->DrawClone("same");
+
+    TGraphErrors * a1 = new TGraphErrors(1);
+    a1->SetMarkerStyle(8);
+    a1->SetMarkerColor(4);
+    a1->SetMarkerSize(msize);
+    a1->SetLineColor(4);
+    a1->SetLineWidth(lwidth);
+    //Lattice PRD94(2016)054508 Bhattacharya et al.
+    iy -= 1.0;
+    a1->SetPoint(0, 0.987, iy);
+    a1->SetPointError(0, 0.051, 0);
+    t0 = new TLatex(Xtext, iy, "#font[22]{Bhattacharya et al. (2016)}");
+    t0->SetTextAlign(12);
+    t0->SetTextSize(tsize);
+    a1->DrawClone("pesame");
+    t0->DrawClone("same");
+    //Lattice PRD92(2015)114513 Abdel-Rehim et al.
+    iy -= 1.0;
+    a1->SetPoint(0, 1.027, iy);
+    a1->SetPointError(0, 0.062, 0);
+    t0 = new TLatex(Xtext, iy, "#font[22]{Abdel-Rehim et al. (2015)}");
+    t0->SetTextAlign(12);
+    t0->SetTextSize(tsize);
+    a1->DrawClone("pesame");
+    t0->DrawClone("same");
+    //Lattice PRD91(2015)054501 Bali et al.
+    iy -= 1.0;
+    a1->SetPoint(0, 1.005, iy);
+    a1->SetPointError(0, 0.017, 0);
+    t0 = new TLatex(Xtext, iy, "#font[22]{Bali et al. (2015)}");
+    t0->SetTextAlign(12);
+    t0->SetTextSize(tsize);
+    a1->DrawClone("pesame");
+    t0->DrawClone("same");
+    //Lattice PRD86(2012)114509 Green et al.
+    iy -= 1.0;
+    a1->SetPoint(0, 1.038, iy);
+    a1->SetPointError(0, 0.0163, 0);
+    t0 = new TLatex(Xtext, iy, "#font[22]{Green et al. (2012)}");
+    t0->SetTextAlign(12);
+    t0->SetTextSize(tsize);
+    a1->DrawClone("pesame");
+    t0->DrawClone("same");
+    //Lattice PRD82(2010)014501 Aoki et al.
+    iy -= 1.0;
+    a1->SetPoint(0, 0.990, iy);
+    a1->SetPointError(0, 0.035, 0);
+    t0 = new TLatex(Xtext, iy, "#font[22]{Aoki et al. (2010)}");
+    t0->SetTextAlign(12);
+    t0->SetTextSize(tsize);
+    a1->DrawClone("pesame");
+    t0->DrawClone("same");
+    //Lattice PLB627(2005)113 Gockeler et al.
+    iy -= 1.0;
+    a1->SetPoint(0, 1.068, iy);
+    a1->SetPointError(0, 0.016, 0);
+    t0 = new TLatex(Xtext, iy, "#font[22]{Gockeler et al. (2005)}");
+    t0->SetTextAlign(12);
+    t0->SetTextSize(tsize);
+    a1->DrawClone("pesame");
+    t0->DrawClone("same");
+
+    TGraphAsymmErrors * a3 = new TGraphAsymmErrors(1);
+    a3->SetMarkerStyle(8);
+    a3->SetMarkerColor(1);
+    a3->SetMarkerSize(msize);
+    a3->SetLineColor(1);
+    a3->SetLineWidth(lwidth);
+    //Fit PRD93(2016)014009 Kang et al.
+    iy -= 1.0;
+    a3->SetPoint(0, 0.61, iy);
+    a3->SetPointError(0, 0.25, 0.15, 0, 0);
+    t0 = new TLatex(Xtext, iy, "#font[22]{Kang et al. (2016)}");
+    t0->SetTextAlign(12);
+    t0->SetTextSize(tsize);
+    a3->DrawClone("pesame");
+    t0->DrawClone("same");
+    //Fit JHEP05(2015)123 Radici et al.
+    iy -= 1.0;
+    a3->SetPoint(0, 0.81, iy);
+    a3->SetPointError(0, 0.44, 0.44, 0, 0);
+    t0 = new TLatex(Xtext, iy, "#font[22]{Radici et al. (2015)}");
+    t0->SetTextAlign(12);
+    t0->SetTextSize(tsize);
+    a3->DrawClone("pesame");
+    t0->DrawClone("same");
+    //Fit 1401.0483 Goldstein et al.
+    iy -= 1.0;
+    a3->SetPoint(0, 0.979, iy);
+    a3->SetPointError(0, 0.25, 0.25, 0, 0);
+    t0 = new TLatex(Xtext, iy, "#font[22]{Goldstein et al. (2014)}");
+    t0->SetTextAlign(12);
+    t0->SetTextSize(tsize);
+    a3->DrawClone("pesame");
+    t0->DrawClone("same");
+    //Fit PRD87(2013)094019 Anselmino et al.
+    iy -= 1.0;
+    a3->SetPoint(0, 0.64, iy);
+    a3->SetPointError(0, 0.32, 0.28, 0, 0);
+    t0 = new TLatex(Xtext, iy, "#font[22]{Anselmino et al. (2013)}");
+    t0->SetTextAlign(12);
+    t0->SetTextSize(tsize);
+    a3->DrawClone("pesame");
+    t0->DrawClone("same");
+    //Fit PLB767(2017)91 Ye et al.
+    iy -= 1.0;
+    a3->SetPoint(0, 0.64, iy);
+    a3->SetPointError(0, 0.15, 0.15, 0, 0);
+    t0 = new TLatex(Xtext, iy, "#font[22]{Ye et al. (2017)}");
+    t0->SetTextAlign(12);
+    t0->SetTextSize(tsize);
+    a3->DrawClone("pesame");
+    t0->DrawClone("same");
+
+    TGraphErrors * a4 = new TGraphErrors(1);
+    a4->SetMarkerStyle(8);
+    a4->SetMarkerColor(2);
+    a4->SetMarkerSize(msize);
+    a4->SetLineColor(2);
+    a4->SetLineWidth(lwidth);
+    //SoLID PLB767(2017)91 Ye et al. 
+    iy -= 1.0;
+    a4->SetPoint(0, 0.64, iy);
+    a4->SetPointError(0, 0.021, 0);
+    t0 = new TLatex(Xtext, iy, "#font[22]{JLab12 SoLID}");
+    t0->SetTextAlign(12);
+    t0->SetTextSize(tsize);
+    a4->DrawClone("pesame");
+    t0->DrawClone("same");
+
+    TLegend * leg = new TLegend(0.63, 0.75, 0.9, 0.9);
+    leg->AddEntry(a0, "#font[22]{Dyson-Schwinger}", "p");
+    leg->AddEntry(a1, "#font[22]{Lattice QCD}", "p");
+    leg->AddEntry(a3, "#font[22]{Phenomenology}", "p");
+    leg->AddEntry(a4, "#font[22]{Future experiment}", "p");
+
+
+    leg->Draw("same");
     c0->Print("gt1.pdf");
   }
 
