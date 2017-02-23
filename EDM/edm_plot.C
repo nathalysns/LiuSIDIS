@@ -27,8 +27,8 @@ int main(int argc, char * argv[]){
 
   const double Xscale = 1e-25;
   const double Yscale = 1e-25;
-  const double Xmin = -0.31;
-  const double Xmax = 0.31;
+  const double Xmin = -1.01;
+  const double Xmax = 1.01;
   const double Ymin = -2.6;
   const double Ymax = 3.6;
   //base (blank)
@@ -113,6 +113,34 @@ int main(int argc, char * argv[]){
     h0->DrawClone("axissame");
     l0->Draw("same");
     c0->Print("solid_edm.pdf");
+    
+    for (int i = 0; i < 100; i++){
+      y[i] = -x[i];
+    }
+    TGraph * gl = new TGraph(100, x, y);
+    gl->SetLineColorAlpha(1, 0.8);
+    gl->SetLineWidth(2);
+    gl->SetLineStyle(2);
+    gl->DrawClone("Lsame");
+    //c0->Print("solid_edm_1.pdf");
+    double par4[9] = {0.0, 0.0, 0.413, -0.229, 0.0, nedm90, 0.0, 0.0, 0.0};//SoLID
+    for (int i = 0; i < 100; i++){
+      y[i] = fx(&x[i], par4);
+      err[i] = efx(&x[i], par4);
+      err1[i] = y[i] + err[i];
+      err2[i] = y[i] - err[i];
+    }
+    TGraph * limit1 = new TGraph(100, x, err1);
+    limit1->SetLineColor(5);
+    limit1->SetLineWidth(2);
+    limit1->SetLineStyle(5);
+    TGraph * limit2 = new TGraph(100, x, err2);
+    limit2->SetLineColor(5);
+    limit2->SetLineWidth(2);
+    limit2->SetLineStyle(5);
+    limit1->DrawClone("Lsame");
+    limit2->DrawClone("Lsame");
+    c0->Print("solid_edm_1.pdf");
   }
 
   if (opt == 2){//lattice
