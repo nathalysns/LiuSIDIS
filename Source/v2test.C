@@ -78,7 +78,7 @@ int main(int argc, char * argv[]){
 
   
   Long64_t Nsim1 = 1000000;
-  Long64_t Nsim2 = 10000;
+  Long64_t Nsim2 = 100000;
   double acc = 0.0;
 
   TH1D * hx = new TH1D("hx", "", 100, 0.0, 0.7);
@@ -186,7 +186,7 @@ int main(int argc, char * argv[]){
   hphih->SetLineColor(2);
 
   for (Long64_t i = 0; i < Nsim2; i++){
-    if (i%100 == 0) cout << i << endl;
+    if (i%1000 == 0) cout << i << endl;
     weight = mysidis.GibbsSampler(0, 1);
     acc = 0;
     lp = mysidis.GetLorentzVector("lp");

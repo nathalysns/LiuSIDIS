@@ -731,7 +731,7 @@ int Lsidis::GibbsStarter(const int mode = 0, const int method = 0){//prepare for
   double var[6];
   double weight = 0;
   double judge = 0;
-  const itermax = 10;
+  const int itermax = 10;
   int iter = 0;
   while (judge < 1.0e-9 && iter < itermax){
     iter++;
@@ -797,7 +797,7 @@ double Lsidis::GibbsSampler(const int mode = 0, const int method = 0){//Generate
 	else if (method == 1){//generate in x, Q2, z, Pt, phih, phiS
 	  double y0 = Xseed[1] / (2.0 * Xseed[0] * (PP * Pl));
 	  jacobian = 2.0 * Xseed[3] * y0 / Xseed[1];
-	  SetVariables(var[0], y0, var[2], var[3], var[4], var[5]);
+	  SetVariables(Xseed[0], y0, Xseed[2], Xseed[3], Xseed[4], Xseed[5]);
 	}
 	CalculateFinalState();
 	Xhisto[ih]->SetBinContent(ib, dsigma(mode) * jacobian);
@@ -811,7 +811,7 @@ double Lsidis::GibbsSampler(const int mode = 0, const int method = 0){//Generate
 	else if (method == 1){//generate in x, Q2, z, Pt, phih, phiS
 	  double y0 = Xseed[1] / (2.0 * Xseed[0] * (PP * Pl));
 	  jacobian = 2.0 * Xseed[3] * y0 / Xseed[1];
-	  SetVariables(var[0], y0, var[2], var[3], var[4], var[5]);
+	  SetVariables(Xseed[0], y0, Xseed[2], Xseed[3], Xseed[4], Xseed[5]);
 	}
 	CalculateFinalState();
       } while(dsigma(mode) == 0);
