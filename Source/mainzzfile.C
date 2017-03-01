@@ -1,4 +1,4 @@
-#include "../Header/Lsidis1.h"
+#include "Lsidis.h"
 
 using namespace std;
 
@@ -38,10 +38,7 @@ int main(int argc, char * argv[]){
 
   double vz = -370.0;
   
-  double Ngen = 2.3e4;
-  if (strcmp(argv[1], "K+") == 0 || strcmp(argv[1], "K0") == 0) Ngen = 3.5e4;
-  if (strcmp(argv[1], "K-") == 0) Ngen = 5.0e4;
-  if (strcmp(argv[1], "p") == 0) Ngen = 2.7e4;
+  double Ngen = 5.0e3;
 
   int Nrec = 0;
  
@@ -58,10 +55,13 @@ int main(int argc, char * argv[]){
     else return 1;
    
     Nrec = 0;
-    for (double i = 0; i < Ngen; i++){
+    for (int i = 0; i < Ngen; i++){
       vz = gRandom->Uniform(-370, -330);
-      weight = mysidis.GenerateEvent(0, 1);//please check the consistency with Xmin
+      //weight = mysidis.GenerateEvent(0, 1);//please check the consistency with Xmin
+      weight = mysidis.GibbsSampler(0, 1);
       if (weight > 0){
+	if (i%100 == 0)
+	  cout << "File: " << j << "   #" << i << endl;
 	lp = mysidis.GetLorentzVector("lp");
 	Ph = mysidis.GetLorentzVector("Ph");
 	//number of particles, x, z, Q2, Beam polarization, Pt, phih, ...

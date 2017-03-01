@@ -803,7 +803,13 @@ double Lsidis::GibbsSampler(const int mode = 0, const int method = 0){//Generate
 	Xhisto[ih]->SetBinContent(ib, dsigma(mode) * jacobian);
       }
       do {//Sample and double check
-	Xseed[ih] = Xhisto[ih]->GetRandom();
+	if (Xhisto[ih]->Integral(1,-1) > 0){
+	  Xseed[ih] = Xhisto[ih]->GetRandom();
+	}
+	else {
+	  Xseed[ih] = gRandom->Uniform(Xmin[ih], Xmax[ih]);
+	  //printf("Warning: GibbsSampler to zero point!\n");
+	}
 	if (method == 0){//generate in x, y, z, Pt, phih, phiS
 	  jacobian = 2.0 * Xseed[3];
 	  SetVariables(Xseed[0], Xseed[1], Xseed[2], Xseed[3], Xseed[4], Xseed[5]);
@@ -814,7 +820,7 @@ double Lsidis::GibbsSampler(const int mode = 0, const int method = 0){//Generate
 	  SetVariables(Xseed[0], y0, Xseed[2], Xseed[3], Xseed[4], Xseed[5]);
 	}
 	CalculateFinalState();
-      } while(dsigma(mode) == 0);
+      } while(dsigma(mode) < 1.e-20);
     }
   }
   return sigmatotal;
