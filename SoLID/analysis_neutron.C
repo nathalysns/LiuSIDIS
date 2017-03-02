@@ -21,7 +21,9 @@ int main(int argc, char * argv[]){
     cout << "opt = 5: output file for Sivers analysis" << endl;
     cout << "     ./analysis 5 <rootfile1> <rootfile2> <csvfile>" << endl;
     cout << "opt = 6: make kinematic covarage file" << endl;
-    cout << "     ./analysis 6 <Ebeam>" << endl;
+    cout << "     ./analysis 6 " << endl;
+    cout << "opt = 7: make rate distribution file" << endl;
+    cout << "     ./analysis 7 " << endl;
     return 0;
   }
 
@@ -92,7 +94,12 @@ int main(int argc, char * argv[]){
   if (opt == 6){
     MakeKinematicCoveragePlots(11.0, "NeutronResults/coverage_11.root");
     MakeKinematicCoveragePlots(8.8, "NeutronResults/coverage_8.8.root");
-  }			
+  }	
+
+  if (opt == 7){
+    MakeRateDistributionPlots(11.0, "NeutronResults/ratedistri_11.root");
+    MakeRateDistributionPlots(8.8, "NeutronResults/ratedistri_8.8.root");
+  }
 
   return 0;
 }

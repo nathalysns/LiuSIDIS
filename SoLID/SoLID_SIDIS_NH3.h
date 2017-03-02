@@ -64,11 +64,12 @@ int GetTotalRate(const double Ebeam, const char * hadron){//Estimate the total r
   double Xmax[6] = {0.7, 8.0, 0.7, 1.6, M_PI, M_PI};
   sidis.SetRange(Xmin, Xmax);
   double sum = 0.0;
-  double Nsim = 1.0e7;
+  Long64_t Nsim = 100000000;
   double weight = 0.0;
   TLorentzVector lp(0, 0, 0, 0);
   TLorentzVector Ph(0, 0, 0, 0);
   for (Long64_t i = 0; i < Nsim; i++){
+    if (i%(Nsim/20) == 0) std::cout << i << std::endl;
     weight = sidis.GenerateEvent(0, 1);
     if (weight > 0){
       if (sidis.GetVariable("W") < 2.3) continue;
@@ -80,6 +81,8 @@ int GetTotalRate(const double Ebeam, const char * hadron){//Estimate the total r
       sum += weight * GetAcceptance_e(lp) * GetAcceptance_pi(Ph, hadron);
     }
   }
+  printf("\n");
+  printf("Total rate: %.4E  (%.1f GeV %s)\n\n", sum * lumi / Nsim, Ebeam, hadron);
   std::cout << "Total rate: " << sum * lumi / Nsim << std::endl;
   return 0;
 }
@@ -88,10 +91,10 @@ int MakeKinematicCoveragePlots(const double Ebeam, const char * hadron, const ch
   Lsidis sidis;
   TLorentzVector l(0, 0, Ebeam, Ebeam);
   TLorentzVector P(0, 0, 0, 0.938272);
-  sidis.SetNucleus(2,1);
+  sidis.SetNucleus(0.334*10.0+0.593*2.0, 0.334*7.0+0.593*2.0);
   sidis.SetHadron(hadron);
   sidis.SetInitialState(l, P);
-  sidis.SetPDFset("CJ15lo");
+  sidis.SetPDFset("CT14lo");
   sidis.SetFFset("DSSFFlo");
   double Xmin[6] = {0.0, 1.0, 0.3, 0.0, -M_PI, -M_PI};
   double Xmax[6] = {0.7, 9.0, 0.7, 2.0, M_PI, M_PI};
@@ -200,7 +203,7 @@ int MakeKinematicCoveragePlots(const double Ebeam, const char * hadron, const ch
   double weight, acc_FA, acc_LA;
   TLorentzVector lp, Ph;
   for (Long64_t i = 0; i < 100000000; i++){
-    if (i % 1000000 == 0) std::cout << i / 1000000 << " %" << std::endl;
+    if (i % 1000000 == 0) std::cout << i << " %" << std::endl;
     weight = sidis.GenerateEvent(0, 1);
     if (weight > 0){
       z = sidis.GetVariable("z");
@@ -279,6 +282,134 @@ int MakeKinematicCoveragePlots(const double Ebeam, const char * hadron, const ch
   PtWp_LA->Divide(PtWp_LA); PtWp_LA->Scale(100);
   WpQ2_FA->Divide(WpQ2_FA); WpQ2_FA->Scale(100);
   WpQ2_LA->Divide(WpQ2_LA); WpQ2_LA->Scale(100);
+  fs->Write();
+  return 0;
+}
+
+int MakeRateDistributionPlots(const double Ebeam, const char * hadron, const char * savefile){
+  double lumi = 1.0e+9 * pow(0.197327, 2);
+  Lsidis sidis;
+  TLorentzVector l(0, 0, Ebeam, Ebeam);
+  TLorentzVector P(0, 0, 0, 0.938272);
+  sidis.SetNucleus(0.334*10.0+0.593*2.0, 0.334*7.0+0.593*2.0);
+  sidis.SetHadron(hadron);
+  sidis.SetInitialState(l, P);
+  sidis.SetPDFset("CT14lo");
+  sidis.SetFFset("DSSFFlo");
+  double Xmin[6] = {0.0, 1.0, 0.3, 0.0, -M_PI, -M_PI};
+  double Xmax[6] = {0.7, 10.0, 0.7, 2.0, M_PI, M_PI};
+  sidis.SetRange(Xmin, Xmax);
+  TFile * fs = new TFile(savefile, "RECREATE");
+  gStyle->SetOptStat(0);
+  //(x, Q2)
+  TH2D * xQ2 = new TH2D("xQ2", "", 700, 0.0, 0.7, 900, 0.0, 9.0);
+  xQ2->GetXaxis()->SetTitle("x");
+  xQ2->GetYaxis()->SetTitle("Q^{2} / GeV^{2}");
+  //(x, W)
+  TH2D * xW = new TH2D("xW", "", 700, 0.0, 0.7, 500, 2.0, 4.5);
+  xW->GetXaxis()->SetTitle("x");
+  xW->GetYaxis()->SetTitle("W / GeV");
+  //(x, Wp)
+  TH2D * xWp = new TH2D("xWp", "", 700, 0.0, 0.7, 500, 1.5, 4.0);
+  xWp->GetXaxis()->SetTitle("x");
+  xWp->GetYaxis()->SetTitle("W' / GeV");
+  //(x, z)
+  TH2D * xz = new TH2D("xz", "", 700, 0.0, 0.7, 600, 0.2, 0.8);
+  xz->GetXaxis()->SetTitle("x");
+  xz->GetYaxis()->SetTitle("z");
+  //(x, Pt)
+  TH2D * xPt = new TH2D("xPt", "", 700, 0.0, 0.7, 800, 0.0, 2.0);
+  xPt->GetXaxis()->SetTitle("x");
+  xPt->GetYaxis()->SetTitle("P_{T} / GeV");
+  //(z, Pt)
+  TH2D * zPt = new TH2D("zPt", "", 600, 0.2, 0.8, 800, 0.0, 2.0);
+  zPt->GetXaxis()->SetTitle("z");
+  zPt->GetYaxis()->SetTitle("P_{T} / GeV");
+  //(z, Q2)
+  TH2D * zQ2 = new TH2D("zQ2", "", 600, 0.2, 0.8, 900, 0.0, 9.0);
+  zQ2->GetXaxis()->SetTitle("z");
+  zQ2->GetYaxis()->SetTitle("Q^{2} / GeV^{2}");
+  //(z, W)
+  TH2D * zW = new TH2D("zW", "", 600, 0.2, 0.8, 500, 2.0, 4.5);
+  zW->GetXaxis()->SetTitle("z");
+  zW->GetYaxis()->SetTitle("W / GeV");
+  //(z, Wp)
+  TH2D * zWp = new TH2D("zWp", "", 600, 0.2, 0.8, 500, 1.5, 4.0);
+  zWp->GetXaxis()->SetTitle("z");
+  zWp->GetYaxis()->SetTitle("W' / GeV");
+  //(Pt, Q2)
+  TH2D * PtQ2 = new TH2D("PtQ2", "", 800, 0.0, 2.0, 900, 0.0, 9.0);
+  PtQ2->GetXaxis()->SetTitle("P_{T} / GeV");
+  PtQ2->GetYaxis()->SetTitle("Q^{2} / GeV^{2}");
+  //(Pt, W)
+  TH2D * PtW = new TH2D("PtW", "", 800, 0.0, 2.0, 500, 2.0, 4.5);
+  PtW->GetXaxis()->SetTitle("P_{T} / GeV");
+  PtW->GetYaxis()->SetTitle("W / GeV");
+  //(Pt, Wp)
+  TH2D * PtWp = new TH2D("PtWp", "", 800, 0.0, 2.0, 500, 1.5, 4.0);
+  PtWp->GetXaxis()->SetTitle("P_{T} / GeV");
+  PtWp->GetYaxis()->SetTitle("W' / GeV");
+  //(W, Q2)
+  TH2D * WQ2 = new TH2D("WQ2", "", 500, 2.0, 4.5, 900, 0.0, 9.0);
+  WQ2->GetXaxis()->SetTitle("W / GeV");
+  WQ2->GetYaxis()->SetTitle("Q^{2} / GeV^{2}");
+  //(Wp, Q2)
+  TH2D * WpQ2 = new TH2D("WpQ2", "", 500, 1.5, 4.0, 900, 0.0, 9.0);
+  WpQ2->GetXaxis()->SetTitle("W' / GeV");
+  WpQ2->GetYaxis()->SetTitle("Q^{2} / GeV^{2}");
+  double x, Q2, z, Pt, W, Wp;
+  double weight, acc;
+  TLorentzVector lp, Ph;
+  Long64_t Nsim = 100000000;
+  for (Long64_t i = 0; i < Nsim; i++){
+    if (i % 10000000 == 0) std::cout << i << " %" << std::endl;
+    weight = sidis.GenerateEvent(0, 1);
+    if (weight > 0){
+      z = sidis.GetVariable("z");
+      if (z < 0.3 || z > 0.7) continue;
+      Q2 = sidis.GetVariable("Q2");
+      if (Q2 < 1.0) continue;
+      W = sidis.GetVariable("W");
+      if (W < 2.3) continue;
+      Wp = sidis.GetVariable("Wp");
+      if (Wp < 1.6) continue;
+      x = sidis.GetVariable("x");
+      Pt = sidis.GetVariable("Pt");
+      lp = sidis.GetLorentzVector("lp");
+      Ph = sidis.GetLorentzVector("Ph");
+      acc = GetAcceptance_e(lp, "all") * GetAcceptance_pi(Ph, hadron);
+      if (acc > 0){
+	xQ2->Fill(x, Q2, weight * acc);
+	xW->Fill(x, W, weight * acc);
+	xz->Fill(x, z, weight * acc);
+	xPt->Fill(x, Pt, weight * acc);
+	xWp->Fill(x, Wp, weight * acc);
+	zPt->Fill(z, Pt, weight * acc);
+	zQ2->Fill(z, Q2, weight * acc);
+	zW->Fill(z, W, weight * acc);
+	zWp->Fill(z, Wp, weight * acc);
+	PtQ2->Fill(Pt, Q2, weight * acc);
+	PtW->Fill(Pt, W, weight * acc);
+	PtWp->Fill(Pt, Wp, weight * acc);
+	WQ2->Fill(W, Q2, weight * acc);
+	WpQ2->Fill(Wp, Q2, weight * acc);
+      }
+    }
+  }
+  xQ2->Scale(lumi/Nsim);
+  xW->Scale(lumi/Nsim);
+  xz->Scale(lumi/Nsim);
+  xPt->Scale(lumi/Nsim);
+  xWp->Scale(lumi/Nsim);
+  zW->Scale(lumi/Nsim);
+  zQ2->Scale(lumi/Nsim);
+  zWp->Scale(lumi/Nsim);
+  zPt->Scale(lumi/Nsim);
+  PtQ2->Scale(lumi/Nsim);
+  WQ2->Scale(lumi/Nsim);
+  PtW->Scale(lumi/Nsim);
+  PtWp->Scale(lumi/Nsim);
+  WpQ2->Scale(lumi/Nsim);
   fs->Write();
   return 0;
 }
