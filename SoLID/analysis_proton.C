@@ -24,6 +24,8 @@ int main(int argc, char * argv[]){
     cout << "     ./analysis 6 " << endl;
     cout << "opt = 7: make rate distribution file" << endl;
     cout << "     ./analysis 7 " << endl;
+    cout << "opt = 8: make rate distribution file with R < 0.4" << endl;
+    cout << "     ./analysis 8 " << endl;
     return 0;
   }
 
@@ -103,7 +105,14 @@ int main(int argc, char * argv[]){
     MakeRateDistributionPlots(8.8, "pi+", "ProtonResults/ratedistri_8.8p.root");
     MakeRateDistributionPlots(8.8, "pi-", "ProtonResults/ratedistri_8.8m.root");
   }
-     
+  
+  if (opt == 8){
+    Rfactor0 = 0.4;
+    MakeRateDistributionPlots(11.0, "pi+", "ProtonResults/ratedistri_11p_R0.4.root");
+    MakeRateDistributionPlots(11.0, "pi-", "ProtonResults/ratedistri_11m_R0.4.root");
+    MakeRateDistributionPlots(8.8, "pi+", "ProtonResults/ratedistri_8.8p_R0.4.root");
+    MakeRateDistributionPlots(8.8, "pi-", "ProtonResults/ratedistri_8.8m_R0.4.root");
+  }
 
   return 0;
 }

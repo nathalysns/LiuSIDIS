@@ -379,6 +379,8 @@ int MakeRateDistributionPlots(const double Ebeam, const char * hadron, const cha
       Ph = sidis.GetLorentzVector("Ph");
       acc = GetAcceptance_e(lp, "all") * GetAcceptance_pi(Ph, hadron);
       if (acc > 0){
+	sidis.CalculateRfactor();
+	if (sidis.GetVariable("Rfactor") > Rfactor0) continue;
 	xQ2->Fill(x, Q2, weight * acc);
 	xW->Fill(x, W, weight * acc);
 	xz->Fill(x, z, weight * acc);

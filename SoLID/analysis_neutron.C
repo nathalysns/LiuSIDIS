@@ -24,6 +24,8 @@ int main(int argc, char * argv[]){
     cout << "     ./analysis 6 " << endl;
     cout << "opt = 7: make rate distribution file" << endl;
     cout << "     ./analysis 7 " << endl;
+    cout << "opt = 8: make rate distribution file with R < 0.4" << endl;
+    cout << "     ./analysis 8 " << endl;
     return 0;
   }
 
@@ -99,6 +101,12 @@ int main(int argc, char * argv[]){
   if (opt == 7){
     MakeRateDistributionPlots(11.0, "NeutronResults/ratedistri_11.root");
     MakeRateDistributionPlots(8.8, "NeutronResults/ratedistri_8.8.root");
+  }
+
+  if (opt == 8){
+    Rfactor0 = 0.4;
+    MakeRateDistributionPlots(11.0, "NeutronResults/ratedistri_11_R0.4.root");
+    MakeRateDistributionPlots(8.8, "NeutronResults/ratedistri_8.8_R0.4.root");
   }
 
   return 0;
