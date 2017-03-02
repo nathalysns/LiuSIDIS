@@ -9,14 +9,14 @@
 
 using namespace std;
 
-TFile * file_negative = new TFile("/var/phy/project/mepg/tl190/SoLIDacceptance/acceptance_solid_CLEO_SIDIS_3he_negative_output.root","r");
-TFile * file_positive = new TFile("/var/phy/project/mepg/tl190/SoLIDacceptance/acceptance_solid_CLEO_SIDIS_3he_positive_output.root","r");
-TH2F * acc_FA_negative = (TH2F *) file_negative->Get("acceptance_forwardangle");
-TH2F * acc_LA_negative = (TH2F *) file_negative->Get("acceptance_largeangle");
-TH2F * acc_FA_positive = (TH2F *) file_positive->Get("acceptance_forwardangle");
-TH2F * acc_LA_positive = (TH2F *) file_positive->Get("acceptance_largeangle");
+TFile * file_negative = new TFile("acceptance_solid_SIDIS_He3_electron_currentColl_output.root","r");
+TFile * file_positive = new TFile("acceptance_solid_SIDIS_He3_electron_currentColl_output.root","r");
+TH2F * acc_FA_negative = (TH2F *) file_negative->Get("acceptance_ThetaP_forwardangle");
+TH2F * acc_LA_negative = (TH2F *) file_negative->Get("acceptance_ThetaP_largeangle");
+TH2F * acc_FA_positive = (TH2F *) file_positive->Get("acceptance_ThetaP_forwardangle");
+TH2F * acc_LA_positive = (TH2F *) file_positive->Get("acceptance_ThetaP_largeangle");
 
-TFile * file_new = new TFile("acceptance_solid_SIDIS_He3_electron_output_cut5-4-3-3-1.5-1.5-1.root", "r");
+TFile * file_new = new TFile("acceptance_solid_SIDIS_He3_electron_newColl5_output.root", "r");
 TH2F * acc_FA_new = (TH2F *) file_new->Get("acceptance_ThetaP_forwardangle");
 //TH2F * acc_LA_new = (TH2F *) file_new->Get("acceptance_ThetaP_largeangle");
 
@@ -275,22 +275,22 @@ int main(int argc, char * argv[]){
   szPt->GetXaxis()->SetLabelSize(0.05);
   szPt->GetYaxis()->SetLabelSize(0.05);
 
-  TCanvas * c2 = new TCanvas("c2", "", 600, 1800);
-  c2->Divide(1, 3);
-  c2->cd(1);
-  sxz->Divide(txz);
-  sxz->GetZaxis()->SetRangeUser(0,1);
-  sxz->DrawClone("colz");
-  c2->cd(2);
-  sxPt->Divide(txPt);
-  sxPt->GetZaxis()->SetRangeUser(0,1);
-  sxPt->DrawClone("colz");
-  c2->cd(3);
-  szPt->Divide(tzPt);
-  szPt->GetZaxis()->SetRangeUser(0,1);
-  szPt->DrawClone("colz");
+  // TCanvas * c2 = new TCanvas("c2", "", 600, 1800);
+  // c2->Divide(1, 3);
+  // c2->cd(1);
+  // sxz->Divide(txz);
+  // sxz->GetZaxis()->SetRangeUser(0,1);
+  // sxz->DrawClone("colz");
+  // c2->cd(2);
+  // sxPt->Divide(txPt);
+  // sxPt->GetZaxis()->SetRangeUser(0,1);
+  // sxPt->DrawClone("colz");
+  // c2->cd(3);
+  // szPt->Divide(tzPt);
+  // szPt->GetZaxis()->SetRangeUser(0,1);
+  // szPt->DrawClone("colz");
 
-  c2->Print("NewAcceptance2D.pdf");
+  // c2->Print("NewAcceptance2D.pdf");
 
   // ////
   // rxz->GetXaxis()->SetTitle("x");
