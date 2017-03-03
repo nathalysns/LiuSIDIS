@@ -3,7 +3,7 @@
 //LHAPDF is required. Developed with v6.1
 //ROOT is required. Developed with v5.34.21
 //Potential error with other versions not tested
-//Last update date 23 Feb. 2017 version 2.0
+//Last update date 3 Mar. 2017 version 2.1
 
 #ifndef _LSIDIS_H_
 #define _LSIDIS_H_
@@ -210,7 +210,7 @@ int Lsidis::SetHadron(const char * hadron){//set final hadron
     MXminn = Mp;
   }
   else if (strcmp(hadron, "pi0") == 0){
-    hic = 0; hid = 210;
+    hic = 0; hid = 111;
     Mh = Mpi0;
     MXminp = Mp;
     MXminn = Mp;
@@ -228,7 +228,7 @@ int Lsidis::SetHadron(const char * hadron){//set final hadron
     MXminn = Mp + Mkaon;
   }
   else if (strcmp(hadron, "K0") == 0){
-    hic = 0; hid = 310;
+    hic = 0; hid = 310;//Ks
     Mh = MK0;
     MXminp = MSigmap;
     MXminn = MLambda;
@@ -833,6 +833,9 @@ int Lsidis::Test(){//Test code
 
 #endif
 
-/* update log from v1.1
+/* update log from v1.1 to 2.0
    implement Gibbs sampler for sidis event generator
+   
+   update log from v2.0 to 2.1
+   fix pid bug
 */
