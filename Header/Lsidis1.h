@@ -712,3 +712,7 @@ int Lsidis::Test(){//Test code
 }
 
 #endif
+
+// Local Variables:
+// mode: c++
+// End:

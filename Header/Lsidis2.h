@@ -839,3 +839,8 @@ int Lsidis::Test(){//Test code
    update log from v2.0 to 2.1
    fix pid bug
 */
+
+
+// Local Variables:
+// mode: c++
+// End:
