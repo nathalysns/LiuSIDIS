@@ -109,6 +109,10 @@ int main(int argc, char * argv[]){
     MakeRateDistributionPlots(8.8, "NeutronResults/ratedistri_8.8_R0.4.root");
   }
 
+  if (opt == -1){
+    MakeRateDistributionPlotZ(8.8);
+  }
+
   return 0;
 }
 	

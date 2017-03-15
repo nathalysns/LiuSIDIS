@@ -412,6 +412,66 @@ int MakeRateDistributionPlots(const double Ebeam, const char * savefile){
   return 0;
 }
 
+int MakeRateDistributionPlotZ(const double Ebeam){//Make z-? plot
+  double lumi = 1.0e+10 * pow(0.197327, 2);
+  Lsidis sidis;
+  TLorentzVector l(0, 0, Ebeam, Ebeam);
+  TLorentzVector P(0, 0, 0, 0.938272);
+  sidis.SetNucleus(2,1);
+  sidis.SetHadron("pi+");
+  sidis.SetInitialState(l, P);
+  sidis.SetPDFset("CT14lo");
+  sidis.SetFFset("DSSFFlo");
+  double Xmin[6] = {0.0, 1.0, 0.01, 0.0, -M_PI, -M_PI};
+  double Xmax[6] = {0.7, 10.0, 0.99, 2.0, M_PI, M_PI};
+  sidis.SetRange(Xmin, Xmax);
+  gStyle->SetOptStat(0);
+  //(Ph, z)
+  TH2D * Phz = new TH2D("Phz", "", 500, 0.0, 10.0, 500, 0.0, 1.0);
+  Phz->GetXaxis()->SetTitle("P_{h} / GeV");
+  Phz->GetXaxis()->SetTitleSize(0.05);
+  Phz->GetXaxis()->CenterTitle(true);
+  Phz->GetXaxis()->SetLabelSize(0.05);
+  Phz->GetYaxis()->SetTitle("z");
+  Phz->GetYaxis()->SetTitleSize(0.05);
+  Phz->GetYaxis()->CenterTitle(true);
+  Phz->GetYaxis()->SetLabelSize(0.05);
+  double x, Q2, z, Pt, W, Wp;
+  double weight, acc;
+  TLorentzVector lp, Ph;
+  Long64_t Nsim = 100000000;
+  for (Long64_t i = 0; i < Nsim; i++){
+    if (i % 10000000 == 0) std::cout << i * 100 / Nsim << " %" << std::endl;
+    weight = sidis.GenerateEvent(0, 1);
+    if (weight > 0){
+      z = sidis.GetVariable("z");
+      //if (z < 0.3 || z > 0.7) continue;
+      Q2 = sidis.GetVariable("Q2");
+      if (Q2 < 1.0) continue;
+      W = sidis.GetVariable("W");
+      if (W < 2.3) continue;
+      Wp = sidis.GetVariable("Wp");
+      if (Wp < 1.6) continue;
+      x = sidis.GetVariable("x");
+      Pt = sidis.GetVariable("Pt");
+      lp = sidis.GetLorentzVector("lp");
+      Ph = sidis.GetLorentzVector("Ph");
+      acc = GetAcceptance_e(lp, "all") * GetAcceptance_pi(Ph);
+      if (acc > 0){
+	//sidis.CalculateRfactor();
+	//if (sidis.GetVariable("Rfactor") > Rfactor0) continue;
+	Phz->Fill(Ph.P(), z, weight * acc);
+      }
+    }
+  }
+  Phz->Scale(lumi/Nsim);
+  TCanvas * c0 = new TCanvas("c0", "", 800, 600);
+  c0->SetLogz();
+  Phz->DrawClone("colz");
+  c0->Print("Phz.pdf");
+  return 0;
+}
+
 int GenerateBinInfoFile(const char * filename, const double Ebeam, const char * hadron){//Bin the data and create the bin info file
   FILE * fp = fopen(filename, "w");
   fprintf(fp, "Q2l\t Q2u\t zl\t zu\t Ptl\t Ptu\t xl\t xu\n");
