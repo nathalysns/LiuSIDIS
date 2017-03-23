@@ -63,9 +63,9 @@ int main(int argc, char * argv[]){
     double msize = 1.3;
     double lwidth = 1.;
     TLatex * t0;
-    t0 = new TLatex(0.65, -8.0, "#font[32]{#delta u}");
+    t0 = new TLatex(0.65, -8.0, "#font[32]{g_{T}^{u}}");
     t0->DrawClone("same");
-    t0 = new TLatex(-0.2, -8.0, "#font[32]{#delta d}");
+    t0 = new TLatex(-0.2, -8.0, "#font[32]{g_{T}^{d}}");
     t0->DrawClone("same");
 
 
@@ -336,7 +336,7 @@ int main(int argc, char * argv[]){
 
 
     TLegend * leg = new TLegend(0.63, 0.75, 0.9, 0.9);
-    leg->AddEntry(e0, "#font[22]{Dyson-Schwinger}", "p");
+    leg->AddEntry(e0, "#font[22]{Dyson-Schwinger equation}", "p");
     leg->AddEntry(e1, "#font[22]{Lattice QCD}", "p");
     leg->AddEntry(e2, "#font[22]{Models}", "p");
     leg->AddEntry(e3, "#font[22]{Phenomenology}", "p");
@@ -364,7 +364,7 @@ int main(int argc, char * argv[]){
     double msize = 1.3;
     double lwidth = 1.;
     TLatex * t0;
-    t0 = new TLatex(0.75, -8.0, "#font[32]{#delta u - #delta d}");
+    t0 = new TLatex(0.75, -8.0, "#font[32]{g_{T}^{(1)} = g_{T}^{u} - g_{T}^{d}}");
     t0->SetTextAlign(22);
     t0->DrawClone("same");
 
@@ -521,8 +521,8 @@ int main(int argc, char * argv[]){
     a4->DrawClone("pesame");
     t0->DrawClone("same");
 
-    TLegend * leg = new TLegend(0.63, 0.75, 0.9, 0.9);
-    leg->AddEntry(a0, "#font[22]{Dyson-Schwinger}", "p");
+    TLegend * leg = new TLegend(0.60, 0.75, 0.9, 0.9);
+    leg->AddEntry(a0, "#font[22]{Dyson-Schwinger equation}", "p");
     leg->AddEntry(a1, "#font[22]{Lattice QCD}", "p");
     leg->AddEntry(a3, "#font[22]{Phenomenology}", "p");
     leg->AddEntry(a4, "#font[22]{Future experiment}", "p");
