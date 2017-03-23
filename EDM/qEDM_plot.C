@@ -19,8 +19,8 @@ double uedm_n(const double * x, const double * par);
 double uedm_p_error(const double * x, const double * par);
 double uedm_n_error(const double * x, const double * par);
 
-double uedm(const double * x, const double * par);
-double dedm(const double * x, const double * par);
+double uedm_limit(const double * x, const double * par);
+double dedm_limit(const double * x, const double * par);
 
 
 int main(const int argc, const char * argv[]){
@@ -63,7 +63,8 @@ int main(const int argc, const char * argv[]){
     double scale = 1.0e-24;
     h0->GetXaxis()->SetTitle("#it{d_{d}} / 10^{-24} #it{e}#upointcm");
     h0->GetYaxis()->SetTitle("#it{d_{u}} / 10^{-24} #it{e}#upointcm");
-    h0->GetYaxis()->SetRangeUser(-1.5, 2.0);
+    h0->GetYaxis()->SetRangeUser(-1.2, 1.4);
+    h0->GetYaxis()->SetNdivisions(6, 5, 0);
     double dd[400];
     for (int i = 0; i < 400; i++){
       dd[i] = -2.0 + 0.01 * i;
@@ -86,13 +87,24 @@ int main(const int argc, const char * argv[]){
     TGraphErrors * g2 = new TGraphErrors(400, dd, du2, 0, eu2);
     g2->SetLineColor(2);
     g2->SetFillColor(2);
+    double par3[7] = {2.0e-29 / scale, 0.0, 0.413, 0.018, -0.229, 0.008, -2.65e-5};//current pEDM + future gT
+    double du3[400], eu3[400];
+    for (int i = 0; i < 400; i++){
+      du3[i] = uedm_p(&dd[i], par3);
+      eu3[i] = uedm_p_error(&dd[i], par3);
+    }
+    TGraphErrors * g3 = new TGraphErrors(400, dd, du3, 0, eu3);
+    g3->SetLineColor(1);
+    g3->SetFillColor(1);
     TLegend * l0 = new TLegend(0.15, 0.78, 0.45, 0.9);
     l0->AddEntry(g1, "#font[22]{current g_{T} + current d_{p}}", "f");
     l0->AddEntry(g2, "#font[22]{future  g_{T} + current d_{p}}", "f");
+    l0->AddEntry(g3, "#font[22]{future  g_{T} + future  d_{p}}", "f");
     
     h0->DrawClone("axis");
     g1->DrawClone("3same");
     g2->DrawClone("3same");
+    g3->DrawClone("3same");
     h0->DrawClone("axissame");
     l0->DrawClone("same");
     c0->Print("pedm.pdf");
@@ -104,6 +116,7 @@ int main(const int argc, const char * argv[]){
     h0->GetXaxis()->SetTitle("#it{d_{d}} / 10^{-25} #it{e}#upointcm");
     h0->GetYaxis()->SetTitle("#it{d_{u}} / 10^{-25} #it{e}#upointcm");
     h0->GetYaxis()->SetRangeUser(-3.0, 3.5);
+    h0->GetYaxis()->SetNdivisions(7, 5, 0);
     double dd[400];
     for (int i = 0; i < 400; i++){
       dd[i] = -2.0 + 0.01 * i;
@@ -150,6 +163,19 @@ int main(const int argc, const char * argv[]){
     c0->Print("nedm.pdf");
   }
 
+  if (opt == 3){// qEDM limits
+    double * xx;
+    double par1[7] = {2.0e-25, 2.1e-26, 0.413, 0.133, -0.229, 0.094, 0.002};
+    cout << "1: " << uedm_limit(xx, par1) << "  " << dedm_limit(xx, par1) << endl;
+    double par2[7] = {2.0e-25, 2.1e-26, 0.413, 0.018, -0.229, 0.008, -2.65e-5};
+    cout << "2: " << uedm_limit(xx, par2) << "  " << dedm_limit(xx, par2) << endl;
+    double par3[7] = {2.0e-25, 2.1e-28, 0.413, 0.018, -0.229, 0.008, -2.65e-5};
+    cout << "3: " << uedm_limit(xx, par3) << "  " << dedm_limit(xx, par3) << endl;
+    double par4[7] = {2.0e-29, 2.1e-26, 0.413, 0.018, -0.229, 0.008, -2.65e-5};
+    cout << "4: " << uedm_limit(xx, par4) << "  " << dedm_limit(xx, par4) << endl;
+    double par5[7] = {2.0e-29, 2.1e-28, 0.413, 0.018, -0.229, 0.008, -2.65e-5};
+    cout << "5: " << uedm_limit(xx, par5) << "  " << dedm_limit(xx, par5) << endl;
+  }
 
   return 0;
 }
@@ -200,4 +226,36 @@ double uedm_n_error(const double * x, const double * par){//
     + pow( dd / tu, 2) * pow(ed, 2)
     + 2.0 * abs(dd * (dn + abs(td * dd)) / pow(tu, 3)) * eud;
   return sqrt(edu2) + abs(dn / tu);
+}
+
+double uedm_limit(const double * x, const double * par){//
+  double dp = par[0];
+  double dn = -par[1];
+  double tu = par[2];
+  double eu = par[3];
+  double td = par[4];
+  double ed = par[5];
+  double eud = par[6];
+  double Dt2 = tu * tu - td * td;
+  double edu2 =
+    pow( (-2.0 * tu * (tu * dp - td * dn)) / (Dt2 * Dt2) + dp / Dt2, 2) * pow(eu, 2)
+    + pow( (2.0 * td * (tu * dp - td * dn)) / (Dt2 * Dt2) - dn / Dt2, 2) * pow(ed, 2)
+    + 2.0 * ((-2.0 * tu * (tu * dp - td * dn)) / (Dt2 * Dt2) + dp / Dt2) * ((2.0 * td * (tu * dp - td * dn)) / (Dt2 * Dt2) - dn / Dt2) * eud;
+  return sqrt(edu2) + abs( (tu * dp - td * dn) / Dt2);
+}
+ 
+double dedm_limit(const double * x, const double * par){//
+  double dp = par[0];
+  double dn = -par[1];
+  double tu = par[2];
+  double eu = par[3];
+  double td = par[4];
+  double ed = par[5];
+  double eud = par[6];
+  double Dt2 = tu * tu - td * td;
+  double edu2 =
+    pow( (-2.0 * tu * (tu * dn - td * dp)) / (Dt2 * Dt2) + dn / Dt2, 2) * pow(eu, 2)
+    + pow( (2.0 * td * (tu * dn - td * dp)) / (Dt2 * Dt2) - dp / Dt2, 2) * pow(ed, 2)
+    + 2.0 * ((-2.0 * tu * (tu * dn - td * dp)) / (Dt2 * Dt2) + dn / Dt2) * ((2.0 * td * (tu * dn - td * dp)) / (Dt2 * Dt2) - dp / Dt2) * eud;
+  return sqrt(edu2) + abs( (tu * dn - td * dp) / Dt2);
 }
