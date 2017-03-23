@@ -230,7 +230,7 @@ double uedm_n_error(const double * x, const double * par){//
 
 double uedm_limit(const double * x, const double * par){//
   double dp = par[0];
-  double dn = -par[1];
+  double dn = par[1];
   double tu = par[2];
   double eu = par[3];
   double td = par[4];
@@ -246,7 +246,7 @@ double uedm_limit(const double * x, const double * par){//
  
 double dedm_limit(const double * x, const double * par){//
   double dp = par[0];
-  double dn = -par[1];
+  double dn = par[1];
   double tu = par[2];
   double eu = par[3];
   double td = par[4];
