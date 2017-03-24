@@ -22,6 +22,8 @@ double uedm_n_error(const double * x, const double * par);
 double uedm_limit(const double * x, const double * par);
 double dedm_limit(const double * x, const double * par);
 
+double qedm_limit(const double * x, const double * par);
+
 
 int main(const int argc, const char * argv[]){
 
@@ -166,15 +168,17 @@ int main(const int argc, const char * argv[]){
   if (opt == 3){// qEDM limits
     double * xx;
     double par1[7] = {2.0e-25, 2.1e-26, 0.413, 0.133, -0.229, 0.094, 0.002};
-    cout << "1: " << uedm_limit(xx, par1) << "  " << dedm_limit(xx, par1) << endl;
+    cout << "1: " << uedm_limit(xx, par1) << "  " << dedm_limit(xx, par1) << "  " << qedm_limit(xx, par1) << endl;
     double par2[7] = {2.0e-25, 2.1e-26, 0.413, 0.018, -0.229, 0.008, -2.65e-5};
-    cout << "2: " << uedm_limit(xx, par2) << "  " << dedm_limit(xx, par2) << endl;
+    cout << "2: " << uedm_limit(xx, par2) << "  " << dedm_limit(xx, par2) << "  " << qedm_limit(xx, par2) << endl;
     double par3[7] = {2.0e-25, 2.1e-28, 0.413, 0.018, -0.229, 0.008, -2.65e-5};
-    cout << "3: " << uedm_limit(xx, par3) << "  " << dedm_limit(xx, par3) << endl;
+    cout << "3: " << uedm_limit(xx, par3) << "  " << dedm_limit(xx, par3) << "  " << qedm_limit(xx, par3) << endl;
     double par4[7] = {2.0e-29, 2.1e-26, 0.413, 0.018, -0.229, 0.008, -2.65e-5};
-    cout << "4: " << uedm_limit(xx, par4) << "  " << dedm_limit(xx, par4) << endl;
+    cout << "4: " << uedm_limit(xx, par4) << "  " << dedm_limit(xx, par4) << "  " << qedm_limit(xx, par4) << endl;
     double par5[7] = {2.0e-29, 2.1e-28, 0.413, 0.018, -0.229, 0.008, -2.65e-5};
-    cout << "5: " << uedm_limit(xx, par5) << "  " << dedm_limit(xx, par5) << endl;
+    cout << "5: " << uedm_limit(xx, par5) << "  " << dedm_limit(xx, par5) << "  " << qedm_limit(xx, par5) << endl;
+    double par6[7] = {2.0e-26, 2.1e-26, 0.413, 0.133, -0.229, 0.094, 0.002};
+    cout << "6: " << uedm_limit(xx, par6) << "  " << dedm_limit(xx, par6) << "  " << qedm_limit(xx, par6) << endl;
   }
 
   return 0;
@@ -258,4 +262,30 @@ double dedm_limit(const double * x, const double * par){//
     + pow( (2.0 * td * (tu * dn - td * dp)) / (Dt2 * Dt2) - dp / Dt2, 2) * pow(ed, 2)
     + 2.0 * ((-2.0 * tu * (tu * dn - td * dp)) / (Dt2 * Dt2) + dn / Dt2) * ((2.0 * td * (tu * dn - td * dp)) / (Dt2 * Dt2) - dp / Dt2) * eud;
   return sqrt(edu2) + abs( (tu * dn - td * dp) / Dt2);
+}
+
+double qedm_limit(const double * x, const double * par){//
+  double dp = par[0];
+  double dn = par[1];
+  double tu = par[2];
+  double eu = par[3];
+  double td = par[4];
+  double ed = par[5];
+  double eud = par[6];
+  double R = -2.0 * 0.48;//-2 mu / md
+  double eR = 2.0 * 0.1;
+  double D2p = pow(tu * R + td, 2);
+  double D2n = pow(td * R + tu, 2);
+  double edq2_p = 
+    pow( -R * dp / D2p, 2) * pow(eu, 2)
+    + pow( -dp / D2p, 2) * pow(ed, 2)
+    + 2.0 * (-R * dp / D2p) * (- dp / D2p) * eud
+    + pow(-tu * dp / D2p, 2) * pow(eR, 2);
+  double edq2_n = 
+    pow( -R * dn / D2n, 2) * pow(ed, 2)
+    + pow( -dn / D2n, 2) * pow(eu, 2)
+    + 2.0 * (-R * dn / D2n) * (-dn / D2n) * eud
+    + pow( -td * dn / D2n, 2) * pow(eR, 2);
+  return min(sqrt(edq2_p) + abs(dp / (tu * R + td)),
+	     sqrt(edq2_n) + abs(dn / (td * R + tu)));
 }
