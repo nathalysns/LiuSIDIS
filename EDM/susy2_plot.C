@@ -98,6 +98,23 @@ int main(const int argc, const char * argv[]){
     TGraphErrors * g3 = new TGraphErrors(201, x, y3, 0, e3);
     g3->SetLineColor(1);
     g3->SetFillColor(1);
+    factor1 = factor1 * 900.0;
+    double y4[201], e4[201];
+    double y4a[201], y4b[201];
+    for (int i = 0; i < 201; i++){
+      y4[i] = x[i];
+      e4[i] = sqrt((abs(x[i]) + abs(2.0 * dd / md) * factor1) * (abs(x[i]) + abs(3.0 * du / (2.0 * mu)) * factor1)) - abs(x[i]);
+      y4a[i] = y4[i] + e4[i];
+      y4b[i] = y4[i] - e4[i];
+    }
+    TGraph * g4a = new TGraph(201, x, y4a);
+    TGraph * g4b = new TGraph(201, x, y4b);
+    g4a->SetLineColor(5);
+    g4a->SetLineStyle(2);
+    g4b->SetLineColor(5);
+    g4b->SetLineStyle(2);
+
+
     TLegend * l0 = new TLegend(0.15, 0.8, 0.55, 0.9);
     l0->AddEntry(g1, "#font[22]{current g_{T} + current nucleon EDMs}", "f");
     l0->AddEntry(g2, "#font[22]{future  g_{T} + current nucleon EDMs}", "f");
@@ -107,6 +124,8 @@ int main(const int argc, const char * argv[]){
     g1->DrawClone("3same");
     g2->DrawClone("3same");
     g3->DrawClone("3lsame");
+    g4a->DrawClone("lsame");
+    g4b->DrawClone("lsame");
     h0->DrawClone("axissame");
     l0->DrawClone("same");
     c0->Print("susy.pdf");
