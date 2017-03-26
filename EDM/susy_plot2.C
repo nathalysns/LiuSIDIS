@@ -46,7 +46,7 @@ int main(const int argc, const char * argv[]){
   h0->GetYaxis()->SetLabelOffset(0.01);
   h0->GetYaxis()->SetRangeUser(-1.0, 1.0);
 
-  TCanvas * c0 = new TCanvas("c0", "", 650, 750);
+  TCanvas * c0 = new TCanvas("c0", "", 1300, 1500);
   c0->SetTopMargin(0.20);
   c0->SetBottomMargin(0.15);
   c0->SetLeftMargin(0.15);

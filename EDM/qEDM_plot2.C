@@ -56,7 +56,7 @@ int main(const int argc, const char * argv[]){
   h0->GetYaxis()->SetLabelSize(0.055);
   h0->GetYaxis()->SetLabelOffset(0.01);
 
-  TCanvas * c0 = new TCanvas("c0", "", 800, 600);
+  TCanvas * c0 = new TCanvas("c0", "", 1600, 1200);
   c0->SetBottomMargin(0.15);
   c0->SetLeftMargin(0.15);
 
@@ -81,7 +81,7 @@ int main(const int argc, const char * argv[]){
     g1->SetLineColor(4);
     g1->SetFillColor(4);
     g1->SetMarkerStyle(8);
-    g1->SetMarkerSize(1.2);
+    g1->SetMarkerSize(2.2);
     g1->SetMarkerColor(4);
     double par2[7] = {2.0e-25 / scale, 0.0, 0.413, 0.018, -0.229, 0.008, -2.65e-5};//current pEDM + future gT
     double du2[400], eu2[400];
@@ -93,7 +93,7 @@ int main(const int argc, const char * argv[]){
     g2->SetLineColor(2);
     g2->SetFillColor(2);
     g2->SetMarkerStyle(8);
-    g2->SetMarkerSize(1.2);
+    g2->SetMarkerSize(2.2);
     g2->SetMarkerColor(2);
     double par3[7] = {2.0e-29 / scale, 0.0, 0.413, 0.018, -0.229, 0.008, -2.65e-5};//current pEDM + future gT
     double du3[400], eu3[400];
@@ -105,7 +105,7 @@ int main(const int argc, const char * argv[]){
     g3->SetLineColor(1);
     g3->SetFillColor(1);
     g3->SetMarkerStyle(8);
-    g3->SetMarkerSize(1.2);
+    g3->SetMarkerSize(2.2);
     g3->SetMarkerColor(1);
     TLegend * l0 = new TLegend(0.16, 0.72, 0.50, 0.88);
     l0->SetBorderSize(0);
@@ -143,7 +143,7 @@ int main(const int argc, const char * argv[]){
     g1->SetLineColor(4);
     g1->SetFillColor(4);
     g1->SetMarkerStyle(8);
-    g1->SetMarkerSize(1.2);
+    g1->SetMarkerSize(2.2);
     g1->SetMarkerColor(4);
     double par2[7] = {0.0, 2.1e-26 / scale, 0.413, 0.018, -0.229, 0.008, -2.65e-5};//current nEDM + future gT
     double du2[400], eu2[400];
@@ -155,7 +155,7 @@ int main(const int argc, const char * argv[]){
     g2->SetLineColor(2);
     g2->SetFillColor(2);
     g2->SetMarkerStyle(8);
-    g2->SetMarkerSize(1.2);
+    g2->SetMarkerSize(2.2);
     g2->SetMarkerColor(2);
     double par3[7] = {0.0, 2.1e-28 / scale, 0.413, 0.018, -0.229, 0.008, -2.65e-5};//current nEDM + future gT
     double du3[400], eu3[400];
@@ -167,7 +167,7 @@ int main(const int argc, const char * argv[]){
     g3->SetLineColor(1);
     g3->SetFillColor(1);
     g3->SetMarkerStyle(8);
-    g3->SetMarkerSize(1.2);
+    g3->SetMarkerSize(2.2);
     g3->SetMarkerColor(1);
 
     TLegend * l0 = new TLegend(0.16, 0.72, 0.50, 0.88);
