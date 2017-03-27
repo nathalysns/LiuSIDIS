@@ -109,7 +109,8 @@ int main(const int argc, const char * argv[]){
     g3->SetMarkerStyle(8);
     g3->SetMarkerSize(1.1);
     g3->SetMarkerColor(1);
-    factor1 = factor1 * 900.0;
+    Lambda = 1.5e4;
+    factor1 =  18.0 * M_PI * Lambda * Lambda / alphaS;
     double y4[201], e4[201];
     double y4a[201], y4b[201];
     for (int i = 0; i < 201; i++){
@@ -141,7 +142,7 @@ int main(const int argc, const char * argv[]){
     l0->AddEntry(g1, "#font[22]{current g_{T} + current d_{N} #Lambda=1TeV   }", "f");
     l0->AddEntry(g2, "#font[22]{future   g_{T} + current d_{N} #Lambda=1TeV   }", "f");
     l0->AddEntry(g3, "#font[22]{future   g_{T} + future   d_{N} #Lambda=1TeV   }", "f");
-    l0->AddEntry(g4, "#font[22]{future   g_{T} + future   d_{N} #Lambda=30TeV   }", "f");
+    l0->AddEntry(g4, "#font[22]{future   g_{T} + future   d_{N} #Lambda=15TeV   }", "f");
 
     h0->DrawClone("axis");
     g1->DrawClone("3same");
