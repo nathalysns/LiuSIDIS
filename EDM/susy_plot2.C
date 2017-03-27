@@ -154,5 +154,100 @@ int main(const int argc, const char * argv[]){
     c0->Print("susy.pdf");
   }
 
+
+  if (opt == 2){//susy with d-EDM
+    c0->Clear();
+    double x[201];
+    for (int i = 0; i < 201; i++){
+      x[i] = -1.0 + 0.01 * i;
+    }
+    double mu = 2.2e-3;//u quark mass in GeV
+    double md = 4.7e-3;//d quark mass in GeV
+    double alphaS = 0.41 * M_PI;
+    double Lambda = 1.0e3;//
+    const double unit = 1.0e13 / 0.197327;
+    double du, dd;
+    //par: dd, md, alpha_s, Lambda, tanbeta,
+    double factor1 = 18.0 * M_PI * Lambda * Lambda / alphaS;
+    du = 5.4e-28 * unit;
+    dd = 8.4e-28 * unit;
+    Lambda = 2.5e4;
+    factor1 = 18.0 * M_PI * Lambda * Lambda / alphaS;
+    double y1[201], e1[201];
+    for (int i = 0; i < 201; i++){
+      y1[i] = x[i];
+      e1[i] = sqrt((abs(x[i]) + abs(2.0 * dd / md) * factor1) * (abs(x[i]) + abs(3.0 * du / (2.0 * mu)) * factor1)) - abs(x[i]);
+    }
+    cout << e1[100] << endl;
+    TGraphErrors * g1 = new TGraphErrors(201, x, y1, 0, e1);
+    g1->SetLineColor(4);
+    g1->SetFillColor(4);
+    g1->SetMarkerStyle(8);
+    g1->SetMarkerSize(1.1);
+    g1->SetMarkerColor(4);
+    //
+    Lambda = 2.0e4;
+    factor1 = 18.0 * M_PI * Lambda * Lambda / alphaS;
+    double y2[201], e2[201];
+    for (int i = 0; i < 201; i++){
+      y2[i] = x[i];
+      e2[i] = sqrt((abs(x[i]) + abs(2.0 * dd / md) * factor1) * (abs(x[i]) + abs(3.0 * du / (2.0 * mu)) * factor1)) - abs(x[i]);
+    }
+    cout << e2[100] << endl;
+    TGraphErrors * g2 = new TGraphErrors(201, x, y2, 0, e2);
+    g2->SetLineColor(2);
+    g2->SetFillColor(2);
+    g2->SetMarkerStyle(8);
+    g2->SetMarkerSize(1.1);
+    g2->SetMarkerColor(2);
+    //
+    Lambda = 1.5e4;
+    factor1 = 18.0 * M_PI * Lambda * Lambda / alphaS;
+    du = 5.4e-28 * unit;
+    dd = 8.4e-28 * unit;
+    double y3[201], e3[201];
+    for (int i = 0; i < 201; i++){
+      y3[i] = x[i];
+      e3[i] = sqrt((abs(x[i]) + abs(2.0 * dd / md) * factor1) * (abs(x[i]) + abs(3.0 * du / (2.0 * mu)) * factor1)) - abs(x[i]);
+    }
+    cout << e3[100] << endl;
+    TGraphErrors * g3 = new TGraphErrors(201, x, y3, 0, e3);
+    g3->SetLineColor(1);
+    g3->SetFillColor(1);
+    g3->SetMarkerStyle(8);
+    g3->SetMarkerSize(1.1);
+    g3->SetMarkerColor(1);
+    //
+    Lambda = 1.0e4;
+    factor1 = 18.0 * M_PI * Lambda * Lambda / alphaS;
+    double y4[201], e4[201];
+    for (int i = 0; i < 201; i++){
+      y4[i] = x[i];
+      e4[i] = sqrt((abs(x[i]) + abs(2.0 * dd / md) * factor1) * (abs(x[i]) + abs(3.0 * du / (2.0 * mu)) * factor1)) - abs(x[i]);
+    }
+    TGraphErrors * g4 = new TGraphErrors(201, x, y4, 0, e4);
+    g4->SetLineColor(5);
+    g4->SetFillColor(5);
+    g4->SetMarkerStyle(8);
+    g4->SetMarkerSize(1.1);
+    g4->SetMarkerColor(5);
+
+    TLegend * l0 = new TLegend(0.15, 0.8, 0.9, 0.88);
+    l0->SetNColumns(2);
+    l0->AddEntry(g1, "#font[22]{future g_{T} and d_{N} #Lambda=25TeV   }", "f");
+    l0->AddEntry(g2, "#font[22]{future g_{T} and d_{N} #Lambda=20TeV   }", "f");
+    l0->AddEntry(g3, "#font[22]{future g_{T} and d_{N} #Lambda=15TeV   }", "f");
+    l0->AddEntry(g4, "#font[22]{future g_{T} and d_{N} #Lambda=10TeV   }", "f");
+
+    h0->DrawClone("axis");
+    g1->DrawClone("3same");
+    g2->DrawClone("3same");
+    g3->DrawClone("3same");
+    g4->DrawClone("3same");
+    h0->DrawClone("axissame");
+    l0->DrawClone("same");
+    c0->Print("compare.pdf");
+  }
+
   return 0;
 }
