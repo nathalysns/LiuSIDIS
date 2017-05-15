@@ -71,7 +71,7 @@ int main(const int argc, const char * argv[]){
     for (int i = 0; i < 400; i++){
       dd[i] = -2.0 + 0.01 * i;
     }
-    double par1[7] = {2.0e-25 / scale, 0.0, 0.413, 0.133, -0.229, 0.094, 0.002};//current pEDM + current gT
+    double par1[7] = {2.6e-25 / scale, 0.0, 0.413, 0.133, -0.229, 0.094, 0.002};//current pEDM + current gT
     double du1[400], eu1[400];
     for (int i = 0; i < 400; i++){
       du1[i] = uedm_p(&dd[i], par1);
@@ -83,7 +83,7 @@ int main(const int argc, const char * argv[]){
     g1->SetMarkerStyle(8);
     g1->SetMarkerSize(2.2);
     g1->SetMarkerColor(4);
-    double par2[7] = {2.0e-25 / scale, 0.0, 0.413, 0.018, -0.229, 0.008, -2.65e-5};//current pEDM + future gT
+    double par2[7] = {2.6e-25 / scale, 0.0, 0.413, 0.018, -0.229, 0.008, -2.65e-5};//current pEDM + future gT
     double du2[400], eu2[400];
     for (int i = 0; i < 400; i++){
       du2[i] = uedm_p(&dd[i], par2);
@@ -95,7 +95,7 @@ int main(const int argc, const char * argv[]){
     g2->SetMarkerStyle(8);
     g2->SetMarkerSize(2.2);
     g2->SetMarkerColor(2);
-    double par3[7] = {2.0e-29 / scale, 0.0, 0.413, 0.018, -0.229, 0.008, -2.65e-5};//current pEDM + future gT
+    double par3[7] = {2.6e-29 / scale, 0.0, 0.413, 0.018, -0.229, 0.008, -2.65e-5};//current pEDM + future gT
     double du3[400], eu3[400];
     for (int i = 0; i < 400; i++){
       du3[i] = uedm_p(&dd[i], par3);
@@ -133,7 +133,7 @@ int main(const int argc, const char * argv[]){
     for (int i = 0; i < 400; i++){
       dd[i] = -2.0 + 0.01 * i;
     }
-    double par1[7] = {0.0, 2.1e-26 / scale, 0.413, 0.133, -0.229, 0.094, 0.002};//current nEDM + current gT
+    double par1[7] = {0.0, 3.0e-26 / scale, 0.413, 0.133, -0.229, 0.094, 0.002};//current nEDM + current gT
     double du1[400], eu1[400];
     for (int i = 0; i < 400; i++){
       du1[i] = uedm_n(&dd[i], par1);
@@ -145,7 +145,7 @@ int main(const int argc, const char * argv[]){
     g1->SetMarkerStyle(8);
     g1->SetMarkerSize(2.2);
     g1->SetMarkerColor(4);
-    double par2[7] = {0.0, 2.1e-26 / scale, 0.413, 0.018, -0.229, 0.008, -2.65e-5};//current nEDM + future gT
+    double par2[7] = {0.0, 3.0e-26 / scale, 0.413, 0.018, -0.229, 0.008, -2.65e-5};//current nEDM + future gT
     double du2[400], eu2[400];
     for (int i = 0; i < 400; i++){
       du2[i] = uedm_n(&dd[i], par2);
@@ -157,7 +157,7 @@ int main(const int argc, const char * argv[]){
     g2->SetMarkerStyle(8);
     g2->SetMarkerSize(2.2);
     g2->SetMarkerColor(2);
-    double par3[7] = {0.0, 2.1e-28 / scale, 0.413, 0.018, -0.229, 0.008, -2.65e-5};//current nEDM + future gT
+    double par3[7] = {0.0, 3.0e-28 / scale, 0.413, 0.018, -0.229, 0.008, -2.65e-5};//current nEDM + future gT
     double du3[400], eu3[400];
     for (int i = 0; i < 400; i++){
       du3[i] = uedm_n(&dd[i], par3);
@@ -187,17 +187,17 @@ int main(const int argc, const char * argv[]){
 
   if (opt == 3){// qEDM limits
     double * xx;
-    double par1[7] = {2.0e-25, 2.1e-26, 0.413, 0.133, -0.229, 0.094, 0.002};
+    double par1[7] = {2.6e-25, 3.0e-26, 0.413, 0.133, -0.229, 0.094, 0.002};
     cout << "1: " << uedm_limit(xx, par1) << "  " << dedm_limit(xx, par1) << "  " << qedm_limit(xx, par1) << endl;
-    double par2[7] = {2.0e-25, 2.1e-26, 0.413, 0.018, -0.229, 0.008, -2.65e-5};
+    double par2[7] = {2.6e-25, 3.0e-26, 0.413, 0.018, -0.229, 0.008, -2.65e-5};
     cout << "2: " << uedm_limit(xx, par2) << "  " << dedm_limit(xx, par2) << "  " << qedm_limit(xx, par2) << endl;
-    double par3[7] = {2.0e-25, 2.1e-28, 0.413, 0.018, -0.229, 0.008, -2.65e-5};
+    double par3[7] = {2.6e-25, 3.0e-28, 0.413, 0.018, -0.229, 0.008, -2.65e-5};
     cout << "3: " << uedm_limit(xx, par3) << "  " << dedm_limit(xx, par3) << "  " << qedm_limit(xx, par3) << endl;
-    double par4[7] = {2.0e-29, 2.1e-26, 0.413, 0.018, -0.229, 0.008, -2.65e-5};
+    double par4[7] = {2.6e-29, 3.0e-26, 0.413, 0.018, -0.229, 0.008, -2.65e-5};
     cout << "4: " << uedm_limit(xx, par4) << "  " << dedm_limit(xx, par4) << "  " << qedm_limit(xx, par4) << endl;
-    double par5[7] = {2.0e-29, 2.1e-28, 0.413, 0.018, -0.229, 0.008, -2.65e-5};
+    double par5[7] = {2.6e-29, 3.0e-28, 0.413, 0.018, -0.229, 0.008, -2.65e-5};
     cout << "5: " << uedm_limit(xx, par5) << "  " << dedm_limit(xx, par5) << "  " << qedm_limit(xx, par5) << endl;
-    double par6[7] = {2.0e-26, 2.1e-26, 0.413, 0.133, -0.229, 0.094, 0.002};
+    double par6[7] = {2.6e-26, 3.0e-26, 0.413, 0.133, -0.229, 0.094, 0.002};
     cout << "6: " << uedm_limit(xx, par6) << "  " << dedm_limit(xx, par6) << "  " << qedm_limit(xx, par6) << endl;
   }
 

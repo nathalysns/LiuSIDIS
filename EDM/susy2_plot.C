@@ -71,6 +71,7 @@ int main(const int argc, const char * argv[]){
       y1[i] = x[i];
       e1[i] = sqrt((abs(x[i]) + abs(2.0 * dd / md) * factor1) * (abs(x[i]) + abs(3.0 * du / (2.0 * mu)) * factor1)) - abs(x[i]);
     }
+    cout << e1[100] << endl;
     TGraphErrors * g1 = new TGraphErrors(201, x, y1, 0, e1);
     g1->SetLineColor(4);
     g1->SetFillColor(4);
@@ -82,7 +83,7 @@ int main(const int argc, const char * argv[]){
       y2[i] = x[i];
       e2[i] = sqrt((abs(x[i]) + abs(2.0 * dd / md) * factor1) * (abs(x[i]) + abs(3.0 * du / (2.0 * mu)) * factor1)) - abs(x[i]);
     }
-    cout << e2[1] << endl;
+    cout << e2[100] << endl;
     TGraphErrors * g2 = new TGraphErrors(201, x, y2, 0, e2);
     g2->SetLineColor(2);
     g2->SetFillColor(2);
@@ -94,7 +95,7 @@ int main(const int argc, const char * argv[]){
       y3[i] = x[i];
       e3[i] = sqrt((abs(x[i]) + abs(2.0 * dd / md) * factor1) * (abs(x[i]) + abs(3.0 * du / (2.0 * mu)) * factor1)) - abs(x[i]);
     }
-    cout << e3[1] << endl;
+    cout << e3[100] << endl;
     TGraphErrors * g3 = new TGraphErrors(201, x, y3, 0, e3);
     g3->SetLineColor(1);
     g3->SetFillColor(1);
