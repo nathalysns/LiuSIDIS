@@ -127,6 +127,23 @@ double d1(const double M2, const double mu, const double gu, const double gd){
   return result;
 }
 
+double d1F(const double M2, const double mu, const double gu, const double gd){
+  CharginoSVD(M2, mu, gu, gd);
+  double r0 = pow(MX(0) / MH, 2);
+  double r1 = pow(MX(1) / MH, 2);
+  double factor = alpha / (4.0 * 2.0 * M_PI * M_PI * M_PI) / (M2 * mu);
+  double eta0 = pow(pdf->alphasQ(MX(0)) / alphaS0, 8.0 / 46.0);
+  double eta1 = pow(pdf->alphasQ(MX(1)) / alphaS0, 8.0 / 46.0);
+  double eta = sqrt(eta0 * eta1);
+  double R = sqrt(r0 * r1);
+  double rho = r0 / r1;
+  double F1 = 0.0;
+  if (rho == 1.0) F1 = -0.5 * log(R) - 1.0 + 0.5;
+  else F1 = -0.5 * log(R) - 1.0 + (rho + 1.0) * log(rho) / (rho - 1.0) / 4.0;
+  double result = factor * gu * gd * F1 * pow(eta, 4);
+  return result;
+}
+
 double d2(const double M2, const double mu, const double gu, const double gd){
   CharginoSVD(M2, mu, gu, gd);
   double r = pow(MZ / MH, 2);
@@ -142,23 +159,49 @@ double d2(const double M2, const double mu, const double gu, const double gd){
   return sqrt(2.0) * result;
 }
 
+double d2F(const double M2, const double mu, const double gu, const double gd){
+  CharginoSVD(M2, mu, gu, gd);
+  double r = pow(MZ / MH, 2);
+  double r0 = pow(MX(0) / MH, 2);
+  double r1 = pow(MX(1) / MH, 2);
+  double factor = alpha / (16.0 * M_PI * M_PI * M_PI * pow(cos(thetaW), 2)) / (M2 * mu);
+  double eta0 = pow(pdf->alphasQ(MX(0)) / alphaS0, 8.0 / 46.0);
+  double eta1 = pow(pdf->alphasQ(MX(1)) / alphaS0, 8.0 / 46.0);
+  double eta = sqrt(eta0 * eta1);
+  double R = sqrt(r0 * r1);
+  double rho = r0 / r1;
+  double A2 = 0.0;
+  double B2 = 0.0;
+  if (rho == 1.0){
+    A2 = -3.0 / 8.0 + 0.5 * pow(sin(thetaW), 2);
+    B2 = - (4.0 * pow(sin(thetaW), 2) - 3.0) * (1.0 - r + r * log(r)) / (8.0 * (r - 1.0));
+  }
+  else {
+    A2 = ((rho - 1.0) * (2.0 - rho) - rho * log(rho)) / (4.0 * pow(rho - 1.0, 2)) + 0.5 * pow(sin(thetaW), 2);
+    B2 = ( (2.0 - 2.0 * r + r * log(r)) * (rho - 1.0) * (rho - 2.0 - 2.0 * pow(sin(thetaW), 2) * (rho - 1.0)) + (r - 1.0) * (rho - 1.0) * (0.5 * rho + 1.0 - pow(sin(thetaW), 2) * (rho + 1.0)) * log(rho) + r * rho * log(r) * log(rho) + (r - 1.0) * rho * (dilog_re(1.0 - rho, 0.0) - dilog_re(1.0 - 1.0 / rho, 0.0))) / (4.0 * (r - 1.0) * pow(rho - 1.0, 2));
+  }
+  double F2 = A2 * log(R) + B2;
+  double result = factor * gu * gd * F2 * pow(eta, 4);
+  return result;
+}
+
 double d1u(const double M2, const double mu, const double gu, const double gd){
-  double factor = d1(M2, mu, gu, gd);
+  double factor = d1F(M2, mu, gu, gd);
   return factor * (2.0 / 3.0) * Mu * 0.197e-13;//in unit e.cm
 }
 
 double d1d(const double M2, const double mu, const double gu, const double gd){
-  double factor = d1(M2, mu, gu, gd);
+  double factor = d1F(M2, mu, gu, gd);
   return factor * (-1.0 / 3.0) * Md * 0.197e-13;//in unit e.cm
 }
 
 double d2u(const double M2, const double mu, const double gu, const double gd){
-  double factor = d2(M2, mu, gu, gd);
+  double factor = d2F(M2, mu, gu, gd);
   return factor * (0.5 - 2.0 * pow(sin(thetaW), 2) * 2.0 / 3.0) * Mu * 0.197e-13;//in unit e.cm
 }
 
 double d2d(const double M2, const double mu, const double gu, const double gd){
-  double factor = d2(M2, mu, gu, gd);
+  double factor = d2F(M2, mu, gu, gd);
   return factor * (-0.5 + 2.0 * pow(sin(thetaW), 2) / 3.0) * Md * 0.197e-13;//in unit e.cm
 }
 

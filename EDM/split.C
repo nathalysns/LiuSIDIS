@@ -27,10 +27,10 @@ int main(const int argc, const char * argv[]){
     mu1[i] = Solve_mu_nEDM(M2[i], par1);
   }
   
-  TH1D * h0 = new TH1D("h0", "", 1, 200.0, 10000.0);
+  TH1D * h0 = new TH1D("h0", "", 1, 200.0, 5.0e3);
   //h0->GetXaxis()->SetRangeUser(200.0, 600.0);
   h0->SetMinimum(2.0e2);
-  h0->SetMaximum(1.0e4);
+  h0->SetMaximum(5.0e3);
   h0->SetStats(0);
   h0->GetXaxis()->SetTitle("M_{2} (GeV)");
   h0->GetXaxis()->CenterTitle(true);
@@ -40,6 +40,9 @@ int main(const int argc, const char * argv[]){
   h0->GetYaxis()->CenterTitle(true);
   h0->GetYaxis()->SetTitleOffset(1.15);
   h0->GetYaxis()->SetTitleSize(0.06);
+
+  h0->GetXaxis()->SetNdivisions(10, 10, 0);
+  h0->GetYaxis()->SetNdivisions(10, 10, 0);
   
 
   TGraph * g0 = new TGraph(200, M2, mu);
@@ -57,7 +60,7 @@ int main(const int argc, const char * argv[]){
   g0->Draw("lsame");
   g1->Draw("lsame");
 
-  c0->Print("c1.pdf");
+  c0->Print("c3.pdf");
   
   return 0;
 }
