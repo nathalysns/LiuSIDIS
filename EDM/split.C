@@ -29,9 +29,14 @@ int main(const int argc, const char * argv[]){\
     cout << "nEDM: " << nEDMlimit <<  "   running ..." << endl;
     for (int i = 0; i < 200; i++){
       M2[i] = 1.0 * pow(10.0, 2.0 + 0.01 * i);
+      mu0[i] = Solve_mu_nEDM(M2[i], par0);
       mu_now[i] = Solve_mu_nEDM(M2[i], par_now);
       mu_future[i] = Solve_mu_nEDM(M2[i], par_future);
     }
+    TGraph * g0 = new TGraph(200, M2, mu0);
+    g0->SetLineColor(1);
+    g0->SetLineWidth(1);
+    g0->SetLineStyle(2);
     TGraph * g_now = new TGraph(200, M2, mu_now);
     g_now->SetLineColor(4);
     g_now->SetLineWidth(2);
@@ -71,6 +76,7 @@ int main(const int argc, const char * argv[]){\
     c0->SetBottomMargin(0.15);
     c0->SetLeftMargin(0.15);
     h0->DrawClone("axis");
+    g0->DrawClone("lsame");
     g_now->DrawClone("lsame");
     g_future->DrawClone("lsame");
     
@@ -110,7 +116,7 @@ int main(const int argc, const char * argv[]){\
     lt->DrawLatex(6.0e3, 3.0e3, "10^{-29}");
 
     lt->SetTextFont(22);
-    lt->DrawLatex(4.5e2, 7.0e2, "3.0#times10^{-28}");
+    lt->DrawLatex(5.0e2, 7.0e2, "3.0#times10^{-28}");
 
     l0->DrawClone("same");
     c0->Print("nedmsplit.pdf");
@@ -121,9 +127,14 @@ int main(const int argc, const char * argv[]){\
     cout << "pEDM: " << pEDMlimit <<  "   running ..." << endl;
     for (int i = 0; i < 200; i++){
       M2[i] = 1.0 * pow(10.0, 2.0 + log(5.0e4/200.0) / 199.0 * i);
+      mu0[i] = Solve_mu_pEDM(M2[i], par0);
       mu_now[i] = Solve_mu_pEDM(M2[i], par_now);
       mu_future[i] = Solve_mu_pEDM(M2[i], par_future);
     }
+    TGraph * g0 = new TGraph(200, M2, mu0);
+    g0->SetLineColor(1);
+    g0->SetLineWidth(1);
+    g0->SetLineStyle(2);
     TGraph * g_now = new TGraph(200, M2, mu_now);
     g_now->SetLineColor(4);
     g_now->SetLineWidth(2);
@@ -163,6 +174,7 @@ int main(const int argc, const char * argv[]){\
     c0->SetBottomMargin(0.15);
     c0->SetLeftMargin(0.15);
     h0->DrawClone("axis");
+    g0->DrawClone("lsame");
     g_now->DrawClone("lsame");
     g_future->DrawClone("lsame");
     
