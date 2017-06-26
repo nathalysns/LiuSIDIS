@@ -128,18 +128,16 @@ double d1(const double M2, const double mu, const double gu, const double gd){
 }
 
 double d1F(const double M2, const double mu, const double gu, const double gd){
-  CharginoSVD(M2, mu, gu, gd);
-  double r0 = pow(MX(0) / MH, 2);
-  double r1 = pow(MX(1) / MH, 2);
   double factor = alpha / (4.0 * 2.0 * M_PI * M_PI * M_PI) / (M2 * mu);
-  double eta0 = pow(pdf->alphasQ(MX(0)) / alphaS0, 8.0 / 46.0);
-  double eta1 = pow(pdf->alphasQ(MX(1)) / alphaS0, 8.0 / 46.0);
+  double eta0 = pow(pdf->alphasQ(M2) / alphaS0, 8.0 / 46.0);
+  double eta1 = pow(pdf->alphasQ(mu) / alphaS0, 8.0 / 46.0);
   double eta = sqrt(eta0 * eta1);
-  double R = sqrt(r0 * r1);
-  double rho = r0 / r1;
+  double R = M2 * mu / MH / MH;
+  double rho = pow(M2 / mu, 2);
   double F1 = 0.0;
   if (rho == 1.0) F1 = -0.5 * log(R) - 1.0 + 0.5;
   else F1 = -0.5 * log(R) - 1.0 + (rho + 1.0) * log(rho) / (rho - 1.0) / 4.0;
+  eta = 1.0;
   double result = factor * gu * gd * F1 * pow(eta, 4);
   return result;
 }
@@ -160,16 +158,13 @@ double d2(const double M2, const double mu, const double gu, const double gd){
 }
 
 double d2F(const double M2, const double mu, const double gu, const double gd){
-  CharginoSVD(M2, mu, gu, gd);
   double r = pow(MZ / MH, 2);
-  double r0 = pow(MX(0) / MH, 2);
-  double r1 = pow(MX(1) / MH, 2);
   double factor = alpha / (16.0 * M_PI * M_PI * M_PI * pow(cos(thetaW), 2)) / (M2 * mu);
-  double eta0 = pow(pdf->alphasQ(MX(0)) / alphaS0, 8.0 / 46.0);
-  double eta1 = pow(pdf->alphasQ(MX(1)) / alphaS0, 8.0 / 46.0);
+  double eta0 = pow(pdf->alphasQ(M2) / alphaS0, 8.0 / 46.0);
+  double eta1 = pow(pdf->alphasQ(Mu) / alphaS0, 8.0 / 46.0);
   double eta = sqrt(eta0 * eta1);
-  double R = sqrt(r0 * r1);
-  double rho = r0 / r1;
+  double R = M2 * mu / MH / MH;
+  double rho = pow(M2 / mu, 2);
   double A2 = 0.0;
   double B2 = 0.0;
   if (rho == 1.0){
@@ -181,7 +176,31 @@ double d2F(const double M2, const double mu, const double gu, const double gd){
     B2 = ( (2.0 - 2.0 * r + r * log(r)) * (rho - 1.0) * (rho - 2.0 - 2.0 * pow(sin(thetaW), 2) * (rho - 1.0)) + (r - 1.0) * (rho - 1.0) * (0.5 * rho + 1.0 - pow(sin(thetaW), 2) * (rho + 1.0)) * log(rho) + r * rho * log(r) * log(rho) + (r - 1.0) * rho * (dilog_re(1.0 - rho, 0.0) - dilog_re(1.0 - 1.0 / rho, 0.0))) / (4.0 * (r - 1.0) * pow(rho - 1.0, 2));
   }
   double F2 = A2 * log(R) + B2;
+  eta = 1.0;
   double result = factor * gu * gd * F2 * pow(eta, 4);
+  return result;
+}
+
+double d3F(const double M2, const double mu, const double gu, const double gd){
+  double factor = alpha / (16.0 * M_PI * M_PI * M_PI * pow(sin(thetaW), 2)) / (M2 * mu);
+  double eta0 = pow(pdf->alphasQ(M2) / alphaS0, 8.0 / 46.0);
+  double eta1 = pow(pdf->alphasQ(mu) / alphaS0, 8.0 / 46.0);
+  double eta = sqrt(eta0 * eta1);
+  double R = M2 * mu / MH / MH;
+  double rho = pow(M2 / mu, 2);
+  double A2 = 0.0;
+  double B2 = 0.0;
+  if (rho == 1.0){
+    A2 = 1.0 / 8.0;
+    B2 = 1.0 / 6.0;
+  }
+  else {
+    A2 = rho * ((rho - 7.0) * (rho - 1.0) + 2.0 * (rho + 2.0) * log(rho)) / (8.0 * pow(rho - 1.0, 3));
+    B2 = rho * (4.0 * (rho - 4.0) * (rho - 1.0) - (rho * rho + 4.0 * rho + 7.0) * log(rho) - 4.0 * (rho + 2.0) * (dilog_re(1.0 - rho, 0.0) - dilog_re(1.0 - 1.0 / rho, 0.0))) / (16.0 * pow(rho - 1.0, 3));
+  }
+  double F3 = A2 * log(R) + B2;
+  eta = 1.0;
+  double result = factor * gu * gd * F3 * pow(eta, 4);
   return result;
 }
 
@@ -203,6 +222,16 @@ double d2u(const double M2, const double mu, const double gu, const double gd){
 double d2d(const double M2, const double mu, const double gu, const double gd){
   double factor = d2F(M2, mu, gu, gd);
   return factor * (-0.5 + 2.0 * pow(sin(thetaW), 2) / 3.0) * Md * 0.197e-13;//in unit e.cm
+}
+
+double d3u(const double M2, const double mu, const double gu, const double gd){
+  double factor = d3F(M2, mu, gu, gd);
+  return factor * (0.5) * Mu * 0.197e-13;//in unit e.cm
+}
+
+double d3d(const double M2, const double mu, const double gu, const double gd){
+  double factor = d3F(M2, mu, gu, gd);
+  return factor * (-0.5) * Md * 0.197e-13;//in unit e.cm
 }
 
 double dp(const double du, const double dd, const double * gt){
@@ -235,29 +264,55 @@ double dnerror(const double du, const double dd, const double * et){
   return sqrt(err2);
 }
 
-double nEDMlimit = 3.0e-28 / 2.0;
+double nEDMlimit = 3.0e-28;
 double Solve_mu_nEDM(const double M2, const double * par){
   double gu = par[0];
   double gd = par[1];
   double gt[2] = {par[2], par[3]};
   double et[3] = {par[4], par[5], par[6]};
-  double Min = log10(190.0);
-  double Max = log10(2.0e4);
-  double mass = Min;
-  double du = d1u(M2, pow(10.0, mass), gu, gd) + d2u(M2, pow(10.0, mass), gu, gd);//
-  double dd = d1d(M2, pow(10.0, mass), gu, gd) + d2d(M2, pow(10.0, mass), gu, gd);//
+  double Min = log10(199.0);
+  double Max = log10(5.0e4);
+  double mass = Max;
+  double du = d1u(M2, pow(10.0, mass), gu, gd) + d2u(M2, pow(10.0, mass), gu, gd) + d3u(M2, pow(10.0, mass), gu, gd);//
+  double dd = d1d(M2, pow(10.0, mass), gu, gd) + d2d(M2, pow(10.0, mass), gu, gd) + d3d(M2, pow(10.0, mass), gu, gd);//
   double nedm = abs(dn(du, dd, gt));
-  if (nedm < nEDMlimit) return pow(10.0, mass);
+  if (nedm > nEDMlimit) return pow(10.0, mass);
   double nedmerror = dnerror(du, dd, et);
-  if (nedm - nedmerror < nEDMlimit) return pow(10.0, mass);
+  if (nedm - nedmerror > nEDMlimit) return pow(10.0, mass);
   while (true) {
-    mass = mass + 0.001;
-    du = d1u(M2, pow(10.0, mass), gu, gd);//
-    dd = d1d(M2, pow(10.0, mass), gu, gd);//
+    mass = mass - 0.001;
+    du = d1u(M2, pow(10.0, mass), gu, gd) + d2u(M2, pow(10.0, mass), gu, gd) + d3u(M2, pow(10.0, mass), gu, gd);//
+    dd = d1d(M2, pow(10.0, mass), gu, gd) + d2d(M2, pow(10.0, mass), gu, gd) + d3d(M2, pow(10.0, mass), gu, gd);//
     nedm = abs(dn(du, dd, gt));
     nedmerror = dnerror(du, dd, et);
     //cout << "...  " << nedm << " " << nedmerror << endl;
-    if (nedm - nedmerror < nEDMlimit || mass > Max) break;
+    if (nedm - nedmerror > nEDMlimit || mass < Min) break;
+  }
+  return pow(10.0, mass);
+}
+
+double pEDMlimit = 2.6e-29;
+double Solve_mu_pEDM(const double M2, const double * par){
+  double gu = par[0];
+  double gd = par[1];
+  double gt[2] = {par[2], par[3]};
+  double et[3] = {par[4], par[5], par[6]};
+  double Min = log10(199.0);
+  double Max = log10(5.0e4);
+  double mass = Min;
+  double du = d1u(M2, pow(10.0, mass), gu, gd) + d2u(M2, pow(10.0, mass), gu, gd) + d3u(M2, pow(10.0, mass), gu, gd);//
+  double dd = d1d(M2, pow(10.0, mass), gu, gd) + d2d(M2, pow(10.0, mass), gu, gd) + d3d(M2, pow(10.0, mass), gu, gd);//
+  double pedm = abs(dp(du, dd, gt));
+  if (pedm < pEDMlimit) return pow(10.0, mass);
+  double pedmerror = dperror(du, dd, et);
+  if (pedm - pedmerror < pEDMlimit) return pow(10.0, mass);
+  while (true) {
+    mass = mass + 0.0001;
+    du = d1u(M2, pow(10.0, mass), gu, gd) + d2u(M2, pow(10.0, mass), gu, gd) + d3u(M2, pow(10.0, mass), gu, gd);//
+    dd = d1d(M2, pow(10.0, mass), gu, gd) + d2d(M2, pow(10.0, mass), gu, gd) + d3d(M2, pow(10.0, mass), gu, gd);//
+    pedm = abs(dp(du, dd, gt));
+    pedmerror = dperror(du, dd, et);
+    if (pedm - pedmerror < pEDMlimit || mass > Max) break;
   }
   return pow(10.0, mass);
 }

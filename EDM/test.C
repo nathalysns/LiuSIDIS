@@ -2,14 +2,14 @@
 
 int main(const int argc, const char * argv[]){
 
-  
-  cout << f2(0.5, 10.0, 5.0) << "  " << f2(0.5, 5.0, 10.0) << endl;
 
-  cout << d1d(1000.0, 200.0, 1.025 * sqrt(2.0) * MW / VEV, 1.025 * sqrt(2.0) * MW / VEV) << endl;
-  cout << d2d(1000.0, 200.0, 1.025 * sqrt(2.0) * MW / VEV, 1.025 * sqrt(2.0) * MW / VEV) << endl;
+  cout << d1d(600.0, 190.0, 1.025 * sqrt(2.0) * MW / VEV, 1.025 * sqrt(2.0) * MW / VEV) << endl;
+  cout << d2d(600.0, 190.0, 1.025 * sqrt(2.0) * MW / VEV, 1.025 * sqrt(2.0) * MW / VEV) << endl;
+  cout << d3d(600.0, 190.0, 1.025 * sqrt(2.0) * MW / VEV, 1.025 * sqrt(2.0) * MW / VEV) << endl;
 
-  cout << d2u(200.0, 200.0, 1.025 * sqrt(2.0) * MW / VEV, 1.025 * sqrt(2.0) * MW / VEV) << endl;
-  cout << d2d(200.0, 200.0, 1.025 * sqrt(2.0) * MW / VEV, 1.025 * sqrt(2.0) * MW / VEV) << endl;
+  cout << d1d(620.0, 190.0, 1.025 * sqrt(2.0) * MW / VEV, 1.025 * sqrt(2.0) * MW / VEV) << endl;
+  cout << d2d(620.0, 190.0, 1.025 * sqrt(2.0) * MW / VEV, 1.025 * sqrt(2.0) * MW / VEV) << endl;
+  cout << d3d(620.0, 190.0, 1.025 * sqrt(2.0) * MW / VEV, 1.025 * sqrt(2.0) * MW / VEV) << endl;
 
   return 0;
 }
