@@ -1,3 +1,6 @@
+#ifndef _SOLID_SIDIS_3HE_H_
+#define _SOLID_SIDIS_3HE_H_
+
 #include "TFile.h"
 #include "TH1D.h"
 #include "TH2D.h"
@@ -95,6 +98,8 @@ int GetTotalRate(const double Ebeam, const char * hadron){//Estimate the total r
   TLorentzVector P(0, 0, 0, 0.938272);
   sidis.SetNucleus(2, 1);
   sidis.SetHadron(hadron);
+  if (strcmp(hadron, "pi+") == 0 || strcmp(hadron, "pi-") == 0) sidis.ChangeTMDpars(0.604, 0.114);
+  if (strcmp(hadron, "K+") == 0 || strcmp(hadron, "K-") == 0) sidis.ChangeTMDpars(0.604, 0.131);
   sidis.SetInitialState(l, P);
   sidis.SetPDFset("CJ15lo");
   sidis.SetFFset("DSSFFlo");
@@ -108,7 +113,7 @@ int GetTotalRate(const double Ebeam, const char * hadron){//Estimate the total r
   TLorentzVector lp(0, 0, 0, 0);
   TLorentzVector Ph(0, 0, 0, 0);
   for (Long64_t i = 0; i < Nsim; i++){
-    if (i%(Nsim/5) == 0) std::cout << i << std::endl;
+    //if (i%(Nsim/5) == 0) std::cout << i << std::endl;
     weight = sidis.GenerateEvent(0, 1);
     if (weight > 0){
       if (sidis.GetVariable("W") < 2.3) continue;
@@ -120,7 +125,7 @@ int GetTotalRate(const double Ebeam, const char * hadron){//Estimate the total r
       sum += weight * GetAcceptance_e(lp) * GetAcceptance_hadron(Ph, hadron);
     }
   }
-  printf("\n");
+  //printf("\n");
   printf("Total rate: %.4E  (%.1f GeV %s)\n\n", sum * lumi / Nsim, Ebeam, hadron);
   return 0;
 }
@@ -131,6 +136,8 @@ int MakeKinematicCoveragePlots(const double Ebeam, const char * savefile, const 
   TLorentzVector P(0, 0, 0, 0.938272);
   sidis.SetNucleus(2,1);
   sidis.SetHadron(hadron);
+  if (strcmp(hadron, "pi+") == 0 || strcmp(hadron, "pi-") == 0) sidis.ChangeTMDpars(0.604, 0.114);
+  if (strcmp(hadron, "K+") == 0 || strcmp(hadron, "K-") == 0) sidis.ChangeTMDpars(0.604, 0.131); 
   sidis.SetInitialState(l, P);
   sidis.SetPDFset("CJ15lo");
   sidis.SetFFset("DSSFFlo");
@@ -331,6 +338,8 @@ int MakeRateDistributionPlots(const double Ebeam, const char * savefile, const c
   TLorentzVector P(0, 0, 0, 0.938272);
   sidis.SetNucleus(2,1);
   sidis.SetHadron(hadron);
+  if (strcmp(hadron, "pi+") == 0 || strcmp(hadron, "pi-") == 0) sidis.ChangeTMDpars(0.604, 0.114);
+  if (strcmp(hadron, "K+") == 0 || strcmp(hadron, "K-") == 0) sidis.ChangeTMDpars(0.604, 0.131);
   sidis.SetInitialState(l, P);
   sidis.SetPDFset("CJ15lo");
   sidis.SetFFset("DSSFFlo");
@@ -461,6 +470,8 @@ int MakeRateDistributionPlotZ(const double Ebeam, const char * hadron = "pi+"){/
   TLorentzVector P(0, 0, 0, 0.938272);
   sidis.SetNucleus(2,1);
   sidis.SetHadron(hadron);
+  if (strcmp(hadron, "pi+") == 0 || strcmp(hadron, "pi-") == 0) sidis.ChangeTMDpars(0.604, 0.114);
+  if (strcmp(hadron, "K+") == 0 || strcmp(hadron, "K-") == 0) sidis.ChangeTMDpars(0.604, 0.131);
   sidis.SetInitialState(l, P);
   sidis.SetPDFset("CJ15lo");
   sidis.SetFFset("DSSFFlo");
@@ -522,6 +533,8 @@ int GenerateBinInfoFile(const char * filename, const double Ebeam, const char * 
   TLorentzVector P(0, 0, 0, 0.938272);
   sidis.SetNucleus(2, 1);
   sidis.SetHadron(hadron);
+  if (strcmp(hadron, "pi+") == 0 || strcmp(hadron, "pi-") == 0) sidis.ChangeTMDpars(0.604, 0.114);
+  if (strcmp(hadron, "K+") == 0 || strcmp(hadron, "K-") == 0) sidis.ChangeTMDpars(0.604, 0.131);
   sidis.SetInitialState(l, P);
   sidis.SetPDFset("CJ15lo");
   sidis.SetFFset("DSSFFlo");
@@ -639,6 +652,8 @@ int AnalyzeEstatUT3(const char * readfile, const char * savefile, const double E
   TLorentzVector P(0, 0, 0, 0.938272);
   sidis.SetNucleus(2, 1);
   sidis.SetHadron(had);
+  if (strcmp(had, "pi+") == 0 || strcmp(had, "pi-") == 0) sidis.ChangeTMDpars(0.604, 0.114);
+  if (strcmp(had, "K+") == 0 || strcmp(had, "K-") == 0) sidis.ChangeTMDpars(0.604, 0.131);
   sidis.SetInitialState(l, P);
   sidis.SetPDFset("CJ15lo");
   sidis.SetFFset("DSSFFlo");
@@ -658,6 +673,8 @@ int AnalyzeEstatUT3(const char * readfile, const char * savefile, const double E
   Lsidis sidis_n;
   sidis_n.SetNucleus(0, 1);
   sidis_n.SetHadron(had);
+  if (strcmp(had, "pi+") == 0 || strcmp(had, "pi-") == 0) sidis_n.ChangeTMDpars(0.604, 0.114);
+  if (strcmp(had, "K+") == 0 || strcmp(had, "K-") == 0) sidis_n.ChangeTMDpars(0.604, 0.131);
   sidis_n.SetInitialState(l, P);
   sidis_n.SetPDFset("CJ15lo");
   sidis_n.SetFFset("DSSFFlo");
@@ -752,6 +769,8 @@ double CheckCurrentCut(const double Ebeam, const char * hadron, const double kT2
   TLorentzVector P(0, 0, 0, 0.938272);
   sidis.SetNucleus(2, 1);
   sidis.SetHadron(hadron);
+  if (strcmp(hadron, "pi+") == 0 || strcmp(hadron, "pi-") == 0) sidis.ChangeTMDpars(0.604, 0.114);
+  if (strcmp(hadron, "K+") == 0 || strcmp(hadron, "K-") == 0) sidis.ChangeTMDpars(0.604, 0.131);
   sidis.SetInitialState(l, P);
   sidis.SetPDFset("CJ15lo");
   sidis.SetFFset("DSSFFlo");
@@ -875,7 +894,7 @@ int CreateFileSivers(const char * rootfile1, const char * rootfile2, const char 
 
 
   
-
+#endif
 
 
 
