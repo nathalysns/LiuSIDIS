@@ -36,10 +36,15 @@ int main(int argc, char * argv[]){
   if (opt == 0){
     gRandom->SetSeed(0);
     if (argc > 2) Rfactor0 = atof(argv[2]);
-    GetTotalRate(11.0, "pi+");
-    GetTotalRate(8.8, "pi+");
-    GetTotalRate(11.0, "pi-");
-    GetTotalRate(8.8, "pi-");
+    //GetTotalRate(11.0, "pi+");
+    //GetTotalRate(8.8, "pi+");
+    //GetTotalRate(11.0, "pi-");
+    //GetTotalRate(8.8, "pi-");
+    PKmax = 2.5;
+    GetTotalRate(11.0, "K+");
+    GetTotalRate(8.8, "K+");
+    GetTotalRate(11.0, "K-");
+    GetTotalRate(8.8, "K-");
   }
 
   if (opt == 1){
