@@ -3,7 +3,7 @@
 //LHAPDF is required. Developed with v6.1
 //ROOT is required. Developed with v5.34.21
 //Potential error with other versions not tested
-//Last update date 3 Mar. 2017 version 2.1
+//Last update date 6 Dec. 2017 version 2.2
 
 #ifndef _LSIDIS_H_
 #define _LSIDIS_H_
@@ -105,6 +105,7 @@ class Lsidis{
   Lsidis(const TLorentzVector l, const TLorentzVector P);
   static double DEG(const double rad);//convert from rad to deg
   static double RAD(const double deg);//convert form deg to rad  
+  int ChangeTMDpars(const double kt2, const double pt2);//change the TMD model parameters TMDpars
   int SetNucleus(const double np, const double nn, const double pp, const double pn);//Set incoming nucleus
   int CheckNucleus();
   int SetHadron(const char * hadron);//Set detected hadron
@@ -173,6 +174,12 @@ double Lsidis::DEG(const double rad){//convert rad to deg
 
 double Lsidis::RAD(const double deg){//convert deg to rad
   return deg / 180.0 * PI;
+}
+
+int Lsidis::ChangeTMDpars(const double kt2, const double pt2){//change TMD model parameters
+  TMDpars[0] = kt2;
+  TMDpars[1] = pt2;
+  return 0;
 }
 
 int Lsidis::SetNucleus(const double np, const double nn, const double pp = 0, const double pn = 0){//set number of protons and neutrons in the incoming nucleus
