@@ -1,3 +1,6 @@
+#ifndef _SOLID_SIDIS_NH3_H_
+#define _SOLID_SIDIS_NH3_H_
+
 #include "TFile.h"
 #include "TH1D.h"
 #include "TH2D.h"
@@ -11,15 +14,21 @@
 #include "Lsidis.h"
 
 // Acceptance 
-TFile * file_e = new TFile("Acceptance/acceptance_solid_SIDIS_NH3_electron_output.root", "r");
-TFile * file_pip = new TFile("Acceptance/acceptance_solid_SIDIS_NH3_pionp_output.root", "r");
-TFile * file_pim = new TFile("Acceptance/acceptance_solid_SIDIS_NH3_pionm_output.root", "r");
+TFile * file_e = new TFile("Acceptance/acceptance_solid_SIDIS_NH3_electron_201710_1e7_output_final.root", "r");
+TFile * file_pip = new TFile("Acceptance/acceptance_solid_SIDIS_NH3_pip_201710_1e7_output_final.root", "r");
+TFile * file_pim = new TFile("Acceptance/acceptance_solid_SIDIS_NH3_pim_201710_1e7_output_final.root", "r");
+TFile * file_kp = new TFile("Acceptance/acceptance_solid_SIDIS_NH3_kp_201710_1e7_output_final.root", "r");
+TFile * file_km = new TFile("Acceptance/acceptance_solid_SIDIS_NH3_km_201710_1e7_output_final.root", "r");
 TH3F * acc_FA_e = (TH3F *) file_e->Get("acceptance_ThetaPhiP_forwardangle");
 TH3F * acc_LA_e = (TH3F *) file_e->Get("acceptance_ThetaPhiP_largeangle");
 TH3F * acc_FA_pip = (TH3F *) file_pip->Get("acceptance_ThetaPhiP_forwardangle");
 TH3F * acc_LA_pip = (TH3F *) file_pip->Get("acceptance_ThetaPhiP_largeangle");
 TH3F * acc_FA_pim = (TH3F *) file_pim->Get("acceptance_ThetaPhiP_forwardangle");
 TH3F * acc_LA_pim = (TH3F *) file_pim->Get("acceptance_ThetaPhiP_largeangle");
+TH3F * acc_FA_kp = (TH3F *) file_kp->Get("acceptance_ThetaPhiP_forwardangle");
+TH3F * acc_LA_kp = (TH3F *) file_kp->Get("acceptance_ThetaPhiP_largeangle");
+TH3F * acc_FA_km = (TH3F *) file_km->Get("acceptance_ThetaPhiP_forwardangle");
+TH3F * acc_LA_km = (TH3F *) file_km->Get("acceptance_ThetaPhiP_largeangle");
 
 double Rfactor0 = 1.0e5;
 
@@ -36,18 +45,55 @@ double GetAcceptance_e(const TLorentzVector p, const char * detector = "all"){//
   return acc;
 }
 
-double GetAcceptance_pi(const TLorentzVector p, const char * hadron){//Get pion acceptance
+double GetAcceptance_pip(const TLorentzVector p){//Get pi+ acceptance
   double theta = p.Theta() / M_PI * 180.0;
   double phi = p.Phi() / M_PI * 180.0;
   if (theta > 45.0) return 0;
   double mom = p.P();
   double acc = 0;
-  if (strcmp(hadron, "pi+") == 0)
-    acc += acc_FA_pip->GetBinContent(acc_FA_pip->GetXaxis()->FindBin(theta), acc_FA_pip->GetYaxis()->FindBin(phi), acc_FA_pip->GetZaxis()->FindBin(mom));
-  else if (strcmp(hadron, "pi-") == 0)
-    acc += acc_FA_pim->GetBinContent(acc_FA_pim->GetXaxis()->FindBin(theta), acc_FA_pim->GetYaxis()->FindBin(phi), acc_FA_pim->GetZaxis()->FindBin(mom));
-  else return 0;
+  acc += acc_FA_pip->GetBinContent(acc_FA_pip->GetXaxis()->FindBin(theta), acc_FA_pip->GetYaxis()->FindBin(phi), acc_FA_pip->GetZaxis()->FindBin(mom));
   return acc;
+}
+
+double GetAcceptance_pim(const TLorentzVector p){//Get pi+ acceptance
+  double theta = p.Theta() / M_PI * 180.0;
+  double phi = p.Phi() / M_PI * 180.0;
+  if (theta > 45.0) return 0;
+  double mom = p.P();
+  double acc = 0;
+  acc += acc_FA_pim->GetBinContent(acc_FA_pim->GetXaxis()->FindBin(theta), acc_FA_pim->GetYaxis()->FindBin(phi), acc_FA_pim->GetZaxis()->FindBin(mom));
+  return acc;
+}
+
+double PKmax = 7.5;
+double GetAcceptance_Kp(const TLorentzVector p){//Get K+ acceptance
+  double theta = p.Theta() / M_PI * 180.0;
+  double phi = p.Phi() / M_PI * 180.0;
+  if (theta > 45.0) return 0;
+  double mom = p.P();
+  if (p.P() > PKmax) return 0;
+  double acc = 0;
+  acc += acc_FA_kp->GetBinContent(acc_FA_kp->GetXaxis()->FindBin(theta), acc_FA_kp->GetYaxis()->FindBin(phi), acc_FA_kp->GetZaxis()->FindBin(mom));
+  return acc;
+}
+
+double GetAcceptance_Km(const TLorentzVector p){//Get K+ acceptance
+  double theta = p.Theta() / M_PI * 180.0;
+  double phi = p.Phi() / M_PI * 180.0;
+  if (theta > 45.0) return 0;
+  double mom = p.P();
+  if (p.P() > PKmax) return 0;
+  double acc = 0;
+  acc += acc_FA_km->GetBinContent(acc_FA_km->GetXaxis()->FindBin(theta), acc_FA_km->GetYaxis()->FindBin(phi), acc_FA_km->GetZaxis()->FindBin(mom));
+  return acc;
+}
+
+double GetAcceptance_hadron(const TLorentzVector p, const char * hadron = "pi+"){//
+  if (strcmp(hadron, "pi+") == 0) return GetAcceptance_pip(p);
+  else if (strcmp(hadron, "pi-") == 0) return GetAcceptance_pim(p);
+  else if (strcmp(hadron, "K+") == 0) return GetAcceptance_Kp(p);
+  else if (strcmp(hadron, "K-") == 0) return GetAcceptance_Km(p);
+  else return 0;
 }
 
 int GetTotalRate(const double Ebeam, const char * hadron){//Estimate the total rate
@@ -56,8 +102,10 @@ int GetTotalRate(const double Ebeam, const char * hadron){//Estimate the total r
   TLorentzVector P(0, 0, 0, 0.938272);
   sidis.SetNucleus(0.334*10.0+0.593*2.0, 0.334*7.0+0.593*2.0);
   sidis.SetHadron(hadron);
+  if (strcmp(hadron, "pi+") == 0 || strcmp(hadron, "pi-") == 0) sidis.ChangeTMDpars(0.604, 0.114);
+  if (strcmp(hadron, "K+") == 0 || strcmp(hadron, "K-") == 0) sidis.ChangeTMDpars(0.604, 0.131);
   sidis.SetInitialState(l, P);
-  sidis.SetPDFset("CT14lo");
+  sidis.SetPDFset("CJ15lo");
   sidis.SetFFset("DSSFFlo");
   double lumi = 1.0e+9 * pow(0.197327, 2);
   double Xmin[6] = {0.0, 1.0, 0.3, 0.0, -M_PI, -M_PI};
@@ -69,7 +117,7 @@ int GetTotalRate(const double Ebeam, const char * hadron){//Estimate the total r
   TLorentzVector lp(0, 0, 0, 0);
   TLorentzVector Ph(0, 0, 0, 0);
   for (Long64_t i = 0; i < Nsim; i++){
-    if (i%(Nsim/20) == 0) std::cout << i << std::endl;
+    //if (i%(Nsim/20) == 0) std::cout << i << std::endl;
     weight = sidis.GenerateEvent(0, 1);
     if (weight > 0){
       if (sidis.GetVariable("W") < 2.3) continue;
@@ -78,7 +126,7 @@ int GetTotalRate(const double Ebeam, const char * hadron){//Estimate the total r
       if (sidis.GetVariable("Rfactor") > Rfactor0) continue;
       lp = sidis.GetLorentzVector("lp");
       Ph = sidis.GetLorentzVector("Ph");
-      sum += weight * GetAcceptance_e(lp) * GetAcceptance_pi(Ph, hadron);
+      sum += weight * GetAcceptance_e(lp) * GetAcceptance_hadron(Ph, hadron);
     }
   }
   printf("\n");
@@ -93,8 +141,10 @@ int MakeKinematicCoveragePlots(const double Ebeam, const char * hadron, const ch
   TLorentzVector P(0, 0, 0, 0.938272);
   sidis.SetNucleus(0.334*10.0+0.593*2.0, 0.334*7.0+0.593*2.0);
   sidis.SetHadron(hadron);
+  if (strcmp(hadron, "pi+") == 0 || strcmp(hadron, "pi-") == 0) sidis.ChangeTMDpars(0.604, 0.114);
+  if (strcmp(hadron, "K+") == 0 || strcmp(hadron, "K-") == 0) sidis.ChangeTMDpars(0.604, 0.131);
   sidis.SetInitialState(l, P);
-  sidis.SetPDFset("CT14lo");
+  sidis.SetPDFset("CJ15lo");
   sidis.SetFFset("DSSFFlo");
   double Xmin[6] = {0.0, 1.0, 0.3, 0.0, -M_PI, -M_PI};
   double Xmax[6] = {0.7, 9.0, 0.7, 2.0, M_PI, M_PI};
@@ -218,8 +268,8 @@ int MakeKinematicCoveragePlots(const double Ebeam, const char * hadron, const ch
       Pt = sidis.GetVariable("Pt");
       lp = sidis.GetLorentzVector("lp");
       Ph = sidis.GetLorentzVector("Ph");
-      acc_FA = GetAcceptance_e(lp, "FA") * GetAcceptance_pi(Ph, hadron);
-      acc_LA = GetAcceptance_e(lp, "LA") * GetAcceptance_pi(Ph, hadron);
+      acc_FA = GetAcceptance_e(lp, "FA") * GetAcceptance_hadron(Ph, hadron);
+      acc_LA = GetAcceptance_e(lp, "LA") * GetAcceptance_hadron(Ph, hadron);
       if (acc_FA > 0){
 	xQ2_FA->Fill(x, Q2, acc_FA);
 	xW_FA->Fill(x, W, acc_FA);
@@ -293,8 +343,10 @@ int MakeRateDistributionPlots(const double Ebeam, const char * hadron, const cha
   TLorentzVector P(0, 0, 0, 0.938272);
   sidis.SetNucleus(0.334*10.0+0.593*2.0, 0.334*7.0+0.593*2.0);
   sidis.SetHadron(hadron);
+  if (strcmp(hadron, "pi+") == 0 || strcmp(hadron, "pi-") == 0) sidis.ChangeTMDpars(0.604, 0.114);
+  if (strcmp(hadron, "K+") == 0 || strcmp(hadron, "K-") == 0) sidis.ChangeTMDpars(0.604, 0.131);
   sidis.SetInitialState(l, P);
-  sidis.SetPDFset("CT14lo");
+  sidis.SetPDFset("CJ15lo");
   sidis.SetFFset("DSSFFlo");
   double Xmin[6] = {0.0, 1.0, 0.3, 0.0, -M_PI, -M_PI};
   double Xmax[6] = {0.7, 10.0, 0.7, 2.0, M_PI, M_PI};
@@ -361,8 +413,9 @@ int MakeRateDistributionPlots(const double Ebeam, const char * hadron, const cha
   double weight, acc;
   TLorentzVector lp, Ph;
   Long64_t Nsim = 100000000;
+  printf("Generating rate plots: (%.1f GeV %s)\n", Ebeam, hadron);
   for (Long64_t i = 0; i < Nsim; i++){
-    if (i % 10000000 == 0) std::cout << i << " %" << std::endl;
+    //if (i % 10000000 == 0) std::cout << i << " %" << std::endl;
     weight = sidis.GenerateEvent(0, 1);
     if (weight > 0){
       z = sidis.GetVariable("z");
@@ -377,7 +430,7 @@ int MakeRateDistributionPlots(const double Ebeam, const char * hadron, const cha
       Pt = sidis.GetVariable("Pt");
       lp = sidis.GetLorentzVector("lp");
       Ph = sidis.GetLorentzVector("Ph");
-      acc = GetAcceptance_e(lp, "all") * GetAcceptance_pi(Ph, hadron);
+      acc = GetAcceptance_e(lp, "all") * GetAcceptance_hadron(Ph, hadron);
       if (acc > 0){
 	sidis.CalculateRfactor();
 	if (sidis.GetVariable("Rfactor") > Rfactor0) continue;
@@ -424,8 +477,10 @@ int GenerateBinInfoFile(const char * filename, const double Ebeam, const char * 
   TLorentzVector P(0, 0, 0, 0.938272);
   sidis.SetNucleus(0.334*10.0+0.593*2.0, 0.334*7.0+0.593*2.0);
   sidis.SetHadron(hadron);
+  if (strcmp(hadron, "pi+") == 0 || strcmp(hadron, "pi-") == 0) sidis.ChangeTMDpars(0.604, 0.114);
+  if (strcmp(hadron, "K+") == 0 || strcmp(hadron, "K-") == 0) sidis.ChangeTMDpars(0.604, 0.131);
   sidis.SetInitialState(l, P);
-  sidis.SetPDFset("CT14lo");
+  sidis.SetPDFset("CJ15lo");
   sidis.SetFFset("DSSFFlo");
   double lumi = 1.0e+9 * pow(0.197327, 2);
   double eff = 0.85;
@@ -466,7 +521,7 @@ int GenerateBinInfoFile(const char * filename, const double Ebeam, const char * 
 	    if (sidis.GetVariable("Rfactor") > Rfactor0) continue;
 	    lp = sidis.GetLorentzVector("lp");
 	    Ph = sidis.GetLorentzVector("Ph");
-	    acc = GetAcceptance_e(lp) * GetAcceptance_pi(Ph, hadron);
+	    acc = GetAcceptance_e(lp) * GetAcceptance_hadron(Ph, hadron);
 	    if (acc > 0)
 	      hx->Fill(sidis.GetVariable("x"), weight * acc);
 	  }
@@ -541,8 +596,10 @@ int AnalyzeEstatUT3(const char * readfile, const char * savefile, const double E
   TLorentzVector P(0, 0, 0, 0.938272);
   sidis.SetNucleus(0.334*10.0+0.593*2.0, 0.334*7.0+0.593*2.0);
   sidis.SetHadron(had);
+  if (strcmp(had, "pi+") == 0 || strcmp(had, "pi-") == 0) sidis.ChangeTMDpars(0.604, 0.114);
+  if (strcmp(had, "K+") == 0 || strcmp(had, "K-") == 0) sidis.ChangeTMDpars(0.604, 0.131);
   sidis.SetInitialState(l, P);
-  sidis.SetPDFset("CT14lo");
+  sidis.SetPDFset("CJ15lo");
   sidis.SetFFset("DSSFFlo");
   double lumi = 1.0e+9 * pow(0.197327, 2);
   double eff = 0.85;
@@ -560,8 +617,10 @@ int AnalyzeEstatUT3(const char * readfile, const char * savefile, const double E
   Lsidis sidis_p;
   sidis_p.SetNucleus(1, 0);
   sidis_p.SetHadron(had);
+  if (strcmp(had, "pi+") == 0 || strcmp(had, "pi-") == 0) sidis_p.ChangeTMDpars(0.604, 0.114);
+  if (strcmp(had, "K+") == 0 || strcmp(had, "K-") == 0) sidis_p.ChangeTMDpars(0.604, 0.131);
   sidis_p.SetInitialState(l, P);
-  sidis_p.SetPDFset("CT14lo");
+  sidis_p.SetPDFset("CJ15lo");
   sidis_p.SetFFset("DSSFFlo");
   ifstream infile(readfile);
   char tmp[300];
@@ -586,7 +645,7 @@ int AnalyzeEstatUT3(const char * readfile, const char * savefile, const double E
 	if (sidis.GetVariable("Rfactor") > Rfactor0) continue;
 	lp = sidis.GetLorentzVector("lp");
 	Ph = sidis.GetLorentzVector("Ph");
-	acc = GetAcceptance_e(lp) * GetAcceptance_pi(Ph, had);
+	acc = GetAcceptance_e(lp) * GetAcceptance_hadron(Ph, had);
 	if (acc > 0){
 	  sidis_p.SetFinalState(lp, Ph);
 	  sidis_p.CalculateVariables();
@@ -654,8 +713,10 @@ double CheckCurrentCut(const double Ebeam, const char * hadron, const double kT2
   TLorentzVector P(0, 0, 0, 0.938272);
   sidis.SetNucleus(0.334*10.0+0.593*2.0, 0.334*7.0+0.593*2.0);
   sidis.SetHadron(hadron);
+  if (strcmp(hadron, "pi+") == 0 || strcmp(hadron, "pi-") == 0) sidis.ChangeTMDpars(0.604, 0.114);
+  if (strcmp(hadron, "K+") == 0 || strcmp(hadron, "K-") == 0) sidis.ChangeTMDpars(0.604, 0.131);
   sidis.SetInitialState(l, P);
-  sidis.SetPDFset("CT14lo");
+  sidis.SetPDFset("CJ15lo");
   sidis.SetFFset("DSSFFlo");
   double lumi = 1.0e+9 * pow(0.197327, 2);
   double Nsim = 1.0e7;
@@ -685,7 +746,7 @@ double CheckCurrentCut(const double Ebeam, const char * hadron, const double kT2
       if (sidis.GetVariable("Wp") < 1.6) continue;
       lp = sidis.GetLorentzVector("lp");
       Ph = sidis.GetLorentzVector("Ph");
-      acc = GetAcceptance_e(lp) * GetAcceptance_pi(Ph, hadron);
+      acc = GetAcceptance_e(lp) * GetAcceptance_hadron(Ph, hadron);
       if (acc > 0){
 	hall->Fill(sidis.GetVariable("z"), sidis.GetVariable("Pt"), weight * acc);
 	sidis.CalculateRfactor(kT2, MiT2, MfT2);
@@ -769,3 +830,11 @@ int CreateFileSivers(const char * rootfile1, const char * rootfile2, const char 
   fclose(file);
   return 0;
 }
+
+
+
+
+
+
+
+#endif

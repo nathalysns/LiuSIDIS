@@ -40,6 +40,15 @@ int main(int argc, char * argv[]){
     GetTotalRate(8.8, "pi+");
     GetTotalRate(11.0, "pi-");
     GetTotalRate(8.8, "pi-");
+    PKmax = 7.5;
+    GetTotalRate(11.0, "K+");
+    GetTotalRate(11.0, "K-");
+    PKmax = 5.0;
+    GetTotalRate(11.0, "K+");
+    GetTotalRate(11.0, "K-");
+    PKmax = 2.5;
+    GetTotalRate(11.0, "K+");
+    GetTotalRate(11.0, "K-");
   }
 
   if (opt == 1){
@@ -100,10 +109,19 @@ int main(int argc, char * argv[]){
   }
 
   if (opt == 7){
-    MakeRateDistributionPlots(11.0, "pi+", "ProtonResults/ratedistri_11p.root");
-    MakeRateDistributionPlots(11.0, "pi-", "ProtonResults/ratedistri_11m.root");
-    MakeRateDistributionPlots(8.8, "pi+", "ProtonResults/ratedistri_8.8p.root");
-    MakeRateDistributionPlots(8.8, "pi-", "ProtonResults/ratedistri_8.8m.root");
+    MakeRateDistributionPlots(11.0, "pi+", "ProtonResults/ratedistri_pip_11.root");
+    MakeRateDistributionPlots(11.0, "pi-", "ProtonResults/ratedistri_pim_11.root");
+    MakeRateDistributionPlots(8.8, "pi+", "ProtonResults/ratedistri_pip_8.8.root");
+    MakeRateDistributionPlots(8.8, "pi-", "ProtonResults/ratedistri_pim_8.8.root");
+    PKmax = 7.5;
+    MakeRateDistributionPlots(11.0, "K+", "ProtonResults/ratedistri_Kp(7.5)_11.root");
+    MakeRateDistributionPlots(11.0, "K-", "ProtonResults/ratedistri_Km(7.5)_11.root");
+    PKmax = 5.0;
+    MakeRateDistributionPlots(11.0, "K+", "ProtonResults/ratedistri_Kp(5.0)_11.root");
+    MakeRateDistributionPlots(11.0, "K-", "ProtonResults/ratedistri_Km(5.0)_11.root");
+    PKmax = 2.5;
+    MakeRateDistributionPlots(11.0, "K+", "ProtonResults/ratedistri_Kp(2.5)_11.root");
+    MakeRateDistributionPlots(11.0, "K-", "ProtonResults/ratedistri_Km(2.5)_11.root");
   }
   
   if (opt == 8){
