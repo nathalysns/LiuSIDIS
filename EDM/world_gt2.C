@@ -99,9 +99,9 @@ int main(int argc, char * argv[]){
     t0->DrawClone("same");
 
     TGraphErrors * e1 = new TGraphErrors(2);
-    e1->SetMarkerStyle(8);
+    e1->SetMarkerStyle(21);
     e1->SetMarkerColor(4);
-    e1->SetMarkerSize(msize);
+    e1->SetMarkerSize(msize*0.8);
     e1->SetLineColor(4);
     e1->SetLineWidth(lwidth);
     //Lattice PRD94(2016)054508 Bhattacharya et al.
@@ -139,7 +139,7 @@ int main(int argc, char * argv[]){
     t0->DrawClone("same");
 
     TGraphErrors * e2 = new TGraphErrors(2);
-    e2->SetMarkerStyle(8);
+    e2->SetMarkerStyle(22);
     e2->SetMarkerColor(6);
     e2->SetMarkerSize(msize);
     e2->SetLineColor(6);
@@ -256,7 +256,7 @@ int main(int argc, char * argv[]){
  
     
     TGraphAsymmErrors * e3 = new TGraphAsymmErrors(2);
-    e3->SetMarkerStyle(8);
+    e3->SetMarkerStyle(33);
     e3->SetMarkerColor(1);
     e3->SetMarkerSize(msize);
     e3->SetLineColor(1);
@@ -319,9 +319,9 @@ int main(int argc, char * argv[]){
 
 
     TGraphErrors * e4 = new TGraphErrors(2);
-    e4->SetMarkerStyle(8);
+    e4->SetMarkerStyle(27);
     e4->SetMarkerColor(2);
-    e4->SetMarkerSize(msize);
+    e4->SetMarkerSize(msize*0.8);
     e4->SetLineColor(2);
     e4->SetLineWidth(lwidth);
     //SoLID PLB767(2017)91 Ye et al. 
@@ -398,9 +398,9 @@ int main(int argc, char * argv[]){
     t0->DrawClone("same");
 
     TGraphErrors * a1 = new TGraphErrors(1);
-    a1->SetMarkerStyle(8);
+    a1->SetMarkerStyle(21);
     a1->SetMarkerColor(4);
-    a1->SetMarkerSize(msize);
+    a1->SetMarkerSize(msize*0.8);
     a1->SetLineColor(4);
     a1->SetLineWidth(lwidth);
     //Lattice PRD94(2016)054508 Bhattacharya et al.
@@ -459,7 +459,7 @@ int main(int argc, char * argv[]){
     t0->DrawClone("same");
 
     TGraphAsymmErrors * a3 = new TGraphAsymmErrors(1);
-    a3->SetMarkerStyle(8);
+    a3->SetMarkerStyle(33);
     a3->SetMarkerColor(1);
     a3->SetMarkerSize(msize);
     a3->SetLineColor(1);
@@ -511,9 +511,9 @@ int main(int argc, char * argv[]){
     t0->DrawClone("same");
 
     TGraphErrors * a4 = new TGraphErrors(1);
-    a4->SetMarkerStyle(8);
+    a4->SetMarkerStyle(27);
     a4->SetMarkerColor(2);
-    a4->SetMarkerSize(msize);
+    a4->SetMarkerSize(msize*0.8);
     a4->SetLineColor(2);
     a4->SetLineWidth(lwidth);
     //SoLID PLB767(2017)91 Ye et al. 
