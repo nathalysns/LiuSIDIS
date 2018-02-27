@@ -40,6 +40,7 @@ int main(int argc, char * argv[]){
     GetTotalRate(8.8, "pi+");
     GetTotalRate(11.0, "pi-");
     GetTotalRate(8.8, "pi-");
+    /*
     PKmax = 7.5;
     cout << PKmax << endl;
     GetTotalRate(11.0, "K+");
@@ -52,6 +53,7 @@ int main(int argc, char * argv[]){
     cout << PKmax << endl;
     GetTotalRate(11.0, "K+");
     GetTotalRate(11.0, "K-");
+    */
   }
 
   if (opt == 1){
@@ -111,8 +113,17 @@ int main(int argc, char * argv[]){
   }	
 
   if (opt == 7){
-    MakeRateDistributionPlots(11.0, "NeutronResults/ratedistri_11.root");
-    MakeRateDistributionPlots(8.8, "NeutronResults/ratedistri_8.8.root");
+    MakeRateDistributionPlots(11.0, "NeutronResults/ratedistri_pip_11.root", "pi+");
+    MakeRateDistributionPlots(8.8, "NeutronResults/ratedistri_pip_8.8.root", "pi+");
+    PKmax=7.5;
+    MakeRateDistributionPlots(11.0, "NeutronResults/ratedistri_Kp(7.5)_11.root", "K+");
+    MakeRateDistributionPlots(11.0, "NeutronResults/ratedistri_Km(7.5)_11.root", "K-");
+    PKmax=5.0;
+    MakeRateDistributionPlots(11.0, "NeutronResults/ratedistri_Kp(5.0)_11.root", "K+");
+    MakeRateDistributionPlots(11.0, "NeutronResults/ratedistri_Km(5.0)_11.root", "K-");
+    PKmax=2.5;
+    MakeRateDistributionPlots(11.0, "NeutronResults/ratedistri_Kp(2.5)_11.root", "K+");
+    MakeRateDistributionPlots(11.0, "NeutronResults/ratedistri_Km(2.5)_11.root", "K-");
   }
 
   if (opt == 8){
