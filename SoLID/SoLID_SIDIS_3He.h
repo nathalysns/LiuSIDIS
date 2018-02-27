@@ -31,35 +31,39 @@ TH2F * acc_LA_kp = (TH2F *) file_kp->Get("acceptance_ThetaP_largeangle");
 
 double Rfactor0 = 1.0e5;
 
+double thetamin = 8.0;
 double GetAcceptance_e(const TLorentzVector p, const char * detector = "all"){//Get electron acceptance
   double theta = p.Theta() / M_PI * 180.0;
-  if (theta < 8.0 || theta > 30.0) return 0;
+  if (theta < thetamin || theta > 30.0) return 0;
   double mom = p.P();
   double acc = 0;
   if (strcmp(detector, "FA") == 0 || strcmp(detector, "all") == 0)
     acc += acc_FA_e->GetBinContent(acc_FA_e->GetXaxis()->FindBin(theta), acc_FA_e->GetYaxis()->FindBin(mom));
   if (mom > 3.5 && (strcmp(detector, "LA") == 0 || strcmp(detector, "all") == 0))
     acc += acc_LA_e->GetBinContent(acc_LA_e->GetXaxis()->FindBin(theta), acc_LA_e->GetYaxis()->FindBin(mom));
+  if (theta > thetamin && theta < 8.0 && mom > 2.0) return 0.5;
   return acc;
 }
 
 double GetAcceptance_pip(const TLorentzVector p){//Get pi+ acceptance
   double theta = p.Theta() / M_PI * 180.0;
-  if (theta < 8.0 || theta > 18.0) return 0;
+  if (theta < thetamin || theta > 18.0) return 0;
   double mom = p.P();
   //if (mom < 7.0) return 0;
   double acc = 0;
   acc += acc_FA_pip->GetBinContent(acc_FA_pip->GetXaxis()->FindBin(theta), acc_FA_pip->GetYaxis()->FindBin(mom));
+  if (theta > thetamin && theta < 8.0 && mom > 2.0) return 0.5;
   return acc;
 }
 
 double GetAcceptance_pim(const TLorentzVector p){//Get pi- acceptance
   double theta = p.Theta() / M_PI * 180.0;
-  if (theta < 8.0 || theta > 18.0) return 0;
+  if (theta < thetamin || theta > 18.0) return 0;
   double mom = p.P();
   //if (mom < 7.0) return 0;
   double acc = 0;
   acc += acc_FA_pim->GetBinContent(acc_FA_pim->GetXaxis()->FindBin(theta), acc_FA_pim->GetYaxis()->FindBin(mom));
+  if (theta > thetamin && theta < 8.0 && mom > 2.0) return 0.5;
   return acc;
 }
 
