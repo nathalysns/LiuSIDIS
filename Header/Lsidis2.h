@@ -562,6 +562,7 @@ double Lsidis::GetVariable(const char * var){//get current variable
   else if (strcmp(var, "epsilon") == 0) return epsilon;
   else if (strcmp(var, "Rfactor") == 0) return Rfactor;
   else if (strcmp(var, "sigmatotal") == 0) return sigmatotal;
+  else if (strcmp(var, "Mh") == 0) return Mh;
   else {
     perror("No such variable!");
     return -1;
