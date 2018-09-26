@@ -49,7 +49,7 @@ double GetAcceptance_pip(const TLorentzVector p){//Get pi+ acceptance
   double theta = p.Theta() / M_PI * 180.0;
   if (theta < thetamin || theta > 18.0) return 0;
   double mom = p.P();
-  //if (mom < 7.0) return 0;
+  if (mom < 2.5) return 0;
   double acc = 0;
   acc += acc_FA_pip->GetBinContent(acc_FA_pip->GetXaxis()->FindBin(theta), acc_FA_pip->GetYaxis()->FindBin(mom));
   if (theta > thetamin && theta < 8.0 && mom > 2.0) return 0.5;
@@ -60,7 +60,7 @@ double GetAcceptance_pim(const TLorentzVector p){//Get pi- acceptance
   double theta = p.Theta() / M_PI * 180.0;
   if (theta < thetamin || theta > 18.0) return 0;
   double mom = p.P();
-  //if (mom < 7.0) return 0;
+  if (mom < 2.5) return 0;
   double acc = 0;
   acc += acc_FA_pim->GetBinContent(acc_FA_pim->GetXaxis()->FindBin(theta), acc_FA_pim->GetYaxis()->FindBin(mom));
   if (theta > thetamin && theta < 8.0 && mom > 2.0) return 0.5;
