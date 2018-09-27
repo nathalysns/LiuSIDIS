@@ -7,12 +7,14 @@
 
 #include "LHAPDF/LHAPDF.h"
 
+#include "Math/WrappedParamFunction.h"
+#include "Math/IntegratorMultiDim.h"
+#include "Math/GSLIntegrator.h"
+
 using namespace std;
 
-const LHAPDF::PDF * xf = LHAPDF::mkPDF("CJ15lo", 0);
+const LHAPDF::PDF * xf = LHAPDF::mkPDF("CT14lo", 0);
 const LHAPDF::PDF * zDp = LHAPDF::mkPDF("DSSFFlo", 211);
-const LHAPDF::PDF * zDm = LHAPDF::mkPDF("DSSFFlo", 1211);
-const LHAPDF::PDF * zD0 = LHAPDF::mkPDF("DSSFFlo", 111);
 
 double xPDF(const int flavor, const double x, const double Q2, const double Np, const double Nn){
   if (abs(flavor) == 1 || abs(flavor) == 2)
@@ -35,9 +37,7 @@ double D1(const int flavor, const double z, const double Q2, const char * hadron
   if (strcmp(hadron, "pi+") == 0)
     return zDp->xfxQ2(flavor, z, Q2) / z;
   if (strcmp(hadron, "pi-") == 0)
-    return zDm->xfxQ2(flavor, z, Q2) / z;
-  if (strcmp(hadron, "pi0") == 0)
-    return zD0->xfxQ2(flavor, z, Q2) / z;
+    return zDp->xfxQ2(-flavor, z, Q2) / z;
   return 0;
 }
 
@@ -47,8 +47,8 @@ double FUUT(const double * var, const char * target, const char * hadron){
   double x = var[1];
   double z = var[3];
   double pT = var[4];
-  double kt2 = 0.604;
-  double pt2 = 0.114;
+  double kt2 = 0.25;
+  double pt2 = 0.20;
   double PT2 = pt2 + z * z * kt2;
   double fu = f1(2, x, Q2, target);
   double fub = f1(-2, x, Q2, target);
@@ -78,13 +78,12 @@ double FUUT(const double * var, const char * target, const char * hadron){
 double xTransversity(const int flavor, const double x, const double Q2, const double Np, const double Nn, const double * par){
   if (flavor == 1 || flavor == 2){
     double Nu = par[0];
-    double au = par[1];
-    double bu = par[2];
-    double Nd = par[3];
-    double ad = par[4];
-    double bd = par[5];
-    double xhu = Nu * pow(x, au) * pow(1.0 - x, bu) * xf->xfxQ2(2, x, Q2);
-    double xhd = Nd * pow(x, ad) * pow(1.0 - x, bd) * xf->xfxQ2(1, x, Q2);
+    double Nd = par[1];
+    double a = par[2];
+    double b = par[3];
+    double c = par[4];
+    double xhu = Nu * (1.0 + c * sqrt(x)) * pow(x, a) * pow(1.0 - x, b) * pow(a + b, a + b) / pow(a, a) / pow(b, b) * (xf->xfxQ2(2, x, Q2) - xf->xfxQ2(-2, x, Q2));
+    double xhd = Nd * (1.0 + c * sqrt(x)) * pow(x, a) * pow(1.0 - x, b) * pow(a + b, a + b) / pow(a, a) / pow(b, b) * (xf->xfxQ2(1, x, Q2) - xf->xfxQ2(-1, x, Q2));
     if (flavor == 2)
       return Np * xhu + Nn * xhd;
     else
@@ -105,16 +104,17 @@ double h1(const int flavor, const double x, const double Q2, const char * target
 }
 
 double H1(const int flavor, const double z, const double Q2, const char * hadron){
-  double Nfav = 0.49;
+  double Nfav = 1.0;
   double Ndis = -1.0;
-  double c = 1.06;
-  double d = 0.07;
-  double Mh = sqrt(1.5);
+  double c = -2.36;
+  double d = 2.12;
+  double Mh = sqrt(0.67);
+  double factor = sqrt(2.0 * M_E) * 0.14 * Mh / (Mh * Mh + 0.20);
   if ( (flavor == 2 && strcmp(hadron, "pi+") == 0) || (flavor == 1 && strcmp(hadron, "pi-") == 0) ){
-    return sqrt(2.0 * M_E) * 0.14 * Mh / (Mh * Mh + 0.2) * Nfav * pow(z, c) * pow(1.0 - z, d) * pow(c + d, c + d) / pow(c, c) / pow(d, d) * zDp->xfxQ2(2, z, Q2);
+    return factor * Nfav * ((1.0 - c - d) + c * z + d * z * z) * zDp->xfxQ2(2, z, Q2);
   }
-  else if ( (flavor == 1 && strcmp(hadron, "pi+") == 0) || (flavor == 2 && strcmp(hadron, "pi+") == 0) ){
-    return sqrt(2.0 * M_E) * 0.14 * Mh / (Mh * Mh + 0.2) * Ndis * pow(z, c) * pow(1.0 - z, d) * pow(c + d, c + d) / pow(c, c) / pow(d, d) * zDp->xfxQ2(1, z, Q2);
+  else if ( (flavor == 1 && strcmp(hadron, "pi+") == 0) || (flavor == 2 && strcmp(hadron, "pi-") == 0) ){
+    return factor * Ndis * ((1.0 - c - d) + c * z + d * z * z) * zDp->xfxQ2(1, z, Q2);
   }
   else
     return 0;
@@ -126,8 +126,8 @@ double FUTCollins(const double * var, const char * target, const char * hadron, 
   double x = var[1];
   double z = var[3];
   double pT = var[4];
-  double kt2 = par[6];
-  double pt2 = 1.5 * 0.2 / (1.5 + 0.2);
+  double kt2 = par[5];
+  double pt2 = 0.67 * 0.20 / (0.67 + 0.20);
   double PT2 = pt2 + z * z * kt2;
   double factor = pt2 * pT / (0.14 * z * PT2);
   double hu = h1(2, x, Q2, target, par);
@@ -147,6 +147,32 @@ double AUTCollins(const double * var, const char * target, const char * hadron, 
   double g = 2.0 * x * 0.939 / Q;
   double epsilon = (1.0 - y - 0.25 * g * g * y * y) / (1.0 - y + 0.5 * y * y + 0.25 * g * g * y * y);
   double result = epsilon * FUTCollins(var, target, hadron, par) / FUUT(var, target, hadron);
+  return result;
+}
+
+double h1u(double x, void * par){
+  //double x = var[0];
+  double Q2 = 2.4;
+  return xTransversity(2, x, Q2, 1.0, 0.0, (double *) par) / x;
+}
+
+double h1d(double x, void * par){
+  //double x = var[0];
+  double Q2 = 2.4;
+  return xTransversity(1, x, Q2, 1.0, 0.0, (double *) par) / x;
+}
+
+double gtu(double * par){
+  ROOT::Math::GSLIntegrator ig(ROOT::Math::IntegrationOneDim::kADAPTIVE, 1e-8, 1e-4);
+  ig.SetFunction(&h1u, par);
+  double result = ig.Integral(1e-5, 1.0);
+  return result;
+}
+
+double gtd(double * par){
+  ROOT::Math::GSLIntegrator ig(ROOT::Math::IntegrationOneDim::kADAPTIVE, 1e-8, 1e-4);
+  ig.SetFunction(&h1d, par);
+  double result = ig.Integral(1e-5, 1.0);
   return result;
 }
  
