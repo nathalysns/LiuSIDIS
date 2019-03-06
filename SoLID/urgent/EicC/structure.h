@@ -97,10 +97,10 @@ double Nxfx(const int flavor, const double x, const double Q2, const char * targ
       return 0.5 * (ub + db);
   }
   else if (strcmp(target, "helium3") == 0){
-    if (flavor == 2) return 0.86 * (dv + db) - 0.025 * (uv + ub);
-    else if (flavor == 1) return 0.86 * (uv + ub) - 0.025 * (dv + db);
-    else if (flavor == -2) return 0.86 * db - 0.025 * ub;
-    else if (flavor == -1) return 0.86 * ub - 0.025 * db;
+    if (flavor == 2) return 0.86 * (dv + db) / 3;
+    else if (flavor == 1) return 0.86 * (uv + ub) / 3;
+    else if (flavor == -2) return 0.86 * db / 3;
+    else if (flavor == -1) return 0.86 * ub / 3;
   }
   return 0;
 }
