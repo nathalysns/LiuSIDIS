@@ -3,7 +3,7 @@
 //LHAPDF is required. Developed with v6.1
 //ROOT is required. Developed with v5.34.21
 //Potential error with other versions not tested
-//Last update date 1 Nov. 2018 version 2.3
+//Last update date 9 April 2019 version 3.0
 
 #ifndef _LSIDIS_H_
 #define _LSIDIS_H_
@@ -20,6 +20,7 @@
 #include "TRandom3.h"
 #include "TMatrixD.h"
 #include "TH1D.h"
+#include "TF1.h"
 
 const double PI = 3.14159265358979323846264;//math Pi
 const double GeVfm = 1.0 / 0.1973269718;//GeV times fm in natural unit
@@ -80,6 +81,7 @@ class Lsidis{
   double xn;//Nachtmann scaling variable xn
   double y;//lepton energy transferred fraction scalar variable
   double z;//fragmentation scalar variable
+  double zn;//Nachtmann like light-front fragmentation fraction zn
   double Q2;//transferred momentum square, also used as factorization scale
   double Pt;//transverse momentum of final hadron in Trento convention
   double phih;//azimuthal angle of final hadron in Trento convention
@@ -102,6 +104,10 @@ class Lsidis{
   double volume;//simulation variables volume
   double sigmatotal;//total cross section within the simulation range [Xmin, Xmax]
   TH1D * Xhisto[6];//for Gibbs sampler
+  TF1 * TF_Maxwell;//for R1 sampling
+  TF1 * TF_xi;
+  TF1 * TF_zeta;
+  TF1 * TF_kt;
  public:
   Lsidis();
   Lsidis(const TLorentzVector l, const TLorentzVector P);
@@ -131,6 +137,8 @@ class Lsidis{
   int CalculateVariables();//Calculate Lorentz scalar variables
   int CalculateFinalState();//Calculate scattered lepton and detected hadron from x, y, z, Pt, phih, phiS
   int CalculateRfactor(const double kT2, const double MiT2, const double MfT2);//Calculate the Rfactor for current fragmentation criteria
+  int R1SamplerStarter();//Initialize functions for R1 sampling
+  double R1Sampler();//Random sampling R1 following Ted Rogers' method
   int SetVariables(const double x0, const double y0, const double z0, const double Pt0, const double phih0, const double phiS0);//Set variables x, y, z, Pt2, phih, phiS
   double GetVariable(const char * var);//Get particular variable of current event
   TLorentzVector GetLorentzVector(const char * part);//Get 4-momentum of a particle of current event
@@ -158,8 +166,8 @@ Lsidis::Lsidis(){//constructor
   st_Ph = false;
   st_gibbs = false;
   physics_control = false;
-  TMDpars[0] = 0.54;//kt2
-  TMDpars[1] = 0.13;//pt2
+  TMDpars[0] = 0.57;//kt2
+  TMDpars[1] = 0.12;//pt2
   Slepton = 0;
   SNL = 0;
   SNT = 0;
@@ -418,6 +426,7 @@ int Lsidis::CalculateVariables(){//calculate lorentz scalar variables
     double Pt2 = - (PPh * PPh) + 2.0 * (PP * PPh) * (Pq * PPh) / (PP * Pq) / (1.0 + gamma * gamma) - gamma * gamma / (1.0 + gamma * gamma) * (pow(Pq * PPh, 2) / Q2 - pow(PP * PPh, 2) / (Mp * Mp));
     if (Pt2 < 0) Pt2 = 0.0;
     Pt = sqrt(Pt2);
+    zn = xn * z / (2.0 * x) * (1.0 + sqrt(1.0 - 4.0 * Mp * Mp * (Mh * Mh + Pt * Pt) * x * x / (z * z * Q2 * Q2)));//add since v3.0
     double lt2 = - (Pl * Pl) + 2.0 * (PP * Pl) * (Pq * Pl) / (PP * Pq) / (1.0 + gamma * gamma) - gamma * gamma / (1.0 + gamma * gamma) * (pow(Pq * Pl, 2) / Q2 - pow(PP * Pl, 2) / (Mp * Mp));
     double ch = - 1.0 / sqrt(lt2 * Pt * Pt) * ( (Pl * PPh) - ((Pq * Pl) * (PP * PPh) + (PP * Pl) * (Pq * PPh)) / (1.0 + gamma * gamma) / (PP * Pq) + gamma * gamma / (1.0 + gamma * gamma) * ( (Pq * Pl) * (Pq * PPh) / Q2 - (PP * Pl) * (PP * PPh) / (Mp * Mp)));
     TMatrixD eg5(4,4);
@@ -517,6 +526,7 @@ int Lsidis::CalculateFinalState(){//Calculate scattered electron and detected ha
     gamma = 2.0 * x * Mp / sqrt(Q2);
     epsilon = (1.0 - y - 0.25 * gamma * gamma * y * y) / (1.0 - y + 0.5 * y * y + 0.25 * gamma * gamma * y * y);
     xn = 2.0 * x / (1.0 + sqrt(1.0 + gamma * gamma));
+    zn = xn * z / (2.0 * x) * (1.0 + sqrt(1.0 - 4.0 * Mp * Mp * (Mh * Mh + Pt * Pt) * x * x / (z * z * Q2 * Q2)));//add since v3.0
     physics_control = true;
     GetPDFs();
     GetFFs();
@@ -543,6 +553,28 @@ int Lsidis::CalculateRfactor(const double kT2 = 0.5, const double MiT2 = 0.5, co
     Rfactor = 1. / 0.;//NaN
     return -1;
   }
+}
+
+int Lsidis::R1SamplerStarter(){//initialize the R1 sampler
+  TF_Maxwell = new TF1("TF_Maxwell", "x*x*exp(-x*x/0.02)", 0.0, 1.0);
+  TF_xi = new TF1("TF_xi", "x*pow(1.0-x,3)", 0.0, 1.0);
+  TF_zeta = new TF1("TF_zeta", "x*pow(1.0-x,2)", 0.0, 1.0);
+  TF_kt = new TF1("TF_kt", "exp(-x/0.4)", 0.0, 1.5); 
+  return 0;
+}
+
+double Lsidis::R1Sampler(){//random sampling R1 following Ted Rogers' method
+  double xi = TF_xi->GetRandom(xn, 1.0);
+  double zeta = TF_zeta->GetRandom(zn, 1.0);
+  double dkt = TF_kt->GetRandom();
+  double ki = TF_Maxwell->GetRandom();
+  double kf = TF_Maxwell->GetRandom();
+  double angle = gRandom->Uniform(-M_PI, M_PI);
+  double xnhat = xn / xi;
+  double denominator = (zn * Q2) / (2.0 * xnhat) - pow(ki, 2) * xn * (Mh * Mh + Pt * Pt) / (2.0 * zn * Q2);
+  double kft2 = pow(Pt / zeta, 2) + dkt * dkt - 2.0 * dkt * Pt / zeta * cos(angle);
+  double numerator = (kft2 + kf * kf) * zeta / 2.0 + (Mh * Mh + Pt * Pt) / (2.0 * zeta) + Pt * Pt / zeta - dkt * Pt * cos(angle);
+  return abs(numerator / denominator);
 }
 
 double Lsidis::GetVariable(const char * var){//get current variable
@@ -851,6 +883,9 @@ int Lsidis::Test(){//Test code
 
    update log from v2.2 to 2.3
    move static const double variables outside class definition
+
+   update log from v2.3 to 3.0
+   implement R1 Monte Carlo sampling follow Ted Rogers' method
 
 */
 

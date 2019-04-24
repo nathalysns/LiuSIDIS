@@ -1,0 +1,10 @@
+Q2	x	y	z	pT	obs	target	hadron	value	error
+1.24	0.006453	0.65	0.29	0.54	AUTsivers	deuteron	pi-	0.0032257	0.0159211
+1.46	0.01057	0.47	0.32	0.52	AUTsivers	deuteron	pi-	-0.0027362	0.0104198
+1.68	0.01641	0.35	0.35	0.49	AUTsivers	deuteron	pi-	-0.022511	0.0088069
+2.02	0.02552	0.27	0.37	0.46	AUTsivers	deuteron	pi-	-0.0076737	0.0078828
+2.82	0.03964	0.24	0.38	0.45	AUTsivers	deuteron	pi-	-0.0054915	0.0089399
+4.59	0.06247	0.25	0.38	0.45	AUTsivers	deuteron	pi-	-0.0096824	0.0112891
+7.42	0.1004	0.25	0.36	0.46	AUTsivers	deuteron	pi-	-0.0166246	0.0152746
+11.9	0.1607	0.25	0.36	0.47	AUTsivers	deuteron	pi-	-0.0025896	0.0232154
+23.9	0.2781	0.28	0.35	0.51	AUTsivers	deuteron	pi-	-0.0339252	0.0411253
