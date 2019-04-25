@@ -21,7 +21,6 @@ TH2F * acc_LA_pim = (TH2F *) file_pim->Get("acceptance_ThetaP_largeangle");
 TH2F * acc_FA_pip = (TH2F *) file_pip->Get("acceptance_ThetaP_forwardangle");
 TH2F * acc_LA_pip = (TH2F *) file_pip->Get("acceptance_ThetaP_largeangle");
 
-
 double thetamin = 8.0;
 double GetAcceptance_e(const TLorentzVector p, const char * detector = "all"){//Get electron acceptance
   double theta = p.Theta() / M_PI * 180.0;
@@ -32,7 +31,6 @@ double GetAcceptance_e(const TLorentzVector p, const char * detector = "all"){//
     acc += acc_FA_e->GetBinContent(acc_FA_e->GetXaxis()->FindBin(theta), acc_FA_e->GetYaxis()->FindBin(mom));
   if (mom > 3.5 && (strcmp(detector, "LA") == 0 || strcmp(detector, "all") == 0))
     acc += acc_LA_e->GetBinContent(acc_LA_e->GetXaxis()->FindBin(theta), acc_LA_e->GetYaxis()->FindBin(mom));
-  if (theta > thetamin && theta < 8.0 && mom > 2.0) return 0.5;
   return acc;
 }
 
@@ -40,10 +38,9 @@ double GetAcceptance_pip(const TLorentzVector p){//Get pi+ acceptance
   double theta = p.Theta() / M_PI * 180.0;
   if (theta < thetamin || theta > 18.0) return 0;
   double mom = p.P();
-  //if (mom < 7.0) return 0;
+  if (mom > 7.5) return 0;
   double acc = 0;
   acc += acc_FA_pip->GetBinContent(acc_FA_pip->GetXaxis()->FindBin(theta), acc_FA_pip->GetYaxis()->FindBin(mom));
-  if (theta > thetamin && theta < 8.0 && mom > 2.0) return 0.5;
   return acc;
 }
 
@@ -51,10 +48,9 @@ double GetAcceptance_pim(const TLorentzVector p){//Get pi- acceptance
   double theta = p.Theta() / M_PI * 180.0;
   if (theta < thetamin || theta > 18.0) return 0;
   double mom = p.P();
-  //if (mom < 7.0) return 0;
+  if (mom > 7.5) return 0;
   double acc = 0;
   acc += acc_FA_pim->GetBinContent(acc_FA_pim->GetXaxis()->FindBin(theta), acc_FA_pim->GetYaxis()->FindBin(mom));
-  if (theta > thetamin && theta < 8.0 && mom > 2.0) return 0.5;
   return acc;
 }
 
@@ -93,51 +89,80 @@ int main(const int argc, const char * argv[]){
   double Xmax[6] = {0.7, 10.0, 0.7, 2.0, M_PI, M_PI};
   sidis.SetRange(Xmin, Xmax);
 
-  Long64_t Nsim = 100000000;
+  Long64_t Nsim = 10000000;
   double weight = 0;
   double acc = 0;
   TLorentzVector lp(0, 0, 0, 0);
   TLorentzVector Ph(0, 0, 0, 0);
 
-  double R1 = 0;
-
-  TFile * fs = new TFile(argv[3], "RECREATE");
-  TH2D * h1xQ2 = new TH2D("h1xQ2", "", 100, 0.0, 1.0, 100, 0.0, 10.0);
-  TH2D * h2xQ2 = new TH2D("h2xQ2", "", 100, 0.0, 1.0, 100, 0.0, 10.0);
-  TH2D * h1zPt = new TH2D("h1zPt", "", 100, 0.0, 1.0, 100, 0.0, 2.0);
-  TH2D * h2zPt = new TH2D("h2zPt", "", 100, 0.0, 1.0, 100, 0.0, 2.0);
-  h1xQ2->SetDirectory(fs);
-  h2xQ2->SetDirectory(fs);
-  h1zPt->SetDirectory(fs);
-  h2zPt->SetDirectory(fs);
- 
-  for (Long64_t i = 0; i < Nsim; i++){
-    if (i % (Nsim/10) == 0) cout << i << endl;
-    weight = sidis.GenerateEvent(0, 1);
-    if (weight > 0){
-      if (sidis.GetVariable("W") < 2.3) continue;
-      if (sidis.GetVariable("Wp") < 1.6) continue;
-      lp = sidis.GetLorentzVector("lp");
-      Ph = sidis.GetLorentzVector("Ph");
-      acc = GetAcceptance_e(lp) * GetAcceptance_hadron(Ph, argv[2]);
-      if (acc > 0){
-	h1xQ2->Fill(sidis.GetVariable("x"), sidis.GetVariable("Q2"), weight * acc);
-	h1zPt->Fill(sidis.GetVariable("z"), sidis.GetVariable("Pt"), weight * acc);
-	if (Ph.P() > 2.5){
-	  h2xQ2->Fill(sidis.GetVariable("x"), sidis.GetVariable("Q2"), weight * acc);
-	  h2zPt->Fill(sidis.GetVariable("z"), sidis.GetVariable("Pt"), weight * acc);
+  if (true){
+    TFile * fs = new TFile(argv[3], "RECREATE");
+    TH2D * hxQ2 = new TH2D("hxQ2", "", 100, 0.0, 1.0, 100, 0.0, 10.0);
+    TH2D * h0xQ2 = new TH2D("h0xQ2", "", 100, 0.0, 1.0, 100, 0.0, 10.0);
+    TH2D * h1xQ2 = new TH2D("h1xQ2", "", 100, 0.0, 1.0, 100, 0.0, 10.0);
+    TH2D * h2xQ2 = new TH2D("h2xQ2", "", 100, 0.0, 1.0, 100, 0.0, 10.0);
+    TH2D * h3xQ2 = new TH2D("h3xQ2", "", 100, 0.0, 1.0, 100, 0.0, 10.0);
+    TH2D * hzPt = new TH2D("hzPt", "", 100, 0.0, 1.0, 100, 0.0, 2.0);
+    TH2D * h0zPt = new TH2D("h0zPt", "", 100, 0.0, 1.0, 100, 0.0, 2.0);
+    TH2D * h1zPt = new TH2D("h1zPt", "", 100, 0.0, 1.0, 100, 0.0, 2.0);
+    TH2D * h2zPt = new TH2D("h2zPt", "", 100, 0.0, 1.0, 100, 0.0, 2.0);
+    TH2D * h3zPt = new TH2D("h3zPt", "", 100, 0.0, 1.0, 100, 0.0, 2.0);
+    hxQ2->SetDirectory(fs);
+    h0xQ2->SetDirectory(fs);
+    h1xQ2->SetDirectory(fs);
+    h2xQ2->SetDirectory(fs);
+    h3xQ2->SetDirectory(fs);
+    hzPt->SetDirectory(fs);
+    h0zPt->SetDirectory(fs);
+    h1zPt->SetDirectory(fs);
+    h2zPt->SetDirectory(fs);
+    h3zPt->SetDirectory(fs);
+    
+    for (Long64_t i = 0; i < Nsim; i++){
+      if (i % (Nsim/10) == 0) cout << i / (Nsim/100) << "%" << endl;
+      weight = sidis.GenerateEvent(0, 1);
+      if (weight > 0){
+	if (sidis.GetVariable("W") < 2.3) continue;
+	if (sidis.GetVariable("Wp") < 1.6) continue;
+	lp = sidis.GetLorentzVector("lp");
+	Ph = sidis.GetLorentzVector("Ph");
+	acc = GetAcceptance_e(lp) * GetAcceptance_hadron(Ph, argv[2]);
+	if (acc > 0){
+	  hxQ2->Fill(sidis.GetVariable("x"), sidis.GetVariable("Q2"), weight * acc);
+	  hzPt->Fill(sidis.GetVariable("z"), sidis.GetVariable("Pt"), weight * acc);
+	  if (Ph.P() > 2.5 && Ph.P() < 7.5){
+	    h0xQ2->Fill(sidis.GetVariable("x"), sidis.GetVariable("Q2"), weight * acc);
+	    h0zPt->Fill(sidis.GetVariable("z"), sidis.GetVariable("Pt"), weight * acc);
+	  }
+	  if (Ph.P() > 1.6 && Ph.P() < 4.8){
+	    h1xQ2->Fill(sidis.GetVariable("x"), sidis.GetVariable("Q2"), weight * acc);
+	    h1zPt->Fill(sidis.GetVariable("z"), sidis.GetVariable("Pt"), weight * acc);
+	  }
+	  if (Ph.P() > 1.3 && Ph.P() < 3.8){
+	    h2xQ2->Fill(sidis.GetVariable("x"), sidis.GetVariable("Q2"), weight * acc);
+	    h2zPt->Fill(sidis.GetVariable("z"), sidis.GetVariable("Pt"), weight * acc);
+	  }
+	  if (Ph.P() > 1.2 && Ph.P() < 3.3){
+	    h3xQ2->Fill(sidis.GetVariable("x"), sidis.GetVariable("Q2"), weight * acc);
+	    h3zPt->Fill(sidis.GetVariable("z"), sidis.GetVariable("Pt"), weight * acc);
+	  }	  
 	}
       }
     }
+    hxQ2->Scale(lumi / Nsim);
+    h0xQ2->Scale(lumi / Nsim);
+    h1xQ2->Scale(lumi / Nsim);
+    h2xQ2->Scale(lumi / Nsim);
+    h3xQ2->Scale(lumi / Nsim);
+    hzPt->Scale(lumi / Nsim);
+    h0zPt->Scale(lumi / Nsim);
+    h1zPt->Scale(lumi / Nsim);
+    h2zPt->Scale(lumi / Nsim);
+    h3zPt->Scale(lumi / Nsim);
+    
+    fs->Write();    
+    fs->Close();
   }
-  h1xQ2->Scale(lumi / Nsim);
-  h2xQ2->Scale(lumi / Nsim);
-  h1zPt->Scale(lumi / Nsim);
-  h2zPt->Scale(lumi / Nsim);
-
-  fs->Write();
-
-  fs->Close();
 
   return 0;
 }
