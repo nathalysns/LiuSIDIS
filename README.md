@@ -7,11 +7,11 @@ Tianbo Liu, Zhiwen Zhao, Weizhi Xiong, Haiyan Gao
 # How to use it
 A quick start to use this generator
 
-Latest version v1.1 (6 January 2017)
+Latest version v3.0 (9 April 2019)
 
 ## Dependence
 * __ROOT__, tested with v5.34.21
-* __LHAPDF__, tested with v6.1
+* __LHAPDF__, tested with v6.1, v6.2
 
 ## Initialization
 * __#include "Lsidis.h"__ //including the head file
