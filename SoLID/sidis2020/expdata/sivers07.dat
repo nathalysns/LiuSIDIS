@@ -1,0 +1,5 @@
+Q2	x	y	z	pT	obs	target	hadron	value	error
+1.38	0.156	0.81	0.5	0.435	AUTsivers	neutron	pi-	-0.059	0.08417244204607587
+1.76	0.206	0.78	0.52	0.38	AUTsivers	neutron	pi-	0.08	0.1186802426691149
+2.16	0.265	0.75	0.54	0.32	AUTsivers	neutron	pi-	0.059	0.0696419413859206
+2.68	0.349	0.7	0.58	0.24	AUTsivers	neutron	pi-	0.087	0.0800812087820857

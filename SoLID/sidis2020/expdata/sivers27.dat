@@ -1,0 +1,10 @@
+Q2	x	y	z	pT	obs	target	hadron	value	error
+1.24	0.006452	0.65	0.3	0.57	AUTsivers	deuteron	k+	-0.0281467	0.0300396
+1.49	0.01054	0.48	0.35	0.56	AUTsivers	deuteron	k+	-0.00903218	0.0199115
+1.82	0.01628	0.38	0.39	0.56	AUTsivers	deuteron	k+	0.0171304	0.0184351
+2.39	0.02533	0.32	0.44	0.55	AUTsivers	deuteron	k+	0.0383079	0.0186406
+3.61	0.0398	0.3	0.46	0.54	AUTsivers	deuteron	k+	0.00729183	0.0221126
+5.74	0.06279	0.3	0.45	0.54	AUTsivers	deuteron	k+	0.0126253	0.0258059
+9.1	0.1008	0.3	0.45	0.53	AUTsivers	deuteron	k+	-0.0221756	0.032549
+14.5	0.1608	0.3	0.45	0.54	AUTsivers	deuteron	k+	-0.0014442	0.0464813
+28.7	0.2847	0.33	0.44	0.56	AUTsivers	deuteron	k+	0.0158433	0.0761992
