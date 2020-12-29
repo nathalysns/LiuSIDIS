@@ -23,9 +23,9 @@ similar for the proton case
 
 copy generated SoLID pseudodata into ./data and ./datacollins
 
-./prepare sivers //prepare pseudodata sets for Sivers fit
+./prepare.py sivers //prepare pseudodata sets for Sivers fit
 
-./prepare collins //prepare pseudodata sets for Collins fit
+./prepare.py collins //prepare pseudodata sets for Collins fit
 
 * run the fit
 
