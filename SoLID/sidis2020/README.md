@@ -29,9 +29,9 @@ copy generated SoLID pseudodata into ./data and ./datacollins
 
 * run the fit
 
-./fitsivers.py <opt> //see opt values at the end part of the code
+./fitsivers.py [opt] //see opt values at the end part of the code
 
-./fitcollins.py <opt>
+./fitcollins.py [opt]
 
 * plot
 
