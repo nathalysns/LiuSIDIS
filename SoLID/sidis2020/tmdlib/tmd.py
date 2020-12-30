@@ -7,14 +7,15 @@ import lhapdf
 
 xpdf = lhapdf.mkPDF("CJ15lo",0)
 zff = lhapdf.mkPDF("DSSFFlo",211)
+zkff = lhapdf.mkPDF("DSSFFlo",321)
 
 def f1col(x, Q2, target='proton'):
     if target == 'proton':
         u, d = xpdf.xfxQ2(2,x,Q2)/x, xpdf.xfxQ2(1,x,Q2)/x
-        ub, db = xpdf.xfxQ2(2,x,Q2)/x, xpdf.xfxQ2(1,x,Q2)/x
+        ub, db = xpdf.xfxQ2(-2,x,Q2)/x, xpdf.xfxQ2(-1,x,Q2)/x
     elif target == 'neutron':
         d, u = xpdf.xfxQ2(2,x,Q2)/x, xpdf.xfxQ2(1,x,Q2)/x
-        db, ub = xpdf.xfxQ2(2,x,Q2)/x, xpdf.xfxQ2(1,x,Q2)/x
+        db, ub = xpdf.xfxQ2(-2,x,Q2)/x, xpdf.xfxQ2(-1,x,Q2)/x
     elif target == 'deuteron':
         u = (xpdf.xfxQ2(2,x,Q2)/x + xpdf.xfxQ2(1,x,Q2)/x) / 2.0
         d = (xpdf.xfxQ2(2,x,Q2)/x + xpdf.xfxQ2(1,x,Q2)/x) / 2.0
@@ -26,20 +27,28 @@ def f1col(x, Q2, target='proton'):
     s, sb = xpdf.xfxQ2(3,x,Q2)/x, xpdf.xfxQ2(-3,x,Q2)/x
     c, cb = xpdf.xfxQ2(4,x,Q2)/x, xpdf.xfxQ2(-4,x,Q2)/x
     b, bb = xpdf.xfxQ2(5,x,Q2)/x, xpdf.xfxQ2(-5,x,Q2)/x
-    pdf = {2:u, 1:d, 3:s, 4:c, 5:b, -2:u, -1:d, -3:s, -4:c, -5:b}
+    pdf = {2:u, 1:d, 3:s, 4:c, 5:b, -2:ub, -1:db, -3:sb, -4:cb, -5:bb}
     return pdf
 
 def D1col(z, Q2, hadron='pi+'):
+    u, d, s, c, b = 0, 0, 0, 0, 0
+    ub, db, sb, cb, bb = 0, 0, 0, 0, 0
     if hadron == 'pi+' or hadron == 'h+':
         u, d, s, c, b = zff.xfxQ2(2,z,Q2)/z, zff.xfxQ2(1,z,Q2)/z, zff.xfxQ2(3,z,Q2)/z, zff.xfxQ2(4,z,Q2)/z, zff.xfxQ2(5,z,Q2)/z
         ub, db, sb, cb, bb = zff.xfxQ2(-2,z,Q2)/z, zff.xfxQ2(-1,z,Q2)/z, zff.xfxQ2(-3,z,Q2)/z, zff.xfxQ2(-4,z,Q2)/z, zff.xfxQ2(-5,z,Q2)/z
     elif hadron == 'pi-' or hadron == 'h-':
         ub, db, sb, cb, bb = zff.xfxQ2(2,z,Q2)/z, zff.xfxQ2(1,z,Q2)/z, zff.xfxQ2(3,z,Q2)/z, zff.xfxQ2(4,z,Q2)/z, zff.xfxQ2(5,z,Q2)/z
         u, d, s, c, b = zff.xfxQ2(-2,z,Q2)/z, zff.xfxQ2(-1,z,Q2)/z, zff.xfxQ2(-3,z,Q2)/z, zff.xfxQ2(-4,z,Q2)/z, zff.xfxQ2(-5,z,Q2)/z
+    elif hadron == 'k+' or hadron == 'K+':
+        u, d, s, c, b = zkff.xfxQ2(2,z,Q2)/z, zkff.xfxQ2(1,z,Q2)/z, zkff.xfxQ2(3,z,Q2)/z, zkff.xfxQ2(4,z,Q2)/z, zkff.xfxQ2(5,z,Q2)/z
+        ub, db, sb, cb, bb = zkff.xfxQ2(-2,z,Q2)/z, zkff.xfxQ2(-1,z,Q2)/z, zkff.xfxQ2(-3,z,Q2)/z, zkff.xfxQ2(-4,z,Q2)/z, zkff.xfxQ2(-5,z,Q2)/z   
+    elif hadron == 'k-' or hadron == 'K-':
+        u, d, s, c, b = zkff.xfxQ2(-2,z,Q2)/z, zkff.xfxQ2(-1,z,Q2)/z, zkff.xfxQ2(-3,z,Q2)/z, zkff.xfxQ2(-4,z,Q2)/z, zkff.xfxQ2(-5,z,Q2)/z
+        ub, db, sb, cb, bb = zkff.xfxQ2(2,z,Q2)/z, zkff.xfxQ2(1,z,Q2)/z, zkff.xfxQ2(3,z,Q2)/z, zkff.xfxQ2(4,z,Q2)/z, zkff.xfxQ2(5,z,Q2)/z
     else:
         print('Fail to match hadron!')
         return 0
-    ff = {2:u, 1:d, 3:s, 4:c, 5:b, -2:u, -1:d, -3:s, -4:c, -5:b}
+    ff = {2:u, 1:d, 3:s, 4:c, 5:b, -2:ub, -1:db, -3:sb, -4:cb, -5:bb}
     return ff
 
 def FUUT(x, Q2, z, pT, target, hadron):

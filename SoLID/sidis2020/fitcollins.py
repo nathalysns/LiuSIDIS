@@ -54,7 +54,7 @@ def fitworld(Nrep, filename):
         Min = Minuit.from_array_func(fitfunc0, start=var0,\
                 name=['Nu','Nd','a','b','c','kt2'],\
                 error=[1e-4,1e-4,1e-4,1e-4,1e-4,1e-4],\
-                fix=[False,False,True,False,True,False],\
+                fix=[False,False,False,False,True,False],\
                 limit=[None,None,None,None,None,None],\
                 errordef=1)
         Min.print_level=0
@@ -73,7 +73,7 @@ def simulate(data):
     Min = Minuit.from_array_func(fitfunc0, start=var0,\
                 name=['Nu','Nd','a','b','c','kt2'],\
                 error=[1e-4,1e-4,1e-4,1e-4,1e-4,1e-4],\
-                fix=[False,False,True,False,True,False],\
+                fix=[False,False,False,False,True,False],\
                 limit=[None,None,None,None,None,None],\
                 errordef=1)
     Min.print_level=0

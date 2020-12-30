@@ -49,15 +49,15 @@ def fitworld(Nrep, filename):
     global worldrep
     worldrep = world.copy()
     out = []
-    var0 = [-0.1, 1.0, 5.0, 0.0, 0.1, 1.0, 5.0, 0.0, 0.0, 0.0, 0.25]
+    var0 = [-0.03851697, 0.66248284, 4.10308136,  0.0, 0.05141101, 0.39843212, 3.19880436, 0.0, 0.0, 0.0, 0.16]
     for i in range(Nrep):
         print(i, end='\r')
         worldrep['value'] = random.normal(world['value'], world['error'])
         Min = Minuit.from_array_func(fitfunc0, start=var0,\
                 name=['Nu','au','bu','cu','Nd','ad','bd','cd','Nub','Ndb','kt2'],\
                 error=[1e-4,1e-4,1e-4,1e-4,1e-4,1e-4,1e-4,1e-4,1e-4,1e-4,1e-4],\
-                fix=[False,False,False,True,False,False,False,True,False,False,False],\
-                limit=[(-1,1),(0,3),(0,10),None,(-1,1),(0,3),(0,10),None,(-1,1),(-1,1),(0.16,1)],\
+                fix=[False,False,False,True,False,False,False,True,True,True,False],\
+                limit=[(-1,1),(0,3),(0,10),None,(-1,1),(0,3),(0,10),None,(-1,1),(-1,1),(0.1,1)],\
                 errordef=1)
         Min.print_level=0
         Min.strategy=1
@@ -73,12 +73,12 @@ def fitworld(Nrep, filename):
 def simulate(data):
     global simdata, worldrep
     worldrep = world.copy()
-    var0 = [-0.1, 1.0, 5.0, 0.0, 0.1, 1.0, 5.0, 0.0, 0.0, 0.0, 0.25]
+    var0 = [-0.03851697, 0.66248284, 4.10308136,  0.0, 0.05141101, 0.39843212, 3.19880436, 0.0, 0.0, 0.0, 0.16]
     Min = Minuit.from_array_func(fitfunc0, start=var0,\
                 name=['Nu','au','bu','cu','Nd','ad','bd','cd','Nub','Ndb','kt2'],\
                 error=[1e-4,1e-4,1e-4,1e-4,1e-4,1e-4,1e-4,1e-4,1e-4,1e-4,1e-4],\
-                fix=[False,False,False,True,False,False,False,True,False,False,False],\
-                limit=[(-1,1),(0,3),(0,10),None,(-1,1),(0,3),(0,10),None,(-1,1),(-1,1),(0.16,1)],\
+                fix=[False,False,False,True,False,False,False,True,True,True,False],\
+                limit=[(-1,1),(0,3),(0,10),None,(-1,1),(0,3),(0,10),None,(-1,1),(-1,1),(0.1,1)],\
                 errordef=1)
     Min.print_level=0
     Min.strategy=1
@@ -103,8 +103,8 @@ def fitsim(Nrep, filename):
         Min = Minuit.from_array_func(fitfunc, start=var0,\
                 name=['Nu','au','bu','cu','Nd','ad','bd','cd','Nub','Ndb','kt2'],\
                 error=[1e-4,1e-4,1e-4,1e-4,1e-4,1e-4,1e-4,1e-4,1e-4,1e-4,1e-4],\
-                fix=[False,False,False,False,False,False,False,False,False,False,False],\
-                limit=[(-1,1),(0,3),(0,10),None,(-1,1),(0,3),(0,10),None,(-1,1),(-1,1),(0.12,1)],\
+                fix=[False,False,False,False,False,False,False,False,True,True,False],\
+                limit=[(-1,1),(0,3),(0,10),None,(-1,1),(0,3),(0,10),None,(-1,1),(-1,1),(0.1,1)],\
                 errordef=1)
         Min.print_level=0
         Min.strategy=1
