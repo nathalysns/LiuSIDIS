@@ -52,6 +52,20 @@ int main(int argc, char * argv[]){
     GenerateBinInfoFile("Projections/bin_base_P8m.dat", 8.8, "pi-");
   }
 
+  if (opt == -1){
+    Rfactor0 = 0.4;
+    pimin = 0;
+    GenerateBinInfoFile("Projections/bin_enhanced_P11p_cut.dat", 11.0, "pi+");
+    GenerateBinInfoFile("Projections/bin_enhanced_P8p_cut.dat", 8.8, "pi+");
+    GenerateBinInfoFile("Projections/bin_enhanced_P11m_cut.dat", 11.0, "pi-");
+    GenerateBinInfoFile("Projections/bin_enhanced_P8m_cut.dat", 8.8, "pi-");
+    pimin = 2.5;
+    GenerateBinInfoFile("Projections/bin_base_P11p_cut.dat", 11.0, "pi+");
+    GenerateBinInfoFile("Projections/bin_base_P8p_cut.dat", 8.8, "pi+");
+    GenerateBinInfoFile("Projections/bin_base_P11m_cut.dat", 11.0, "pi-");
+    GenerateBinInfoFile("Projections/bin_base_P8m_cut.dat", 8.8, "pi-");
+  }
+
   if (opt == 2){
     pimin = 0;
     AnalyzeEstatUT3("Projections/bin_enhanced_P11p.dat", "Projections/enhancedP11p.root", 11.0, "pi+");

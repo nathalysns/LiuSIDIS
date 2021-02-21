@@ -16,6 +16,11 @@ base = pd.read_csv('data/simbase.dat', delim_whitespace=True)
 basesyst = pd.read_csv('data/simbasesyst.dat', delim_whitespace=True)
 enhanced = pd.read_csv('data/simenhanced.dat', delim_whitespace=True)
 enhancedsyst = pd.read_csv('data/simenhancedsyst.dat', delim_whitespace=True)
+base3he = pd.read_csv('data/simbase3he.dat', delim_whitespace=True)
+base3hesyst = pd.read_csv('data/simbase3hesyst.dat', delim_whitespace=True)
+enhanced3he = pd.read_csv('data/simenhanced3he.dat', delim_whitespace=True)
+enhanced3hesyst = pd.read_csv('data/simenhanced3hesyst.dat', delim_whitespace=True)
+
 
 worldrep = 0
 simdata = 0
@@ -168,5 +173,20 @@ if __name__ == "__main__":
         print('fitting SBD+CLAS12+SoLID enhanced (including syst) ...', end='\n')
         simdata = pd.concat([sbs,clas,enhancedsyst], axis=0, ignore_index=True)
         fitsim(30, 'output/out-sbsclasenhancedsyst.dat')
-
+    elif opt == 'base3he':
+        print('fitting SoLID baseline 3he ...', end='\n')
+        simdata = base3he.copy()
+        fitsim(30, 'output/out-base3he.dat')
+    elif opt == 'base3hesyst':
+        print('fitting SoLID baseline 3he (including syst) ...', end='\n')
+        simdata = base3hesyst.copy()
+        fitsim(30, 'output/out-base3hesyst.dat')
+    elif opt == 'enhanced3he':
+        print('fitting SoLID enhanced 3he ...', end='\n')
+        simdata = enhanced3he.copy()
+        fitsim(30, 'output/out-enhanced3he.dat')
+    elif opt == 'enhanced3hesyst':
+        print('fitting SoLID enhanced 3he (including syst) ...', end='\n')
+        simdata = enhanced3hesyst.copy()
+        fitsim(30, 'output/out-enhanced3hesyst.dat')
     exit

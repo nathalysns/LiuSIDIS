@@ -25,7 +25,8 @@ sbs = pd.concat([pseudodata['sbs01'],pseudodata['sbs02']], axis=0, ignore_index=
 clas = pd.concat([pseudodata['clas01'],pseudodata['clas02']], axis=0, ignore_index=True)
 base = pd.concat([pseudodata['basePpip'],pseudodata['basePpim'],pseudodata['baseNpip'],pseudodata['baseNpim']], axis=0, ignore_index=True)
 enhanced = pd.concat([pseudodata['enhancedPpip'],pseudodata['enhancedPpim'],pseudodata['enhancedNpip'],pseudodata['enhancedNpim']], axis=0, ignore_index=True)
-
+base3he = pd.concat([pseudodata['baseNpip'],pseudodata['baseNpim']], axis=0, ignore_index=True)
+enhanced3he = pd.concat([pseudodata['enhancedNpip'],pseudodata['enhancedNpim']], axis=0, ignore_index=True)
 
 def simulatecollins(data, var):
     val = []
@@ -50,6 +51,8 @@ def preparecollins():
     simulatecollins(clas,par0)
     simulatecollins(base,par0)
     simulatecollins(enhanced,par0)
+    simulatecollins(base3he,par0)
+    simulatecollins(enhanced3he,par0)
     sbsrep = sbs.copy()
     clasrep = clas.copy()
     baserep = base.copy()
@@ -60,21 +63,35 @@ def preparecollins():
     enhancedrep['error'] = enhanced['stat']
     enhancedsystrep = enhanced.copy()
     enhancedsystrep['error'] = (enhanced['stat']**2+enhanced['systabs']**2+enhanced['value']**2*enhanced['systrel']**2)**0.5
+    base3herep = base3he.copy()
+    base3herep['error'] = base3he['stat']
+    base3hesystrep = base3he.copy()
+    base3hesystrep['error'] = (base3he['stat']**2+base3he['systabs']**2+base3he['value']**2*base3he['systrel']**2)**0.5
+    enhanced3herep = enhanced3he.copy()
+    enhanced3herep['error'] = enhanced3he['stat']
+    enhanced3hesystrep = enhanced3he.copy()
+    enhanced3hesystrep['error'] = (enhanced3he['stat']**2+enhanced3he['systabs']**2+enhanced3he['value']**2*enhanced3he['systrel']**2)**0.5
     sbsrep.to_csv('datacollins/simsbs.dat', sep='\t', index=False)
     clasrep.to_csv('datacollins/simclas.dat', sep='\t', index=False)
     baserep.to_csv('datacollins/simbase.dat', sep='\t', index=False)
     basesystrep.to_csv('datacollins/simbasesyst.dat', sep='\t', index=False)
     enhancedrep.to_csv('datacollins/simenhanced.dat', sep='\t', index=False)
     enhancedsystrep.to_csv('datacollins/simenhancedsyst.dat', sep='\t', index=False)
+    base3herep.to_csv('datacollins/simbase3he.dat', sep='\t', index=False)
+    base3hesystrep.to_csv('datacollins/simbase3hesyst.dat', sep='\t', index=False)
+    enhanced3herep.to_csv('datacollins/simenhanced3he.dat', sep='\t', index=False)
+    enhanced3hesystrep.to_csv('datacollins/simenhanced3hesyst.dat', sep='\t', index=False)
     return
 
 def preparesivers():
     global sbs, clas, base, enhanced
-    par1 = {'Nu':-0.06710715129203404,'au':0.9068808246185227,'bu':4.9108001362105345,'cu':0.0,'Nd':0.068793630217727,'ad':1.5989158863921848,'bd':9.99900187432782,'cd':0.0,'Nub':-0.0042441128233216,'Ndb':0.037303204858728733,'kt2':0.1600000000280305}
+    par1 = {'Nu': -0.03851696777000435,'au': 0.6624828400702693,'bu': 4.103081356761233,'cu': 0.0,'Nd': 0.05141101415846694,'ad': 0.3984321190429335,'bd': 3.1988043553441288,'cd': 0.0,'Nub': 0.0,'Ndb': 0.0,'kt2': 0.16000000088572233}
     simulatesivers(sbs,par1)
     simulatesivers(clas,par1)
     simulatesivers(base,par1)
     simulatesivers(enhanced,par1)
+    simulatesivers(base3he,par1)
+    simulatesivers(enhanced3he,par1)
     sbsrep = sbs.copy()
     clasrep = clas.copy()
     baserep = base.copy()
@@ -85,12 +102,24 @@ def preparesivers():
     enhancedrep['error'] = enhanced['stat']
     enhancedsystrep = enhanced.copy()
     enhancedsystrep['error'] = (enhanced['stat']**2+enhanced['systabs']**2+enhanced['value']**2*enhanced['systrel']**2)**0.5
+    base3herep = base3he.copy()
+    base3herep['error'] = base3he['stat']
+    base3hesystrep = base3he.copy()
+    base3hesystrep['error'] = (base3he['stat']**2+base3he['systabs']**2+base3he['value']**2*base3he['systrel']**2)**0.5
+    enhanced3herep = enhanced3he.copy()
+    enhanced3herep['error'] = enhanced3he['stat']
+    enhanced3hesystrep = enhanced3he.copy()
+    enhanced3hesystrep['error'] = (enhanced3he['stat']**2+enhanced3he['systabs']**2+enhanced3he['value']**2*enhanced3he['systrel']**2)**0.5
     sbsrep.to_csv('data/simsbs.dat', sep='\t', index=False)
     clasrep.to_csv('data/simclas.dat', sep='\t', index=False)
     baserep.to_csv('data/simbase.dat', sep='\t', index=False)
     basesystrep.to_csv('data/simbasesyst.dat', sep='\t', index=False)
     enhancedrep.to_csv('data/simenhanced.dat', sep='\t', index=False)
     enhancedsystrep.to_csv('data/simenhancedsyst.dat', sep='\t', index=False)
+    base3herep.to_csv('data/simbase3he.dat', sep='\t', index=False)
+    base3hesystrep.to_csv('data/simbase3hesyst.dat', sep='\t', index=False)
+    enhanced3herep.to_csv('data/simenhanced3he.dat', sep='\t', index=False)
+    enhanced3hesystrep.to_csv('data/simenhanced3hesyst.dat', sep='\t', index=False)
     return
 
 

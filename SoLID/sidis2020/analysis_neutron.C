@@ -50,6 +50,20 @@ int main(int argc, char * argv[]){
     GenerateBinInfoFile("Projections/bin_base_N8m.dat", 8.8, "pi-");
   }
 
+  if (opt == -1){
+    Rfactor0 = 0.4;
+    pimin = 0;
+    GenerateBinInfoFile("Projections/bin_enhanced_N11p_cut.dat", 11.0, "pi+");
+    GenerateBinInfoFile("Projections/bin_enhanced_N8p_cut.dat", 8.8, "pi+");
+    GenerateBinInfoFile("Projections/bin_enhanced_N11m_cut.dat", 11.0, "pi-");
+    GenerateBinInfoFile("Projections/bin_enhanced_N8m_cut.dat", 8.8, "pi-");
+    pimin = 2.5;
+    GenerateBinInfoFile("Projections/bin_base_N11p_cut.dat", 11.0, "pi+");
+    GenerateBinInfoFile("Projections/bin_base_N8p_cut.dat", 8.8, "pi+");
+    GenerateBinInfoFile("Projections/bin_base_N11m_cut.dat", 11.0, "pi-");
+    GenerateBinInfoFile("Projections/bin_base_N8m_cut.dat", 8.8, "pi-");
+  }
+
 
   if (opt == 2){
     pimin = 0;
