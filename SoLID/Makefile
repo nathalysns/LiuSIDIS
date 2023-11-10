@@ -1,17 +1,17 @@
 # A Generic Makefile for compiling ROOT programs
 # R. Michaels, rom@jlab.org, Aug 2001  See also README !!
 # Version of this release
-# 
-ROOTLIBS      = $(shell root-config --libs) -MathMore -lHistPainter
+#
+ROOTLIBS      = $(shell root-config --libs) -lMathMore
 ROOTGLIBS     = $(shell root-config --glibs)
 LHAPDFLIBS    = $(shell lhapdf-config --cflags --ldflags)
 CXX           = g++
 CXXFLAGS      = -lgfortran -Wall -frtti -fexceptions -fPIC \
-                   -DLINUXVERS -I$(ROOTSYS)/include -I/var/phy/project/mepg/tl190/LHAPDF/include -I/var/phy/project/mepg/tl190/LHAPDF/boost_1_59_0 -L/var/phy/project/mepg/tl190/LHAPDF/lib -lLHAPDF -O
-
+                   -DLINUXVERS -I$(ROOTSYS)/include -I$(LHAPDFSYS)/include 
 FFLAGS	      = -lgfortran -O -W -ffixed-line-length-132 -ff2c -fno-automatic -fdefault-real-8
 
 # Linux with g++
+
 INCLUDES      = -I$(ROOTSYS)/include 
 CXX           = g++
 LD            = g++
@@ -23,6 +23,7 @@ GLIBS         = $(ROOTGLIBS)
 ALL_LIBS =  $(GLIBS) $(LIBS) $(LHAPDFLIBS)
 
 # The following sources comprise the package of scaler classes by R. Michaels.
+
 SRC = $(O).C
 
 HEAD = $(SRC:.C=.h)
@@ -68,11 +69,3 @@ realclean:  clean
 		[ -s $@ ] || rm -f $@'
 
 -include $(DEPS)
-
-
-
-
-
-
-
-
